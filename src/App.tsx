@@ -1,3 +1,7 @@
+// ShopStore - Дипломный проект интернет-магазина
+// Разработано для демонстрации навыков в React, Redux, TypeScript
+// Автор: [Ваше имя] - Дипломная работа
+
 import classes from "./App.module.css";
 import { PATHS } from "./constants/routes";
 import { useRoutes } from "react-router-dom";
@@ -19,14 +23,22 @@ import CartPage from "./components/pages/showcasePages/CartPage/CartPage";
 import OrdersPage from "./components/pages/adminPages/OrdersPage/OrdersPage";
 import CheckoutSuccessPage from "./components/pages/showcasePages/CheckoutSuccessPage/CheckoutSuccessPage";
 import NotFound from "./components/pages/showcasePages/NotFound/NotFound";
+import AuthPage from "./components/pages/showcasePages/AuthPage/AuthPage";
+import CodeVerificationPage from "./components/pages/showcasePages/CodeVerificationPage/CodeVerificationPage";
+import ProfilePage from "./components/pages/showcasePages/ProfilePage/ProfilePage";
+import { checkAuth } from "./store/AuthSlice";
 
 const App = () => {
+  // Используем Redux для управления состоянием приложения
   const dispatch = useDispatch<AppDispatch>();
+  // Получаем состояние продуктов из Redux store
   const { isLoading, products } = useSelector(
     (state: RootState) => state.product,
   );
+  // Определяем, загружены ли данные
   const isDataLoaded = !isLoading && products.length > 0;
 
+  // Определяем маршруты приложения с помощью React Router
   const routes = useRoutes([
     {
       path: PATHS.showcase,
@@ -64,6 +76,18 @@ const App = () => {
       ],
     },
     {
+      path: PATHS.auth,
+      element: <AuthPage />,
+    },
+    {
+      path: PATHS.codeVerification,
+      element: <CodeVerificationPage />,
+    },
+    {
+      path: PATHS.profile,
+      element: <ProfilePage />,
+    },
+    {
       path: PATHS.admin,
 
       element: <AdminPage />,
@@ -90,12 +114,20 @@ const App = () => {
     },
   ]);
 
+  // useEffect для загрузки данных при монтировании компонента
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Загружаем данные из localStorage и с сервера
         dispatch(getFromLocalStorage("wishlist"));
         dispatch(getFromLocalStorage("cart"));
         dispatch(fetchProducts());
+
+        // Проверяем токен и восстанавливаем сессию
+        const token = localStorage.getItem("token");
+        if (token) {
+          dispatch(checkAuth());
+        }
       } catch (error) {
         console.log("Fetch error App.tsx:", error);
       }

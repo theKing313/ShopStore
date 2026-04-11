@@ -1,12 +1,17 @@
 export enum AlertType {
-  Info = 'info',
-  Success = 'success',
-  Error = 'error',
-  Warning = 'warning',
+  Info = "info",
+  Success = "success",
+  Error = "error",
+  Warning = "warning",
 }
-
+export type user = {
+  username: string;
+  email: string;
+  phone: string;
+  address: string;
+};
 export type Alert = {
-  action?: 'cart' | 'wishlist';
+  action?: "cart" | "wishlist";
   type: AlertType;
   message: string;
 };
@@ -63,12 +68,12 @@ export type Error = {
 };
 
 export type CartItem = {
-  productId: Product['id'];
-  name: Product['name'];
-  price: Product['price'];
+  productId: Product["id"];
+  name: Product["name"];
+  price: Product["price"];
   quantity: number;
   totalPrice: number;
-  weight: Product['weight'];
+  weight: Product["weight"];
   totalWeight: number;
   profit?: number;
   discount?: number;
@@ -76,9 +81,9 @@ export type CartItem = {
 };
 
 export type ProductCartItem = CartItem & {
-  name: Product['name'];
-  categoryUrl: Product['category']['url'];
-  image: Product['image'];
+  name: Product["name"];
+  categoryUrl: Product["category"]["url"];
+  image: Product["image"];
   isWished: boolean;
 };
 

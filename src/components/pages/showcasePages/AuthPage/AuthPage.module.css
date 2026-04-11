@@ -1,0 +1,40 @@
+.authPage {
+  display: flex;
+  justify-content: center;
+}
+
+.authCard {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 32px;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(16, 45, 123, 0.08);
+}
+
+.authDescription {
+  margin: 12px 0 28px;
+  color: #62718c;
+  line-height: 1.6;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.authActions {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.authLink {
+  display: block;
+  text-align: center;
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}

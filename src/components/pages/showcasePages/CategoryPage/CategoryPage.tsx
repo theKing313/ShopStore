@@ -58,7 +58,7 @@ const CategoryPage: React.FC = () => {
                 />
               </div>
 
-              {hasProducts && <ProductCardList products={productsTorender} />}
+              {hasProducts && <ProductCardList products={filteredProducts} />}
               {!hasProducts && (
                 <Placeholder text={NO_PRODUCTS_MESSAGE} size={"38px"} />
               )}

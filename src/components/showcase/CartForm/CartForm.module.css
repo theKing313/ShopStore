@@ -1,16 +1,26 @@
 .cart-form {
-  background-color: #ecf7ed;
-  padding: 16px;
-  border-radius: 4px;
+  background-color: #f7f9fb;
+  padding: 20px;
+  border-radius: 16px;
   box-sizing: border-box;
+  border: 1px solid #e6ebf1;
 }
 
 .action {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 28px;
+}
+
+.action button {
+  min-width: 260px;
+  padding: 16px 24px;
+  border-radius: 14px;
+  font-size: 16px;
 }
 
 @media screen and (min-width: 1024px) {
   .cart-form {
-    width: calc(100% - 420px);
+    width: 100%;
   }
 }

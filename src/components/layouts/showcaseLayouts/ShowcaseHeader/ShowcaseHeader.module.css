@@ -3,10 +3,17 @@
   flex-direction: column;
   gap: 40px;
 }
-
+.logoLink {
+  text-decoration: none !important;
+}
 .logo {
-  width: 220px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none !important;
   transition: opacity 100ms linear;
+
+  text-transform: uppercase;
 }
 
 .link {
@@ -50,6 +57,42 @@
   display: flex;
   gap: 20px;
   justify-content: center;
+  align-items: center;
+}
+
+.userLink {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 14px;
+  align-items: center;
+  align-self: center;
+  border-radius: 14px;
+  background: rgba(94, 195, 67, 0.12);
+  color: #2e3340;
+  text-decoration: none;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.userLink:hover {
+  transform: translateY(-1px);
+  background: rgba(94, 195, 67, 0.18);
+}
+
+.userLabel {
+  font-size: 12px;
+  color: #667085;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.userName {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 4px;
+  color: #111827;
 }
 
 .admin-link-wrapper {
