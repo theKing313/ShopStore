@@ -23,12 +23,16 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
   ///////////////////////////////////////
   const { products, error } = useSelector((state: RootState) => state.product);
   const { brands } = useSelector((state: RootState) => state.brand);
+  const sizes = ["XS", "S", "M", "L", "XL"];
+  const materials = ["Хлопок", "Полиэстер", "Лён", "Шерсть", "Смесь"];
+  const colors = ["Чёрный", "Белый", "Синий", "Красный", "Зелёный", "Серый"];
   const discountedProducts = products.filter((product) => product.discount);
 
   //
-  const [isOpen, setIsOpen] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   //
   const hasProducts = discountedProducts.length > 0;
   const { productsTorender } = useFilterByBrand(
@@ -36,8 +40,10 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
     brands,
     price,
     selectedBrands,
+    selectedSizes,
+    selectedMaterials,
+    selectedColors,
   );
-  console.log(selectedBrands);
   return (
     <Section>
       <>
@@ -54,19 +60,28 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
                 setPrice={setPrice}
               /> */}
               <FilterPanel
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                isOpen={true}
+                onClose={() => {}}
                 price={price}
                 setPrice={setPrice}
                 brands={brands}
+                sizes={sizes}
+                materials={materials}
+                colors={colors}
                 selectedBrands={selectedBrands}
                 setSelectedBrands={setSelectedBrands}
                 selectedSizes={selectedSizes}
                 setSelectedSizes={setSelectedSizes}
+                selectedMaterials={selectedMaterials}
+                setSelectedMaterials={setSelectedMaterials}
+                selectedColors={selectedColors}
+                setSelectedColors={setSelectedColors}
                 onApply={() => console.log("apply")}
                 onReset={() => {
                   setSelectedBrands([]);
                   setSelectedSizes([]);
+                  setSelectedMaterials([]);
+                  setSelectedColors([]);
                   setPrice({ from: 0, to: 3000 });
                 }}
               />

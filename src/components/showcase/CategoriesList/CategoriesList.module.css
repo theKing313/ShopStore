@@ -5,10 +5,11 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
 }
 
 .title {
-  font-family: 'Nunito';
+  font-family: "Nunito";
   font-size: 18px;
 }
 

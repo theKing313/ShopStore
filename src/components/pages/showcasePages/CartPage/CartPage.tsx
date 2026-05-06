@@ -3,7 +3,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NO_PRODUCTS_IN_CART } from "../../../../constants/messages";
 import { PATHS } from "../../../../constants/routes";
-import { createOrder } from "../../../../store/CommonSlice";
+import {
+  AlertType,
+  CartItem,
+  Product,
+  ProductCartItem,
+} from "../../../../types/common";
+import { createOrder, showAlert } from "../../../../store/CommonSlice";
 import { AppDispatch, RootState } from "../../../../store/store";
 import {
   clearCart,
@@ -11,7 +17,6 @@ import {
   setToLocalStorage,
   wishListHandler,
 } from "../../../../store/UserSlice";
-import { CartItem, Product, ProductCartItem } from "../../../../types/common";
 import Section from "../../../layouts/showcaseLayouts/Section/Section";
 import SectionBody from "../../../layouts/showcaseLayouts/Section/SectionBody/SectionBody";
 import SectionHeader from "../../../layouts/showcaseLayouts/Section/SectionHeader/SectionHeader";
@@ -173,14 +178,31 @@ const CartPage: React.FC = () => {
       totalQuantity: quantity,
     };
 
-    await dispatch(createOrder(order));
+    const result = await dispatch(createOrder(order));
+
     console.log("order------------------------", order);
 
-    // if (!error.isError && !isLoading) {
-    //   navigate(`${PATHS.cart}/${PATHS.success}`);
-    //   dispatch(clearCart());
-    //   dispatch(setToLocalStorage("cart"));
-    // }
+    if (createOrder.fulfilled.match(result)) {
+      dispatch(clearCart());
+      dispatch(setToLocalStorage("cart"));
+      dispatch(
+        showAlert({
+          type: AlertType.Success,
+          message: "Заказ успешно создан, корзина очищена.",
+        }),
+      );
+      setInput(INIT_INPUT);
+      return;
+    }
+
+    if (createOrder.rejected.match(result)) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: "Не удалось оформить заказ. Попробуйте снова.",
+        }),
+      );
+    }
   }
   console.log("cartProducts", cartProducts);
   console.log("cartUser", cartUser);

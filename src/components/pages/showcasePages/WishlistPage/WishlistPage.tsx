@@ -21,6 +21,8 @@ const WishlistPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const { products, error } = useSelector((state: RootState) => state.product);
   const { wishlist } = useSelector((state: RootState) => state.user);
   const { brands } = useSelector((state: RootState) => state.brand);
@@ -33,10 +35,16 @@ const WishlistPage: React.FC = () => {
     brands,
     price,
     selectedBrands,
+    selectedSizes,
+    selectedMaterials,
+    selectedColors,
   );
   const hasProducts = wishlistProducts.length > 0;
   const { search, setSearch, filteredProducts } = useSearch(productsTorender);
 
+  const sizes = ["XS", "S", "M", "L", "XL"];
+  const materials = ["Хлопок", "Полиэстер", "Лён", "Шерсть", "Смесь"];
+  const colors = ["Чёрный", "Белый", "Синий", "Красный", "Зелёный", "Серый"];
   return (
     <Section>
       <>
@@ -62,14 +70,23 @@ const WishlistPage: React.FC = () => {
                 price={price}
                 setPrice={setPrice}
                 brands={brands}
+                sizes={sizes}
+                materials={materials}
+                colors={colors}
                 selectedBrands={selectedBrands}
                 setSelectedBrands={setSelectedBrands}
                 selectedSizes={selectedSizes}
                 setSelectedSizes={setSelectedSizes}
+                selectedMaterials={selectedMaterials}
+                setSelectedMaterials={setSelectedMaterials}
+                selectedColors={selectedColors}
+                setSelectedColors={setSelectedColors}
                 onApply={() => setIsOpen(false)}
                 onReset={() => {
                   setSelectedBrands([]);
                   setSelectedSizes([]);
+                  setSelectedMaterials([]);
+                  setSelectedColors([]);
                   setPrice({ from: 399, to: 2999 });
                 }}
               />

@@ -17,12 +17,18 @@ interface Props {
 
   price: IPrice;
   setPrice: (price: IPrice) => void;
-
+  sizes: string[];
   brands: Brand[];
+  materials?: string[];
+  colors?: string[];
   selectedBrands: string[];
   setSelectedBrands: React.Dispatch<React.SetStateAction<string[]>>;
   selectedSizes: string[];
   setSelectedSizes: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedMaterials: string[];
+  setSelectedMaterials: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedColors: string[];
+  setSelectedColors: React.Dispatch<React.SetStateAction<string[]>>;
   onApply: () => void;
   onReset: () => void;
 }
@@ -33,10 +39,17 @@ const FilterPanel: React.FC<Props> = ({
   price,
   setPrice,
   brands,
+  sizes,
+  materials = [],
+  colors = [],
   selectedBrands,
   setSelectedBrands,
   selectedSizes,
   setSelectedSizes,
+  selectedMaterials,
+  setSelectedMaterials,
+  selectedColors,
+  setSelectedColors,
   onApply,
   onReset,
 }) => {
@@ -45,11 +58,11 @@ const FilterPanel: React.FC<Props> = ({
     setLocalPrice(price);
   }, [price]);
 
-  // const toggleSize = (size: string[]) => {
-  //   setSelectedSizes((prev) =>
-  //     prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
-  //   );
-  // };
+  const toggleSize = (size: string) => {
+    setSelectedSizes((prev) =>
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
+    );
+  };
 
   const toggleBrand = (brand: Brand) => {
     setSelectedBrands((prev) =>
@@ -59,10 +72,23 @@ const FilterPanel: React.FC<Props> = ({
     );
   };
 
+  const toggleMaterial = (material: string) => {
+    setSelectedMaterials((prev) =>
+      prev.includes(material)
+        ? prev.filter((m) => m !== material)
+        : [...prev, material],
+    );
+  };
+
+  const toggleColor = (color: string) => {
+    setSelectedColors((prev) =>
+      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color],
+    );
+  };
+
   const applyFilters = () => {
     setPrice(localPrice);
     onApply();
-    onClose();
   };
 
   return (
@@ -103,7 +129,7 @@ const FilterPanel: React.FC<Props> = ({
           <input
             type="range"
             min={0}
-            max={5000}
+            max={20000}
             value={localPrice.to}
             onChange={(e) =>
               setLocalPrice({
@@ -117,7 +143,7 @@ const FilterPanel: React.FC<Props> = ({
         {/* Размеры */}
         <div className={classes.section}>
           <h3>Размер</h3>
-          {/* <div className={classes.sizes}>
+          <div className={classes.sizes}>
             {sizes.map((size) => (
               <button
                 key={size}
@@ -129,8 +155,46 @@ const FilterPanel: React.FC<Props> = ({
                 {size}
               </button>
             ))}
-          </div> */}
+          </div>
         </div>
+
+        {/* Материалы */}
+        {materials.length > 0 && (
+          <div className={classes.section}>
+            <h3>Материал</h3>
+            <div className={classes.materials}>
+              {materials.map((material) => (
+                <label key={material}>
+                  <input
+                    type="checkbox"
+                    checked={selectedMaterials.includes(material)}
+                    onChange={() => toggleMaterial(material)}
+                  />
+                  {material}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Цвета */}
+        {colors.length > 0 && (
+          <div className={classes.section}>
+            <h3>Цвет</h3>
+            <div className={classes.colors}>
+              {colors.map((color) => (
+                <label key={color}>
+                  <input
+                    type="checkbox"
+                    checked={selectedColors.includes(color)}
+                    onChange={() => toggleColor(color)}
+                  />
+                  {color}
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Бренды */}
         <div className={classes.section}>
