@@ -1,9 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { Alert, AlertType, Error, Order } from '../types/common';
-import { handleObj, wait } from '../utils/helpers';
-import { CREATE_ORDER_ERROR_MESSAGE, FETCH_ORDERS_ERROR_MESSAGE } from '../constants/messages';
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { Alert, AlertType, CartItem, Error, Order } from "../types/common";
+import { handleObj, wait } from "../utils/helpers";
+import { CREATE_ORDER_ERROR_MESSAGE } from "../constants/messages";
+import MOCKED_COMMON from "../mocks/common.json";
 
 export type CommonState = {
   alert: Alert;
@@ -15,60 +16,101 @@ export type CommonState = {
 const initialState: CommonState = {
   alert: {
     type: AlertType.Info,
-    message: '',
+    message: "",
   },
   orders: [],
   isLoading: false,
   error: {
     isError: false,
-    message: '',
+    message: "",
   },
 };
 
-const BASE_URL = 'https://e-commerce-65446-default-rtdb.firebaseio.com';
-
-export const fetchOrders = createAsyncThunk('common/fetchOrders', async (_, { dispatch, rejectWithValue }) => {
-  const response = await fetch(`${BASE_URL}/orders.json`);
-
-  if (!response.ok) {
-    dispatch(showAlert({ type: AlertType.Error, message: FETCH_ORDERS_ERROR_MESSAGE }));
-    return rejectWithValue(FETCH_ORDERS_ERROR_MESSAGE);
-  }
-
-  const data = await response.json();
-  const brands: Order[] = handleObj(data);
-  return brands;
-});
-
-export const createOrder = createAsyncThunk(
-  'common/createOrder',
-  async (order: Partial<Order>, { dispatch, rejectWithValue }) => {
-    const response = await fetch(`${BASE_URL}/orders.json`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(order),
-    });
-
+const BASE_URL = "http://localhost:5044/api";
+export const fetchOrders = createAsyncThunk(
+  "common/fetchOrders",
+  async (_, { dispatch, rejectWithValue }) => {
+    // const response = await fetch(`${BASE_URL}/orders.json`);
+    // const orders: Order[] = handleObj(MOCKED_COMMON as any);
+    // console.log("orders", orders);
+    // return orders;
+    // const orders: Order[] = handleObj(data);
+    // if (!response.ok) {
+    //   dispatch(
+    //     showAlert({
+    //       type: AlertType.Error,
+    //       message: FETCH_ORDERS_ERROR_MESSAGE,
+    //     }),
+    //   );
+    //   return rejectWithValue(FETCH_ORDERS_ERROR_MESSAGE);
+    // }
+    const response = await fetch(`${BASE_URL}/orders`);
     if (!response.ok) {
-      dispatch(showAlert({ type: AlertType.Error, message: CREATE_ORDER_ERROR_MESSAGE }));
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: CREATE_ORDER_ERROR_MESSAGE,
+        }),
+      );
       return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
     }
-
-    const data: { name: string } = await response.json();
-    return { id: data.name, ...order } as Order;
-  }
+    const data = await response.json();
+    const brands: Order[] = handleObj(data);
+    return brands;
+  },
 );
 
-export const showAlert = createAsyncThunk('common/handleAlert', async (alert: Alert, { dispatch }) => {
-  dispatch(setAlert(alert));
-  await wait(2500);
-  dispatch(hideAlert());
-});
+export const createOrder = createAsyncThunk(
+  "common/createOrder",
+  async (
+    order: Partial<Omit<Order, "cart">> & { cart: CartItem[] },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      console.log("order------------------------", order);
+      const response = await fetch(`${BASE_URL}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+
+      if (!response.ok) {
+        dispatch(
+          showAlert({
+            type: AlertType.Error,
+            message: CREATE_ORDER_ERROR_MESSAGE,
+          }),
+        );
+        return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
+      }
+
+      const data = await response.json();
+      return data as Order;
+    } catch (error) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: CREATE_ORDER_ERROR_MESSAGE,
+        }),
+      );
+      return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
+    }
+  },
+);
+
+export const showAlert = createAsyncThunk(
+  "common/handleAlert",
+  async (alert: Alert, { dispatch }) => {
+    dispatch(setAlert(alert));
+    await wait(2500);
+    dispatch(hideAlert());
+  },
+);
 
 export const commonSlice = createSlice({
-  name: 'common',
+  name: "common",
   initialState,
   reducers: {
     setAlert: (state, action: PayloadAction<Alert>) => {
@@ -93,7 +135,7 @@ export const commonSlice = createSlice({
     builder.addCase(fetchOrders.rejected, (state, { payload }) => {
       state.error = {
         isError: true,
-        message: payload as Error['message'],
+        message: payload as Error["message"],
       };
       state.isLoading = false;
     });
@@ -109,7 +151,7 @@ export const commonSlice = createSlice({
     builder.addCase(createOrder.rejected, (state, { payload }) => {
       state.error = {
         isError: true,
-        message: payload as Error['message'],
+        message: payload as Error["message"],
       };
       state.isLoading = false;
     });

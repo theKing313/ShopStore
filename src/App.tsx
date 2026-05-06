@@ -4,7 +4,7 @@
 
 import classes from "./App.module.css";
 import { PATHS } from "./constants/routes";
-import { useRoutes } from "react-router-dom";
+import { useRoutes, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./store/store";
@@ -14,9 +14,10 @@ import ProductsPage from "./components/pages/adminPages/ProductsPage/ProductsPag
 import SettingsPage from "./components/pages/adminPages/SettingsPage/SettingsPage";
 import AdminPage from "./components/pages/adminPages/AdminPage/AdminPage";
 import DiscountProductsPage from "./components/pages/showcasePages/DiscountProductsPage/DiscountProductsPage";
+import HomePage from "./components/pages/showcasePages/HomePage/HomePage";
 import ShowcasePage from "./components/pages/showcasePages/ShowcasePage/ShowcasePage";
 import { getFromLocalStorage } from "./store/UserSlice";
-import WishlistPage from "./components/pages/showcasePages/WishlistPage/WishlistPage";
+// import WishlistPage from "./components/pages/showcasePages/WishlistPage/WishlistPage";
 import ProductPage from "./components/pages/showcasePages/ProductPage/ProductPage";
 import Loader from "./components/UI/Loader/Loader";
 import CartPage from "./components/pages/showcasePages/CartPage/CartPage";
@@ -25,8 +26,12 @@ import CheckoutSuccessPage from "./components/pages/showcasePages/CheckoutSucces
 import NotFound from "./components/pages/showcasePages/NotFound/NotFound";
 import AuthPage from "./components/pages/showcasePages/AuthPage/AuthPage";
 import CodeVerificationPage from "./components/pages/showcasePages/CodeVerificationPage/CodeVerificationPage";
+import ForgotPasswordPage from "./components/pages/showcasePages/ForgotPasswordPage/ForgotPasswordPage";
+import ResetPasswordPage from "./components/pages/showcasePages/ResetPasswordPage/ResetPasswordPage";
 import ProfilePage from "./components/pages/showcasePages/ProfilePage/ProfilePage";
 import { checkAuth } from "./store/AuthSlice";
+import WishlistPage from "./components/pages/showcasePages/WishlistPage/WishlistPage";
+import ProtectedRoute from "./components/pages/adminPages/ProtectedRoute/ProtectedRoute";
 
 const App = () => {
   // Используем Redux для управления состоянием приложения
@@ -35,6 +40,7 @@ const App = () => {
   const { isLoading, products } = useSelector(
     (state: RootState) => state.product,
   );
+  const { loading, user } = useSelector((state: RootState) => state.auth);
   // Определяем, загружены ли данные
   const isDataLoaded = !isLoading && products.length > 0;
 
@@ -45,7 +51,11 @@ const App = () => {
       element: <ShowcasePage />,
       children: [
         {
-          path: "/",
+          index: true,
+          element: isDataLoaded ? <HomePage /> : <Loader />,
+        },
+        {
+          path: PATHS.discounts,
           element: isDataLoaded ? <DiscountProductsPage /> : <Loader />,
         },
         {
@@ -80,6 +90,14 @@ const App = () => {
       element: <AuthPage />,
     },
     {
+      path: PATHS.forgotPassword,
+      element: <ForgotPasswordPage />,
+    },
+    {
+      path: PATHS.resetPassword,
+      element: <ResetPasswordPage />,
+    },
+    {
       path: PATHS.codeVerification,
       element: <CodeVerificationPage />,
     },
@@ -89,21 +107,29 @@ const App = () => {
     },
     {
       path: PATHS.admin,
-
-      element: <AdminPage />,
+      element: <ProtectedRoute />, // Сначала проверяем доступ
       children: [
         {
           index: true,
-          path: PATHS.orders,
-          element: <OrdersPage />,
+          element: <Navigate to={`${PATHS.admin}/${PATHS.orders}`} replace />,
         },
         {
-          path: PATHS.products,
-          element: <ProductsPage />,
-        },
-        {
-          path: PATHS.settings,
-          element: <SettingsPage />,
+          element: <AdminPage />, // Если доступ есть, показываем оболочку админки
+          children: [
+            {
+              index: true,
+              path: PATHS.orders,
+              element: <OrdersPage />,
+            },
+            {
+              path: PATHS.products,
+              element: <ProductsPage />,
+            },
+            {
+              path: PATHS.settings,
+              element: <SettingsPage />,
+            },
+          ],
         },
       ],
     },

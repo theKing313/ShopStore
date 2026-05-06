@@ -40,7 +40,7 @@ const CodeVerificationPage: React.FC = () => {
   const isLoading = useSelector((state: RootState) => state.common.isLoading);
   const navigate = useNavigate();
   const userData = location.state as {
-    name: string;
+    username: string;
     email: string;
     password: string;
   } | null;
@@ -57,11 +57,12 @@ const CodeVerificationPage: React.FC = () => {
     const data = {
       email: userData.email,
       code: input.code,
-      username: userData.name,
+      username: userData.username,
       password: userData.password,
     };
-    const token = await dispatch(verifyCode(data));
-    navigate(PATHS.showcase);
+    const result = await dispatch(verifyCode(data));
+    console.log("Verification result:", JSON.stringify(result));
+    // navigate(PATHS.showcase);
   }
 
   const description = useMemo(

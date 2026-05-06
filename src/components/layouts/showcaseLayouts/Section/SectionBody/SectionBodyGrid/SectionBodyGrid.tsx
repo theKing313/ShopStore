@@ -1,11 +1,19 @@
-import classes from './SectionBodyGrid.module.css';
+import { ReactNode } from "react";
+import classes from "./SectionBodyGrid.module.css";
 interface ISectionBodyGridProps {
-  children: JSX.Element;
+  children: ReactNode;
   displayBlock?: boolean;
 }
 
-const SectionBodyGrid: React.FC<ISectionBodyGridProps> = ({ children, displayBlock = false }) => {
-  return <div className={displayBlock ? classes.block : classes.grid}>{children}</div>;
+const SectionBodyGrid: React.FC<ISectionBodyGridProps> = ({
+  children,
+  displayBlock = false,
+}) => {
+  return (
+    <div className={displayBlock ? classes.block : classes.grid}>
+      {children}
+    </div>
+  );
 };
 
 export default SectionBodyGrid;

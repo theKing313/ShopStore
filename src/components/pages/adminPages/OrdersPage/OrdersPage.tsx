@@ -1,19 +1,20 @@
-import Actions from '../../../layouts/adminLayouts/Actions/Actions';
-import Content from '../../../layouts/adminLayouts/Content/Content';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../store/store';
-import Order from '../../../admin/Order/Order';
-import Card from '../../../UI/Card/Card';
-import Loader from '../../../UI/Loader/Loader';
-import Placeholder from '../../../UI/Placeholder/Placeholder';
-import { NO_ORDERS } from '../../../../constants/messages';
+import Actions from "../../../layouts/adminLayouts/Actions/Actions";
+import Content from "../../../layouts/adminLayouts/Content/Content";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
+import Order from "../../../admin/Order/Order";
+import Card from "../../../UI/Card/Card";
+import Loader from "../../../UI/Loader/Loader";
+import Placeholder from "../../../UI/Placeholder/Placeholder";
+import { NO_ORDERS } from "../../../../constants/messages";
+import { OrderItem } from "../../../../types/common";
 
 const OrdersPage: React.FC = () => {
   const { orders, isLoading } = useSelector((state: RootState) => state.common);
-
+  console.log(orders);
   return (
     <>
-      <Actions title={'Заказы'} />
+      <Actions title={"Заказы"} />
 
       <Content>
         <>
@@ -40,17 +41,31 @@ const OrdersPage: React.FC = () => {
                       </tr>
                     )}
 
-                    {orders.map(({ user, totalPrice, totalWeight, totalDiscount, cart, timestamp, id }) => (
-                      <Order
-                        user={user}
-                        cart={cart}
-                        totalPrice={totalPrice}
-                        timestamp={timestamp}
-                        key={id}
-                        totalWeight={totalWeight}
-                        totalDiscount={totalDiscount}
-                      />
-                    ))}
+                    {orders.map(
+                      ({
+                        userName,
+                        userPhone,
+                        userAddress,
+                        totalPrice,
+                        totalWeight,
+                        totalDiscount,
+                        cart,
+                        timestamp,
+                        id,
+                      }) => (
+                        <Order
+                          userName={userName}
+                          userPhone={userPhone}
+                          userAddress={userAddress}
+                          cart={cart}
+                          totalPrice={totalPrice}
+                          timestamp={timestamp}
+                          key={id}
+                          totalWeight={totalWeight}
+                          totalDiscount={totalDiscount}
+                        />
+                      ),
+                    )}
                   </tbody>
                 </table>
               </>

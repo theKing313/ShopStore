@@ -1,0 +1,29 @@
+{
+  "orders": {
+    "id": "-Nm6txNpyKAINvWnQur_",
+    "cart": [
+      {
+        "discount": 40,
+        "discountedPrice": 6000,
+        "name": "Apple iPhone 14",
+        "price": 10000,
+        "productId": "-Nm3JGtkdgX2YJw4GBUx",
+        "profit": 4000,
+        "quantity": 1,
+        "totalPrice": 6000,
+        "totalWeight": 2,
+        "weight": 2
+      }
+    ],
+    "timestamp": 1703087167970,
+    "totalDiscount": 4000,
+    "totalPrice": 6000,
+    "totalQuantity": 1,
+    "totalWeight": 2,
+    "user": {
+      "address": "Almaty",
+      "name": "TEST RIGHT NOW FROM JSON",
+      "phone": "+77027618584"
+    }
+  }
+}

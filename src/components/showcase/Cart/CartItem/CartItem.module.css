@@ -18,7 +18,7 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  gap: 24px;
+  gap: 12px;
 }
 
 .product-name {
@@ -26,6 +26,23 @@
   text-decoration: none;
   color: #222222;
   transition: color 120ms linear;
+}
+
+.variant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.variant-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: #4c4c4c;
+  font-size: 13px;
 }
 
 .product-name:hover {

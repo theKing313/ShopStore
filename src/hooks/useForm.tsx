@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 type Error = {
   [key: string]: string | undefined;
@@ -11,12 +11,19 @@ type Option = {
 const useForm = <T extends {}>(
   initInput: T,
   callback: () => void,
-  validator: (field: string, inputValue: string | { [key: string]: string }) => { [key: string]: string } | null
+  validator: (
+    field: string,
+    inputValue: string | { [key: string]: string },
+  ) => { [key: string]: string } | null,
 ): {
   input: T;
   errors: Error;
   setInput: React.Dispatch<React.SetStateAction<T>>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => void;
   resetForm: () => void;
   submit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleChangeSelect: (option: Option) => void;
@@ -24,7 +31,11 @@ const useForm = <T extends {}>(
   const [input, setInput] = useState(initInput);
   const [errors, setErrors] = useState<Error>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
 
     clearValidation(name);
@@ -45,7 +56,7 @@ const useForm = <T extends {}>(
       [field]: {
         name,
         id,
-        url
+        url,
       },
     }));
   };
@@ -65,7 +76,10 @@ const useForm = <T extends {}>(
     let isValid = true;
 
     Object.entries(input).forEach(([key, value]) => {
-      const inputErrorObj = validator(key, value as string | { [key: string]: string });
+      const inputErrorObj = validator(
+        key,
+        value as string | { [key: string]: string },
+      );
       if (inputErrorObj) {
         isValid = false;
         setErrors((prev) => ({ ...prev, ...inputErrorObj }));
@@ -91,7 +105,15 @@ const useForm = <T extends {}>(
     setErrors({});
   };
 
-  return { input, errors, setInput, handleChange, resetForm, submit, handleChangeSelect };
+  return {
+    input,
+    errors,
+    setInput,
+    handleChange,
+    resetForm,
+    submit,
+    handleChangeSelect,
+  };
 };
 
 export default useForm;

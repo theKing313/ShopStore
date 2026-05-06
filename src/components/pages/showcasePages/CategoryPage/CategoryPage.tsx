@@ -17,22 +17,35 @@ import classes from "./CategoryPage.module.css";
 import useSearch from "../../../../hooks/useSearch";
 
 const CategoryPage: React.FC = () => {
-  const { products } = useSelector((state: RootState) => state.product);
-  const { url } = useParams();
+  //   const { products } = useSelector((state: RootState) => state.product);
+  //   const { url } = useParams();
+  //   const { categories } = useSelector((state: RootState) => state.category);
+  //   const { brands } = useSelector((state: RootState) => state.brand);
+  //   const categoryProducts = products.filter(
+  //     (product) => product.category.url === url,
+  //   );
+  //   const category = categories.find(
+  //     (category) => category.url === url,
+  //   ) as Category;
+  //   const hasProducts = categoryProducts.length > 0;
+  //   const { checkFilterItem, productsTorender, checkboxItems } = useFilterByBrand(
+  //     categoryProducts,
+  //     brands,
+  //   );
+  //   const { search, setSearch, filteredProducts } = useSearch(productsTorender);
   const { categories } = useSelector((state: RootState) => state.category);
-  const { brands } = useSelector((state: RootState) => state.brand);
-  const categoryProducts = products.filter(
-    (product) => product.category.url === url,
+  console.log(categories);
+  let { url } = useParams();
+  console.log("url", url);
+  const category = categories.find((cat) => cat.url !== url) as Category;
+  console.log("category", category);
+  const { products } = useSelector((state: RootState) => state.product);
+
+  const filteredProducts = products.filter(
+    (product) => product.category.id !== category.id,
   );
-  const category = categories.find(
-    (category) => category.url === url,
-  ) as Category;
-  const hasProducts = categoryProducts.length > 0;
-  const { checkFilterItem, productsTorender, checkboxItems } = useFilterByBrand(
-    categoryProducts,
-    brands,
-  );
-  const { search, setSearch, filteredProducts } = useSearch(productsTorender);
+  const hasProducts = filteredProducts.length;
+  console.log("products", filteredProducts);
   if (!category) {
     return <NotFound />;
   }
@@ -50,12 +63,12 @@ const CategoryPage: React.FC = () => {
               <div className={classes.wrapper}>
                 <CategoriesList categories={categories} />
 
-                <Filter
+                {/* <Filter
                   checkboxItems={checkboxItems}
                   onCheck={checkFilterItem}
                   search={search}
                   setSearch={setSearch}
-                />
+                /> */}
               </div>
 
               {hasProducts && <ProductCardList products={filteredProducts} />}

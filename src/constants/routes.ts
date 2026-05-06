@@ -1,5 +1,6 @@
 export const PATHS = {
   showcase: "/",
+  discounts: "/discounts",
   products: "products",
   admin: "/admin/",
   settings: "settings",
@@ -9,5 +10,7 @@ export const PATHS = {
   success: "success",
   auth: "/auth",
   codeVerification: "/code-verification",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
   profile: "/profile",
 };

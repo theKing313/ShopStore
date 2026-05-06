@@ -7,7 +7,7 @@ import Button from "../../../UI/Button/Button";
 import classes from "./AuthPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authUser, sendCode } from "../../../../store/AuthSlice";
 import { PATHS } from "../../../../constants/routes";
 
@@ -66,7 +66,7 @@ const AuthPage: React.FC = () => {
 
   async function handleSubmit() {
     const userData = {
-      name: input.name,
+      username: input.name,
       email: input.email,
       password: input.password,
     };
@@ -85,6 +85,9 @@ const AuthPage: React.FC = () => {
         <div className={classes.authCard}>
           <SectionHeader title={"Регистрация"} />
           <p className={classes.authDescription}>{description}</p>
+          <Link to={PATHS.forgotPassword} className={classes.authLink}>
+            Забыли пароль?
+          </Link>
 
           <form className={classes.authForm} onSubmit={submit} noValidate>
             <Input

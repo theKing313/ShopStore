@@ -15,19 +15,36 @@ type WishList = Product["id"][];
 export type UserState = {
   user: user | null;
   token: string | null;
+  loading: boolean;
 };
 
 const initialState: UserState = {
   user: null,
   token: null,
+  loading: false,
 };
-
+export const logOut = createAsyncThunk(
+  "user/logout",
+  async (_, { dispatch }) => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(
+      showAlert({
+        type: AlertType.Info,
+        message: "Вы вышли из аккаунта",
+      }),
+    );
+  },
+);
 export const authUser = createAsyncThunk<
   string,
-  { name: string; email: string; password: string }
+  { username: string; email: string; password: string }
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
-    const response = await axios.post("http://localhost:5044/auth", userData);
+    const response = await axios.post(
+      "http://localhost:5044/api/registration",
+      userData,
+    );
     const token = response.data.token; // Предполагаем, что сервер возвращает { token: "..." }
     localStorage.setItem("token", token);
     dispatch(
@@ -76,55 +93,122 @@ export const sendCode = createAsyncThunk<void, string>(
   },
 );
 
+export const sendResetCode = createAsyncThunk<void, string>(
+  "auth/sendResetCode",
+  async (email, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5044/api/password-reset/request",
+        { email },
+      );
+      dispatch(
+        showAlert({
+          type: AlertType.Success,
+          message: response.data.message || "Код для сброса пароля отправлен",
+        }),
+      );
+    } catch (error: any) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message:
+            error.response?.data?.message ||
+            JSON.stringify(error.response?.data) ||
+            "Ошибка отправки кода для сброса пароля",
+        }),
+      );
+      return rejectWithValue(
+        error.response?.data?.message ||
+          JSON.stringify(error.response?.data) ||
+          "Ошибка отправки кода для сброса пароля",
+      );
+    }
+  },
+);
+
+export const resetPassword = createAsyncThunk<
+  void,
+  { email: string; code: string; password: string }
+>("auth/resetPassword", async (data, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5044/api/password-reset/confirm",
+      data,
+    );
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: response.data.message || "Пароль успешно сброшен",
+      }),
+    );
+  } catch (error: any) {
+    dispatch(
+      showAlert({
+        type: AlertType.Error,
+        message:
+          error.response?.data?.message ||
+          JSON.stringify(error.response?.data) ||
+          "Ошибка сброса пароля",
+      }),
+    );
+    return rejectWithValue(
+      error.response?.data?.message ||
+        JSON.stringify(error.response?.data) ||
+        "Ошибка сброса пароля",
+    );
+  }
+});
+
 export const verifyCode = createAsyncThunk<
   { token: string; user: any; message: string },
   { email: string; code: string; username: string; password: string }
 >("auth/verifyCode", async (data, { dispatch, rejectWithValue }) => {
-  // try {
-  //   const response = await axios.post(
-  //     "http://localhost:5044/api/verify-code",
-  //     data,
-  //   );
-  //   const result = response.data; // { token, user, message }
-  //   localStorage.setItem("token", result.token);
-  //   dispatch(
-  //     showAlert({
-  //       type: AlertType.Success,
-  //       message: result.message,
-  //     }),
-  //   );
-  //   return result;
-  // } catch (error: any) {
-  //   dispatch(
-  //     showAlert({
-  //       type: AlertType.Error,
-  //       message: error.response?.data?.message || "Ошибка верификации",
-  //     }),
-  //   );
-  //   return rejectWithValue(error.response?.data || "Ошибка верификации");
-  // }
-
+  alert(JSON.stringify(data));
+  try {
+    const response = await axios.post(
+      "http://localhost:5044/api/verify-code",
+      data,
+    );
+    const result = response.data; // { token, user, message }
+    localStorage.setItem("token", JSON.stringify(result.token));
+    localStorage.setItem("user", JSON.stringify(result.user));
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: result.message || "Проверка кода прошла успешно",
+      }),
+    );
+    return result?.success ? result : rejectWithValue(result);
+  } catch (error: any) {
+    dispatch(
+      showAlert({
+        type: AlertType.Error,
+        message: error.response?.data?.message || "Ошибка верификации",
+      }),
+    );
+    return rejectWithValue(error.response?.data || "Ошибка верификации");
+  }
   // Заглушка для успешной верификации
-  return new Promise<{ token: string; user: any; message: string }>(
-    (resolve) => {
-      setTimeout(() => {
-        const fakeResult = {
-          token: "fake-jwt-token",
-          user: { id: 1, email: data.email, username: data.username },
-          message: "Регистрация успешна!",
-        };
-        localStorage.setItem("token", fakeResult.token);
-        localStorage.setItem("user", JSON.stringify(fakeResult.user));
-        dispatch(
-          showAlert({
-            type: AlertType.Success,
-            message: fakeResult.message,
-          }),
-        );
-        resolve(fakeResult);
-      }, 1000);
-    },
-  );
+  // return new Promise<{ token: string; user: any; message: string }>(
+  //   (resolve) => {
+  //     setTimeout(() => {
+  //       const fakeResult = {
+  //         token: "fake-jwt-token",
+  //         user: { id: 1, email: data.email, username: data.username },
+  //         message: "Регистрация успешна!",
+  //       };
+  //       localStorage.setItem("token", fakeResult.token);
+  //       localStorage.setItem("user", JSON.stringify(fakeResult.user));
+  //       dispatch(
+  //         showAlert({
+  //           type: AlertType.Success,
+  //           message: fakeResult.message,
+  //         }),
+  //       );
+  //       resolve(fakeResult);
+  //     }, 1000);
+  //   },
+  // );
 });
 
 export const checkAuth = createAsyncThunk<{ token: string; user: any }, void>(
@@ -139,6 +223,7 @@ export const checkAuth = createAsyncThunk<{ token: string; user: any }, void>(
     return new Promise<{ token: string; user: any }>((resolve) => {
       setTimeout(() => {
         const fakeUser = localStorage.getItem("user");
+
         resolve({ token, user: fakeUser ? JSON.parse(fakeUser) : null });
       }, 500);
     });
@@ -164,6 +249,11 @@ export const userSlice = createSlice({
       state.token = null;
       state.user = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
   },
   extraReducers: (builder) => {
@@ -193,10 +283,14 @@ export const userSlice = createSlice({
         state.token = null;
         state.user = null;
         localStorage.removeItem("token");
+      })
+      .addCase(logOut.fulfilled, (state) => {
+        state.token = null;
+        state.user = null;
       });
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, setUser } = userSlice.actions;
 
 export default userSlice.reducer;

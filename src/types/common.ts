@@ -9,6 +9,7 @@ export type user = {
   email: string;
   phone: string;
   address: string;
+  isVerified: boolean;
 };
 export type Alert = {
   action?: "cart" | "wishlist";
@@ -25,8 +26,8 @@ export type Category = {
 
 export type Brand = {
   id: string;
-  name: string;
-  url: string;
+  name?: string;
+  url?: string;
   description?: string;
 };
 
@@ -78,6 +79,14 @@ export type CartItem = {
   profit?: number;
   discount?: number;
   discountedPrice?: number;
+  selectedSize?: string;
+  selectedMaterial?: string;
+  selectedColor?: string;
+};
+
+export type OrderItem = CartItem & {
+  id: number;
+  orderId: string;
 };
 
 export type ProductCartItem = CartItem & {
@@ -91,14 +100,19 @@ export type Order = {
   id: string;
   orderNumber: number;
   timestamp: number;
-  user: {
-    name: string;
-    phone: string;
-    address: string;
-  };
-  cart: CartItem[];
+  userName: string;
+  userPhone: string;
+  userAddress: string;
+  paymentType: string;
+  orderType: string;
+  cardNumber?: string;
+  cardExpiry?: string;
+  cardCvv?: string;
+  cardHolder?: string;
+  cart: OrderItem[];
   totalPrice: number;
   totalWeight: number;
   totalDiscount: number;
   totalQuantity: number;
+  createdAt: string;
 };
