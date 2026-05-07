@@ -243,6 +243,178 @@
   gap: 16px;
 }
 
+.reviewSection {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.reviewTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.reviewSubtitle {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.reviewScore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background: #111827;
+  color: #fff;
+  font-weight: 700;
+}
+
+.reviewLoading {
+  margin: 0;
+  color: #475569;
+}
+
+.reviewList {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reviewItem {
+  padding: 20px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+}
+
+.reviewMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.reviewAuthor {
+  font-weight: 700;
+  color: #111827;
+}
+
+.reviewRatingValue {
+  color: #111827;
+  font-weight: 700;
+}
+
+.reviewComment {
+  margin: 0 0 10px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.reviewDate {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+}
+
+.reviewFormTitle {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.reviewInputs {
+  display: grid;
+  gap: 12px;
+}
+
+.reviewField,
+.reviewTextarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #111827;
+  font-size: 1rem;
+  outline: none;
+}
+
+.reviewField:focus,
+.reviewTextarea:focus {
+  border-color: #111827;
+  background: #fff;
+}
+
+.ratingRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ratingButton {
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  cursor: pointer;
+}
+
+.ratingActive {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
+
+.reviewError,
+.reviewSuccess {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.reviewError {
+  color: #b91c1c;
+}
+
+.reviewSuccess {
+  color: #166534;
+}
+
+.reviewSubmit {
+  width: fit-content;
+  padding: 14px 22px;
+  border-radius: 18px;
+  border: none;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
 .info-block {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

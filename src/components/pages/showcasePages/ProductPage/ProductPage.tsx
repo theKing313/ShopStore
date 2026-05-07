@@ -6,7 +6,7 @@ import {
 } from "../../../../constants/messages";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { wishListHandler } from "../../../../store/UserSlice";
-import { CartItem, Product } from "../../../../types/common";
+import { CartItem, Product, Review } from "../../../../types/common";
 import Section from "../../../layouts/showcaseLayouts/Section/Section";
 import SectionBody from "../../../layouts/showcaseLayouts/Section/SectionBody/SectionBody";
 import AddToCartBtn from "../../../showcase/AddToCartBtn/AddToCartBtn";
@@ -32,6 +32,13 @@ const ProductPage: React.FC<IProductPageProps> = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewError, setReviewError] = useState("");
+  const [reviewSuccess, setReviewSuccess] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   const sizeOptions = product?.sizes ?? [];
   const materialOptions = product?.materials ?? [];
@@ -46,6 +53,78 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     setSelectedMaterial(product.materials?.[0] ?? "");
     setSelectedColor(product.colors?.[0] ?? "");
   }, [product]);
+
+  useEffect(() => {
+    async function loadReviews() {
+      if (!productId) return;
+      setReviewsLoading(true);
+      setReviewError("");
+      try {
+        const response = await fetch(
+          `http://localhost:5044/api/reviews/${productId}`,
+        );
+        if (!response.ok) {
+          throw new Error("Не удалось загрузить отзывы");
+        }
+        const reviewsData: Review[] = await response.json();
+        setReviews(reviewsData);
+      } catch (error) {
+        setReviewError(
+          error instanceof Error ? error.message : "Ошибка загрузки отзывов",
+        );
+      } finally {
+        setReviewsLoading(false);
+      }
+    }
+
+    loadReviews();
+  }, [productId]);
+
+  const averageRating = useMemo(() => {
+    if (reviews.length === 0) return 0;
+    return (
+      reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+    );
+  }, [reviews]);
+
+  const handleSubmitReview = async () => {
+    setReviewError("");
+    setReviewSuccess("");
+
+    if (!reviewName.trim() || !reviewComment.trim()) {
+      setReviewError("Введите имя и текст отзыва");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5044/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId,
+          username: reviewName.trim(),
+          rating: reviewRating,
+          comment: reviewComment.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error?.message || "Не удалось отправить отзыв");
+      }
+
+      const createdReview: Review = await response.json();
+      setReviews((prev) => [createdReview, ...prev]);
+      setReviewName("");
+      setReviewRating(5);
+      setReviewComment("");
+      setReviewSuccess("Спасибо! Отзыв добавлен.");
+    } catch (error) {
+      setReviewError(
+        error instanceof Error ? error.message : "Ошибка отправки отзыва",
+      );
+    }
+  };
 
   const recommendation = useMemo(() => {
     if (selectedMaterial === "Хлопок") {
@@ -235,6 +314,110 @@ const ProductPage: React.FC<IProductPageProps> = () => {
 
                 <div className={classes.actions}>
                   <AddToCartBtn product={cartItem} />
+                </div>
+
+                <div className={classes.reviewSection}>
+                  <div className={classes.reviewHeader}>
+                    <div>
+                      <h2 className={classes.reviewTitle}>Отзывы</h2>
+                      <p className={classes.reviewSubtitle}>
+                        {reviews.length > 0
+                          ? `${reviews.length} отзыв${reviews.length === 1 ? "" : "а"}`
+                          : "Пока нет отзывов, вы можете оставить первый."}
+                      </p>
+                    </div>
+                    {reviews.length > 0 && (
+                      <div className={classes.reviewScore}>
+                        <span>{averageRating.toFixed(1)}</span>
+                        <span>★</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {reviewsLoading ? (
+                    <p className={classes.reviewLoading}>Загрузка отзывов...</p>
+                  ) : reviews.length === 0 ? (
+                    <p className={classes.reviewLoading}>
+                      Пока нет отзывов — будьте первым, кто расскажет о товаре.
+                    </p>
+                  ) : (
+                    <ul className={classes.reviewList}>
+                      {reviews.map((review) => (
+                        <li key={review.id} className={classes.reviewItem}>
+                          <div className={classes.reviewMeta}>
+                            <span className={classes.reviewAuthor}>
+                              {review.username}
+                            </span>
+                            <span className={classes.reviewRatingValue}>
+                              {review.rating} ★
+                            </span>
+                          </div>
+                          <p className={classes.reviewComment}>
+                            {review.comment}
+                          </p>
+                          <span className={classes.reviewDate}>
+                            {new Date(review.createdAt).toLocaleDateString(
+                              "ru-RU",
+                              {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              },
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className={classes.reviewForm}>
+                    <h3 className={classes.reviewFormTitle}>Оставить отзыв</h3>
+                    <div className={classes.reviewInputs}>
+                      <input
+                        className={classes.reviewField}
+                        type="text"
+                        placeholder="Ваше имя"
+                        value={reviewName}
+                        onChange={(event) => setReviewName(event.target.value)}
+                      />
+                      <div className={classes.ratingRow}>
+                        {[1, 2, 3, 4, 5].map((rating) => (
+                          <button
+                            key={rating}
+                            type="button"
+                            className={`${classes.ratingButton} ${
+                              reviewRating === rating
+                                ? classes.ratingActive
+                                : ""
+                            }`}
+                            onClick={() => setReviewRating(rating)}
+                          >
+                            {rating} ★
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <textarea
+                      className={classes.reviewTextarea}
+                      rows={4}
+                      placeholder="Ваш отзыв"
+                      value={reviewComment}
+                      onChange={(event) => setReviewComment(event.target.value)}
+                    />
+                    {reviewError && (
+                      <p className={classes.reviewError}>{reviewError}</p>
+                    )}
+                    {reviewSuccess && (
+                      <p className={classes.reviewSuccess}>{reviewSuccess}</p>
+                    )}
+                    <button
+                      type="button"
+                      className={classes.reviewSubmit}
+                      onClick={handleSubmitReview}
+                    >
+                      Отправить отзыв
+                    </button>
+                  </div>
                 </div>
 
                 <InfoBlock />

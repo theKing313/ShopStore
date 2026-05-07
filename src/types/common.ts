@@ -87,6 +87,15 @@ export type CartItem = {
   selectedColor?: string;
 };
 
+export type Review = {
+  id: number;
+  productId: Product["id"];
+  username: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
 export type OrderItem = CartItem & {
   id: number;
   orderId: string;
