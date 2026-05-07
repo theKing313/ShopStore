@@ -8,11 +8,10 @@ import classes from "./AuthPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { Link, useNavigate } from "react-router-dom";
-import { authUser, sendCode } from "../../../../store/AuthSlice";
+import { loginUser } from "../../../../store/AuthSlice";
 import { PATHS } from "../../../../constants/routes";
 
 const INIT_INPUT = {
-  name: "",
   email: "",
   password: "",
 };
@@ -21,7 +20,7 @@ const validator = (
   field: string,
   inputValue: string | { [key: string]: string },
 ): Record<string, string> | null => {
-  const validateFields = ["name", "email", "password"];
+  const validateFields = ["email", "password"];
 
   if (!validateFields.includes(field) || typeof inputValue !== "string") {
     return null;
@@ -53,7 +52,7 @@ const validator = (
   return null;
 };
 
-const AuthPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const isLoading = useSelector((state: RootState) => state.common.isLoading);
@@ -66,22 +65,22 @@ const AuthPage: React.FC = () => {
 
   async function handleSubmit() {
     const userData = {
-      username: input.name,
       email: input.email,
       password: input.password,
     };
-    dispatch(authUser(userData));
-    navigate(PATHS.codeVerification, { state: userData });
+    const result = await dispatch(loginUser(userData));
+    console.log("Login result:", JSON.stringify(result));
+    if (result) {
+      console.log("Login successful:", JSON.stringify(result));
+      navigate(PATHS.showcase);
+    }
   }
 
   const handleGoBack = () => {
     navigate(-1);
   };
 
-  const description = useMemo(
-    () => "Введите имя, email и пароль для регистрации.",
-    [],
-  );
+  const description = useMemo(() => "Введите email и пароль для входа.", []);
 
   return (
     <Section>
@@ -95,27 +94,16 @@ const AuthPage: React.FC = () => {
           >
             ← Назад
           </button>
-          <SectionHeader title={"Регистрация"} />
+          <SectionHeader title={"Вход"} />
           <p className={classes.authDescription}>{description}</p>
-          <Link to={PATHS.login} className={classes.authLink}>
-            Уже есть аккаунт? Войти
+          <Link to={PATHS.auth} className={classes.authLink}>
+            Нет аккаунта? Зарегистрироваться
           </Link>
           <Link to={PATHS.forgotPassword} className={classes.authLink}>
             Забыли пароль?
           </Link>
 
           <form className={classes.authForm} onSubmit={submit} noValidate>
-            <Input
-              label={"Имя"}
-              name={"name"}
-              type={"text"}
-              placeholder={"Введите имя"}
-              value={input.name}
-              onChange={handleChange}
-              errorText={errors.name}
-              required
-            />
-
             <Input
               label={"E-mail"}
               name={"email"}
@@ -140,7 +128,7 @@ const AuthPage: React.FC = () => {
 
             <div className={classes.authActions}>
               <Button mode={"primary"} type={"submit"} isLoading={isLoading}>
-                Отправить код
+                Войти
               </Button>
             </div>
           </form>
@@ -150,4 +138,4 @@ const AuthPage: React.FC = () => {
   );
 };
 
-export default AuthPage;
+export default LoginPage;

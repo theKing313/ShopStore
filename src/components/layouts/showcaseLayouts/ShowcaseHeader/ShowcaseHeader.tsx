@@ -61,7 +61,7 @@ const ShowcaseHeader: React.FC<IShowcaseHeaderProps> = () => {
             ) : (
               <Badge
                 icon={<AuthIcon width={24} height={24} />}
-                to={PATHS.auth}
+                to={PATHS.login}
                 count={0}
                 title="Войти"
               />

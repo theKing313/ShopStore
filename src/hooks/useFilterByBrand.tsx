@@ -62,12 +62,18 @@ const useFilterByBrand = (
           product.sizes.some((size) => selectedSizes.includes(size)));
 
       // 4. Проверка по материалам (если выбраны)
-      // Примечание: материал хранится в CartItem, если доступен в products
-      const matchesMaterial = selectedMaterials.length === 0; // TODO: добавить поле materials в Product
+      const matchesMaterial =
+        selectedMaterials.length === 0 ||
+        (product.materials &&
+          product.materials.some((material) =>
+            selectedMaterials.includes(material),
+          ));
 
       // 5. Проверка по цветам (если выбраны)
-      // Примечание: цвет хранится в CartItem, если доступен в products
-      const matchesColor = selectedColors.length === 0; // TODO: добавить поле colors в Product
+      const matchesColor =
+        selectedColors.length === 0 ||
+        (product.colors &&
+          product.colors.some((color) => selectedColors.includes(color)));
 
       return (
         matchesBrand &&

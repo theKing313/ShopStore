@@ -22,7 +22,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACL222901_19305248_2_v2_2x.jpg",
     "name": "Джинсы MOM STRAIGHT",
     "price": 10000,
-    "weight": 1.4
+    "weight": 1.4,
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий", "Чёрный"]
   },
   "-Nkfo05JsJNfzHDwub4s": {
     "brand": {
@@ -43,7 +46,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACL222501_19305244_2_v1_2x.jpg",
     "name": "Джинсы MOM FIT",
     "price": 9800,
-    "weight": 0.2
+    "weight": 0.2,
+    "sizes": ["XS", "S", "M", "L"],
+    "materials": ["Хлопок", "Полиэстер"],
+    "colors": ["Синий", "Чёрный"]
   },
   "-NkfoJsFedOT3J2S07K0": {
     "brand": {
@@ -64,7 +70,10 @@
     "image": "https://a.lmcdn.ru/img600x866/M/P/MP002XW0FFGI_17566088_2_v1_2x.jpg",
     "name": "Джинсы Lee Cooper",
     "price": 5000,
-    "weight": 1.3
+    "weight": 1.3,
+    "sizes": ["M", "L"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий"]
   },
   "-Nkfp4QHgH8r5KljW43p": {
     "brand": {
@@ -89,7 +98,10 @@
     "image": "https://a.lmcdn.ru/img600x866/M/P/MP002XW15YP8_17416798_1_v1_2x.jpg",
     "name": "Футболка Lee Cooper",
     "price": 2500,
-    "weight": 0.3
+    "weight": 0.3,
+    "sizes": ["XS", "S", "M", "L"],
+    "materials": ["Хлопок"],
+    "colors": ["Белый", "Красный"]
   },
   "-NkfpbVgBRNQyBn2kjSd": {
     "brand": {
@@ -114,7 +126,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACR364801_20150918_1_v1_2x.jpg",
     "name": "Футболка Lee Cooper",
     "price": 1500,
-    "weight": 0.3
+    "weight": 0.3,
+    "sizes": ["S", "M"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий"]
   },
   "-Nkfpu6JXgZYU5WpJXfD": {
     "brand": {
@@ -139,7 +154,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACT543201_20727299_1_v1_2x.jpg",
     "name": "Футболка Levi's",
     "price": 2500,
-    "weight": 1.2
+    "weight": 1.2,
+    "sizes": ["XS", "S"],
+    "materials": ["Полиэстер"],
+    "colors": ["Чёрный", "Серый"]
   },
   "-NkfqB7h3zHrVEJSP3Nk": {
     "brand": {
@@ -164,7 +182,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACU341801_20683479_1_v2_2x.jpg",
     "name": "Футболка Levi's",
     "price": 2500,
-    "weight": 0.4
+    "weight": 0.4,
+    "sizes": ["M", "L", "XL"],
+    "materials": ["Хлопок", "Полиэстер"],
+    "colors": ["Белый"]
   },
   "-NkfqTb3c5gtSAA34UhB": {
     "brand": {
@@ -185,7 +206,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLADB903401_21709020_1_v1_2x.jpg",
     "name": "Футболка Levi's",
     "price": 7000,
-    "weight": 0.5
+    "weight": 0.5,
+    "sizes": ["S", "M"],
+    "materials": ["Хлопок"],
+    "colors": ["Зелёный"]
   },
   "-NkfqmBwLrKu0kbhKi31": {
     "brand": {
@@ -210,7 +234,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACZ474201_21405120_1_v1_2x.jpg",
     "name": "Футболка Levi's",
     "price": 3500,
-    "weight": 0.2
+    "weight": 0.2,
+    "sizes": ["M", "L", "XL"],
+    "materials": ["Хлопок"],
+    "colors": ["Серый"]
   },
   "-Nkfr3V5RGb6V0AsmMLq": {
     "brand": {
@@ -231,7 +258,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLADB458401_21674394_1_v1_2x.jpg",
     "name": "Футболка Levi's",
     "price": 2835,
-    "weight": 0.6
+    "weight": 0.6,
+    "sizes": ["M", "L"],
+    "materials": ["Полиэстер"],
+    "colors": ["Чёрный"]
   },
   "-NkfrNalzpvdrblr9kNN": {
     "brand": {
@@ -252,7 +282,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACZ473001_21405082_2_v1_2x.jpg",
     "name": "Джинсы Levi's",
     "price": 15499,
-    "weight": 0.8
+    "weight": 0.8,
+    "sizes": ["M", "L", "XL"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий"]
   },
   "-NkfrnefFlCJ0u2R2Vv5": {
     "brand": {
@@ -277,7 +310,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACZ472001_21405052_2_v1_2x.jpg",
     "name": "Джинсы 501® LEVIS®ORIGINAL",
     "price": 17299,
-    "weight": 0.6
+    "weight": 0.6,
+    "sizes": ["M", "L", "XL"],
+    "materials": ["Хлопок"],
+    "colors": ["Чёрный", "Синий"]
   },
   "-NkfsIIFdxpbRmELqM06": {
     "brand": {
@@ -302,7 +338,10 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACU342801_20642479_2_v1_2x.jpg",
     "name": "Джинсы RIBCAGE STRAIGHT ANKLE",
     "price": 21990,
-    "weight": 0.2
+    "weight": 0.2,
+    "sizes": ["XS", "S"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий"]
   },
   "-NkfsZqx8Yx8EvjmEuv6": {
     "brand": {
@@ -323,7 +362,10 @@
     "image": "https://a.lmcdn.ru/img600x866/L/E/LE306EWFTE25_2624109_2_v2.jpg",
     "name": "Джинсы 711 SKINNY",
     "price": 8900,
-    "weight": 0.2
+    "weight": 0.2,
+    "sizes": ["XS", "S", "M"],
+    "materials": ["Хлопок"],
+    "colors": ["Синий"]
   },
   "-Nkfsxa_bz_EUYq94Hpm": {
     "brand": {
@@ -344,6 +386,9 @@
     "image": "https://a.lmcdn.ru/img600x866/R/T/RTLACR371801_20155929_2_v2_2x.jpg",
     "name": "Джинсы Lee Cooper",
     "price": 9200,
-    "weight": 0.5
+    "weight": 0.5,
+    "sizes": ["L", "XL"],
+    "materials": ["Хлопок", "Лён"],
+    "colors": ["Чёрный"]
   }
 }

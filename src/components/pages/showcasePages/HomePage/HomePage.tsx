@@ -1,13 +1,77 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../store/store";
+import { wishListHandler } from "../../../../store/UserSlice";
+import ProductCard from "../../../showcase/ProductCard/ProductCard";
+import Carousel from "../../../showcase/Carousel/Carousel";
 import { PATHS } from "../../../../constants/routes";
 import classes from "./HomePage.module.css";
 
 const HomePage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { products } = useSelector((state: RootState) => state.product);
+  const { wishlist } = useSelector((state: RootState) => state.user);
+  const discountProducts = useMemo(
+    () => products.filter((product) => product.discount),
+    [products],
+  );
+  const [discountIndex, setDiscountIndex] = useState(0);
+
+  const handleWishlist = (id: string) => {
+    const isWished = wishlist.includes(id);
+    dispatch(wishListHandler({ id, isWished }));
+  };
+
+  const heroSlides = useMemo(
+    () => [
+      {
+        id: "hero-1",
+        image:
+          "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
+        title: "Новая коллекция уже здесь",
+        description:
+          "Яркие образы, удобные базовые вещи и скидки для тех, кто выбирает стиль.",
+        link: PATHS.discounts,
+        button: "Посмотреть акции",
+        badge: "Тренд",
+      },
+      {
+        id: "hero-2",
+        image:
+          "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80",
+        title: "Зимние образы с выгодой",
+        description:
+          "Верхняя одежда, обувь и аксессуары — все, что нужно для холодного сезона.",
+        link: PATHS.discounts,
+        button: "Смотреть подборки",
+        badge: "Скидки",
+      },
+      {
+        id: "hero-3",
+        image:
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80",
+        title: "Лучшие предложения недели",
+        description:
+          "Ограниченные скидки и подборки топовых товаров для твоего гардероба.",
+        link: PATHS.discounts,
+        button: "В каталог",
+        badge: "Hot",
+      },
+    ],
+    [],
+  );
+
+  const maxDiscountIndex = Math.max(0, discountProducts.length - 3);
+  const nextDiscount = () =>
+    setDiscountIndex((prev) => Math.min(prev + 1, maxDiscountIndex));
+  const prevDiscount = () => setDiscountIndex((prev) => Math.max(prev - 1, 0));
+
   return (
     <div className={classes.page}>
       <section className={classes.hero}>
         <div className={classes.heroText}>
-          <p className={classes.intro}>Твой дипломный проект</p>
+          <p className={classes.intro}> дипломный проект</p>
           <h1 className={classes.title}>ShopStore — магазин в стиле TBOE</h1>
           <p className={classes.description}>
             Главная витрина проекта: акции, подборки и лучшие предложения со
@@ -39,23 +103,62 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className={classes.heroImage}>
-          <div className={classes.promoCard}>
-            <div className={classes.promoBadge}>ЛУЧШИЕ ЦЕНЫ</div>
-            <h2 className={classes.promoTitle}>
-              Джинсы, футболки и базовые вещи
-            </h2>
-            <p className={classes.promoText}>
-              Еженедельные подборки для города, прогулок и учебы. Стильный
-              минимализм и проверенное качество.
+          <Carousel
+            items={heroSlides}
+            autoPlay
+            interval={4500}
+            showDots
+            showArrows
+            variant="full"
+          />
+        </div>
+      </section>
+
+      <section className={classes.discountSection}>
+        <div className={classes.sectionHeader}>
+          <div>
+            <h2>Горячие товары со скидкой</h2>
+            <p>
+              Собрали лучшие предложения в одном месте — переходи и выбирай.
             </p>
-            <div className={classes.promoButtons}>
-              <Link to={PATHS.discounts} className={classes.cardButton}>
-                Посмотреть акции
-              </Link>
-              <Link to={PATHS.wishlist} className={classes.cardLink}>
-                В избранное
-              </Link>
-            </div>
+          </div>
+          <div className={classes.discountActions}>
+            <button
+              type="button"
+              onClick={prevDiscount}
+              className={classes.discountButton}
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={nextDiscount}
+              className={classes.discountButton}
+            >
+              →
+            </button>
+          </div>
+        </div>
+        <div className={classes.discountCarousel}>
+          <div
+            className={classes.discountTrack}
+            style={{ transform: `translateX(-${discountIndex * 33.33}%)` }}
+          >
+            {discountProducts.map((product) => (
+              <div key={product.id} className={classes.discountSlide}>
+                <ProductCard
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  image={product.image}
+                  discount={product.discount}
+                  brand={product.brand}
+                  category={product.category}
+                  onWishlistClick={() => handleWishlist(product.id)}
+                  isAddedToWishlist={wishlist.includes(product.id)}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>

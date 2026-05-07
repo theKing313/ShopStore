@@ -25,6 +25,7 @@ import OrdersPage from "./components/pages/adminPages/OrdersPage/OrdersPage";
 import CheckoutSuccessPage from "./components/pages/showcasePages/CheckoutSuccessPage/CheckoutSuccessPage";
 import NotFound from "./components/pages/showcasePages/NotFound/NotFound";
 import AuthPage from "./components/pages/showcasePages/AuthPage/AuthPage";
+import LoginPage from "./components/pages/showcasePages/AuthPage/LoginPage";
 import CodeVerificationPage from "./components/pages/showcasePages/CodeVerificationPage/CodeVerificationPage";
 import ForgotPasswordPage from "./components/pages/showcasePages/ForgotPasswordPage/ForgotPasswordPage";
 import ResetPasswordPage from "./components/pages/showcasePages/ResetPasswordPage/ResetPasswordPage";
@@ -88,6 +89,10 @@ const App = () => {
     {
       path: PATHS.auth,
       element: <AuthPage />,
+    },
+    {
+      path: PATHS.login,
+      element: <LoginPage />,
     },
     {
       path: PATHS.forgotPassword,

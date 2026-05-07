@@ -113,6 +113,61 @@
   justify-content: flex-end;
 }
 
+.discountSection {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 30px;
+  border-radius: 32px;
+  background: #f8fafc;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.08);
+}
+
+.discountActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.discountButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #111827;
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.discountButton:hover {
+  transform: scale(1.05);
+  background: #0f172a;
+}
+
+.discountCarousel {
+  overflow: hidden;
+}
+
+.discountTrack {
+  display: flex;
+  gap: 18px;
+  transition: transform 0.5s ease;
+  padding-bottom: 10px;
+}
+
+.discountSlide {
+  min-width: 32%;
+  max-width: 32%;
+}
+
+.discountSlide:last-child {
+  padding-right: 24px;
+}
+
 .promoCard {
   width: 100%;
   min-height: 460px;
@@ -327,22 +382,22 @@
 }
 
 .collectionCard:nth-child(1) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%232f2f2f' width='400' height='300'/%3E%3C/svg%3E")
+  background: url("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
 
 .collectionCard:nth-child(2) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%230f172a' width='400' height='300'/%3E%3C/svg%3E")
+  background: url("https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
 
 .collectionCard:nth-child(3) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%231d4ed8' width='400' height='300'/%3E%3C/svg%3E")
+  background: url("https://images.unsplash.com/photo-1503342452485-86f7b31d0ece?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
 
 .collectionCard:nth-child(4) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%239d174d' width='400' height='300'/%3E%3C/svg%3E")
+  background: url("https://images.unsplash.com/photo-1495121605193-b116b5b9c5d8?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
 
@@ -424,6 +479,11 @@
   .collectionGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .discountSlide {
+    min-width: 45%;
+    max-width: 45%;
+  }
 }
 
 @media (max-width: 720px) {
@@ -445,5 +505,19 @@
 
   .appSection {
     padding: 28px;
+  }
+
+  .discountSection {
+    padding: 24px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .discountSlide {
+    min-width: 88%;
+    max-width: 88%;
   }
 }

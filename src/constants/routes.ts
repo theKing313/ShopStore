@@ -9,6 +9,7 @@ export const PATHS = {
   cart: "/cart",
   success: "success",
   auth: "/auth",
+  login: "/login",
   codeVerification: "/code-verification",
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",

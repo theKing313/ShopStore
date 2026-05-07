@@ -65,6 +65,36 @@ export const authUser = createAsyncThunk<
   }
 });
 
+export const loginUser = createAsyncThunk<
+  { token: string; user: any },
+  { email: string; password: string }
+>("user/login", async (userData, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5044/api/login",
+      userData,
+    );
+    const result = response.data; // { token, user }
+    localStorage.setItem("token", result.token);
+    localStorage.setItem("user", JSON.stringify(result.user));
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: "Вход выполнен успешно!",
+      }),
+    );
+    return result;
+  } catch (error: any) {
+    dispatch(
+      showAlert({
+        type: AlertType.Error,
+        message: error.response?.data?.message || "Ошибка входа",
+      }),
+    );
+    return rejectWithValue(error || "Ошибка входа");
+  }
+});
+
 export const sendCode = createAsyncThunk<void, string>(
   "auth/sendCode",
   async (email, { dispatch, rejectWithValue }) => {
@@ -266,6 +296,14 @@ export const userSlice = createSlice({
       })
       .addCase(authUser.rejected, (state) => {
         state.token = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+      })
+      .addCase(loginUser.rejected, (state) => {
+        state.token = null;
+        state.user = null;
       })
       .addCase(verifyCode.fulfilled, (state, action) => {
         state.token = action.payload.token;

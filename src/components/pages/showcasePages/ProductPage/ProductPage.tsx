@@ -16,7 +16,7 @@ import FavoriteIcon from "../../../UI/icons/FavoriteIcon/FavoriteIcon";
 import NotFound from "../NotFound/NotFound";
 import InfoBlock from "./InfoBlock/InfoBlock";
 import classes from "./ProductPage.module.css";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface IProductPageProps {}
 
@@ -29,13 +29,23 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     (product) => product.id === productId,
   ) as Product;
 
-  const [selectedSize, setSelectedSize] = useState("M");
-  const [selectedMaterial, setSelectedMaterial] = useState("Хлопок");
-  const [selectedColor, setSelectedColor] = useState("Синий");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedMaterial, setSelectedMaterial] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
 
-  const sizeOptions = ["XS", "S", "M", "L", "XL"];
-  const materialOptions = ["Хлопок", "Смешанный", "Трикотаж"];
-  const colorOptions = ["Синий", "Белый", "Черный"];
+  const sizeOptions = product?.sizes ?? [];
+  const materialOptions = product?.materials ?? [];
+  const colorOptions = product?.colors ?? [];
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    setSelectedSize(product.sizes?.[0] ?? "");
+    setSelectedMaterial(product.materials?.[0] ?? "");
+    setSelectedColor(product.colors?.[0] ?? "");
+  }, [product]);
 
   const recommendation = useMemo(() => {
     if (selectedMaterial === "Хлопок") {
@@ -144,7 +154,10 @@ const ProductPage: React.FC<IProductPageProps> = () => {
                 <div className={classes.attributes}>
                   <div className={classes.attributeItem}>
                     <span className={classes.attributeLabel}>Состав</span>
-                    <span className={classes.attributeValue}>100% хлопок</span>
+                    <span className={classes.attributeValue}>
+                      {product.materials?.join(", ") ||
+                        "Информация отсутствует"}
+                    </span>
                   </div>
                   <div className={classes.attributeItem}>
                     <span className={classes.attributeLabel}>Вес</span>

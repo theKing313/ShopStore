@@ -43,6 +43,8 @@ export type Product = {
     url: string;
   };
   sizes?: string[];
+  materials?: string[];
+  colors?: string[];
   description: string;
   discount?: {
     percent: number;
