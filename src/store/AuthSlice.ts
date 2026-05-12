@@ -39,6 +39,7 @@ export const authUser = createAsyncThunk<
   { username: string; email: string; password: string }
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
+    console.log(API_URL);
     const response = await axios.post(`${API_URL}/api/registration`, userData);
     const token = response.data.token;
     localStorage.setItem("token", token);
