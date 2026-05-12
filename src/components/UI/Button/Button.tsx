@@ -1,18 +1,30 @@
-import Spinner from '../Spinner/Spinner';
-import classes from './Button.module.css';
+import Spinner from "../Spinner/Spinner";
+import classes from "./Button.module.css";
 
 interface IButtonProps {
   children?: string;
-  mode: 'primary' | 'secondary';
-  type?: 'button' | 'submit';
+  mode: "primary" | "secondary";
+  type?: "button" | "submit";
   isDisabled?: boolean;
   onClick?: () => void;
-  isLoading?: boolean
+  isLoading?: boolean;
 }
 
-const Button: React.FC<IButtonProps> = ({ type = 'button', children, onClick, mode, isDisabled = false, isLoading }) => {
+const Button: React.FC<IButtonProps> = ({
+  type = "button",
+  children,
+  onClick,
+  mode,
+  isDisabled = false,
+  isLoading,
+}) => {
   return (
-    <button disabled={isDisabled || isLoading} className={`${classes.button} ${classes[mode]}`} onClick={onClick} type={type}>
+    <button
+      disabled={isDisabled || isLoading}
+      className={`${classes.button} ${classes[mode]}`}
+      onClick={onClick}
+      type={type}
+    >
       {isLoading && <Spinner />}
       {children}
     </button>

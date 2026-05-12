@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
-import { authUser, checkAuth, setUser } from "../../../../store/AuthSlice";
 import { AlertType } from "../../../../types/common";
 import { showAlert } from "../../../../store/CommonSlice";
 import { PATHS } from "../../../../constants/routes";
 import { generatePath, Outlet, useNavigate } from "react-router-dom";
+import { loginAdmin, setAdmin } from "../../../../store/adminSlice";
 
 const ProtectedRoute: React.FC = () => {
   const admin_mock = {
@@ -15,32 +15,43 @@ const ProtectedRoute: React.FC = () => {
     address: "",
   };
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { admin } = useSelector((state: RootState) => state.admin);
 
   const [email, setEmail] = useState("admin@gmail.com");
   const [password, setPassword] = useState("1234");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedAdmin = localStorage.getItem("admin");
+    if (storedAdmin && !admin) {
+      dispatch(setAdmin(JSON.parse(storedAdmin)));
+    }
+  }, [admin, dispatch]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      if (email !== "admin@gmail.com" || password !== "1234") {
-        throw new Error("Неверные учетные данные");
-      } else {
-        // Если данные верные, устанавливаем фиктивного пользователя в Redux
+      const result = await dispatch(
+        loginAdmin({ name: "admin", email, password }),
+      ).unwrap();
+      console.log("Login result:", JSON.stringify(result));
+      if (result && result.user) {
         dispatch(
           showAlert({
             type: AlertType.Success,
             message: "Успешный вход в админку!",
           }),
         );
-        // Устанавливаем пользователя в state
-        dispatch(setUser(admin_mock));
       }
+
+      //   // Устанавливаем пользователя в state
+      dispatch(setAdmin(admin_mock));
+      // }
+
       navigate(`${PATHS.admin}/products`); // Перенаправляем на страницу админки после успешного входа
       //   await dispatch(authUser({ name: "", email, password })).unwrap();
       // Если успешно, user будет установлен в Redux
@@ -56,7 +67,7 @@ const ProtectedRoute: React.FC = () => {
       setIsLoading(false);
     }
   };
-  if (user) {
+  if (admin) {
     return <Outlet />; // Если пользователь есть, рендерим дочерние маршруты админки
   }
   return (

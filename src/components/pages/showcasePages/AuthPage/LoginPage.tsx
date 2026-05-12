@@ -68,12 +68,15 @@ const LoginPage: React.FC = () => {
       email: input.email,
       password: input.password,
     };
+
     const result = await dispatch(loginUser(userData));
-    console.log("Login result:", JSON.stringify(result));
-    if (result) {
-      console.log("Login successful:", JSON.stringify(result));
+
+    if (loginUser.fulfilled.match(result)) {
       navigate(PATHS.showcase);
+      return;
     }
+
+    console.warn("Login failed, stay on login page", result);
   }
 
   const handleGoBack = () => {

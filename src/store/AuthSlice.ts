@@ -45,7 +45,7 @@ export const authUser = createAsyncThunk<
       "http://localhost:5044/api/registration",
       userData,
     );
-    const token = response.data.token; // Предполагаем, что сервер возвращает { token: "..." }
+    const token = response.data.token;
     localStorage.setItem("token", token);
     dispatch(
       showAlert({
@@ -88,7 +88,8 @@ export const loginUser = createAsyncThunk<
     dispatch(
       showAlert({
         type: AlertType.Error,
-        message: error.response?.data?.message || "Ошибка входа",
+        // Выводим конкретное сообщение от сервера, если оно пришло, иначе стандартное
+        message: typeof error === "string" ? error : "Ошибка входа",
       }),
     );
     return rejectWithValue(error || "Ошибка входа");

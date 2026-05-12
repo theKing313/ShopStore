@@ -61,8 +61,8 @@ const CodeVerificationPage: React.FC = () => {
       password: userData.password,
     };
     const result = await dispatch(verifyCode(data));
-    console.log("Verification result:", JSON.stringify(result));
-    // navigate(PATHS.showcase);
+    // console.log("Verification result:", JSON.stringify(result));
+    navigate(PATHS.showcase);
   }
 
   const description = useMemo(
