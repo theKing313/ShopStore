@@ -40,6 +40,8 @@ export const authUser = createAsyncThunk<
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
     console.log(API_URL);
+    alert(API_URL);
+    alert(process.env.VITE_API_URL);
     const response = await axios.post(`${API_URL}/api/registration`, userData);
     const token = response.data.token;
     localStorage.setItem("token", token);
