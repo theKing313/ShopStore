@@ -25,8 +25,9 @@ const initialState: CommonState = {
     message: "",
   },
 };
+const BASE_URL =
+  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 export const fetchOrders = createAsyncThunk(
   "common/fetchOrders",
   async (_, { dispatch, rejectWithValue }) => {
