@@ -6,7 +6,8 @@ import { AlertType, CartItem, Product, user } from "../types/common";
 import { RootState } from "./store";
 import { showAlert } from "./CommonSlice";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 
 type WishList = Product["id"][];
 
@@ -41,7 +42,7 @@ export const authUser = createAsyncThunk<
   try {
     console.log(API_URL);
     alert(API_URL);
-    alert(process.env.VITE_API_URL);
+    alert(process.env.REACT_APP_API_URL);
     const response = await axios.post(`${API_URL}/api/registration`, userData);
     const token = response.data.token;
     localStorage.setItem("token", token);
