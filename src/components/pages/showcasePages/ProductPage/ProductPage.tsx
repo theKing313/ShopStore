@@ -18,6 +18,8 @@ import InfoBlock from "./InfoBlock/InfoBlock";
 import classes from "./ProductPage.module.css";
 import { useEffect, useMemo, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface IProductPageProps {}
 
 const ProductPage: React.FC<IProductPageProps> = () => {
@@ -60,9 +62,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
       setReviewsLoading(true);
       setReviewError("");
       try {
-        const response = await fetch(
-          `http://localhost:5044/api/reviews/${productId}`,
-        );
+        const response = await fetch(`${API_URL}/api/reviews/${productId}`);
         if (!response.ok) {
           throw new Error("Не удалось загрузить отзывы");
         }
@@ -97,7 +97,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5044/api/reviews", {
+      const response = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -6,6 +6,8 @@ import { RootState } from "./store";
 import { showAlert } from "./CommonSlice";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export type AdminState = {
   admin: any;
 };
@@ -19,7 +21,7 @@ export const loginAdmin = createAsyncThunk<
 >("admin/login", async (userData, { dispatch, rejectWithValue }) => {
   try {
     // const response = await axios.post(
-    //   "http://localhost:5044/api/login",
+    //   `${API_URL}/api/login`,
     //   userData,
     // );
     if (userData.email !== "admin@gmail.com" || userData.password !== "1234") {

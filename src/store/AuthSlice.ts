@@ -5,10 +5,8 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { AlertType, CartItem, Product, user } from "../types/common";
 import { RootState } from "./store";
 import { showAlert } from "./CommonSlice";
-import {
-  ADDED_TO_WISHLIST,
-  REMOVED_FROM_WISHLIST,
-} from "../constants/messages";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 type WishList = Product["id"][];
 
@@ -41,10 +39,7 @@ export const authUser = createAsyncThunk<
   { username: string; email: string; password: string }
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5044/api/registration",
-      userData,
-    );
+    const response = await axios.post(`${API_URL}/api/registration`, userData);
     const token = response.data.token;
     localStorage.setItem("token", token);
     dispatch(
@@ -70,10 +65,7 @@ export const loginUser = createAsyncThunk<
   { email: string; password: string }
 >("user/login", async (userData, { dispatch, rejectWithValue }) => {
   try {
-    const response = await axios.post(
-      "http://localhost:5044/api/login",
-      userData,
-    );
+    const response = await axios.post(`${API_URL}/api/login`, userData);
     const result = response.data; // { token, user }
     localStorage.setItem("token", result.token);
     localStorage.setItem("user", JSON.stringify(result.user));
@@ -100,7 +92,7 @@ export const sendCode = createAsyncThunk<void, string>(
   "auth/sendCode",
   async (email, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:5044/api/send-code", {
+      const response = await axios.post(`${API_URL}/api/send-code`, {
         email,
       });
       dispatch(
@@ -129,7 +121,7 @@ export const sendResetCode = createAsyncThunk<void, string>(
   async (email, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5044/api/password-reset/request",
+        `${API_URL}/api/password-reset/request`,
         { email },
       );
       dispatch(
@@ -163,7 +155,7 @@ export const resetPassword = createAsyncThunk<
 >("auth/resetPassword", async (data, { dispatch, rejectWithValue }) => {
   try {
     const response = await axios.post(
-      "http://localhost:5044/api/password-reset/confirm",
+      `${API_URL}/api/password-reset/confirm`,
       data,
     );
     dispatch(
@@ -196,10 +188,7 @@ export const verifyCode = createAsyncThunk<
 >("auth/verifyCode", async (data, { dispatch, rejectWithValue }) => {
   alert(JSON.stringify(data));
   try {
-    const response = await axios.post(
-      "http://localhost:5044/api/verify-code",
-      data,
-    );
+    const response = await axios.post(`${API_URL}/api/verify-code`, data);
     const result = response.data; // { token, user, message }
     localStorage.setItem("token", JSON.stringify(result.token));
     localStorage.setItem("user", JSON.stringify(result.user));
@@ -261,7 +250,7 @@ export const checkAuth = createAsyncThunk<{ token: string; user: any }, void>(
 
     // Для реального бэкенда:
     // try {
-    //   const response = await axios.get("http://localhost:5044/api/verify-token", {
+    //   const response = await axios.get(`${API_URL}/api/verify-token`, {
     //     headers: { Authorization: `Bearer ${token}` },
     //   });
     //   return { token, user: response.data.user };

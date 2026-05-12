@@ -26,7 +26,7 @@ const initialState: CommonState = {
   },
 };
 
-const BASE_URL = "http://localhost:5044/api";
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 export const fetchOrders = createAsyncThunk(
   "common/fetchOrders",
   async (_, { dispatch, rejectWithValue }) => {
@@ -44,6 +44,7 @@ export const fetchOrders = createAsyncThunk(
     //   );
     //   return rejectWithValue(FETCH_ORDERS_ERROR_MESSAGE);
     // }
+
     const response = await fetch(`${BASE_URL}/orders`);
     if (!response.ok) {
       dispatch(
