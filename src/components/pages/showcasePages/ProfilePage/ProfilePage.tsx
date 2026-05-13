@@ -44,6 +44,7 @@ const ProfilePage = () => {
   const handleLogOut = () => {
     dispatch(logOut());
   };
+  console.log("Orders in ProfilePage:", orders);
   console.log("Current user in ProfilePage:", user);
   if (!user) {
     return (
