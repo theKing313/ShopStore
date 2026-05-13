@@ -302,6 +302,92 @@ input:checked + .slider:before {
   color: #475569;
 }
 
+.orders {
+  padding: 28px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+}
+
+.ordersTitle {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ordersText {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.orderCard {
+  padding: 20px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.orderNumber {
+  font-weight: 700;
+  color: #111827;
+}
+
+.orderDate {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.orderDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderStatus,
+.orderTotal {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.orderItems {
+  margin-top: 12px;
+}
+
+.orderItems h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.orderItems ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.orderItems li {
+  margin-bottom: 4px;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 1040px) {
   .page {
     grid-template-columns: 1fr;
@@ -327,5 +413,22 @@ input:checked + .slider:before {
   .switchRow {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .orders {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .orderItems ul {
+    padding-left: 16px;
   }
 }

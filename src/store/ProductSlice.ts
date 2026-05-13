@@ -61,38 +61,44 @@ export const fetchProducts = createAsyncThunk<
 >("product/fetchProducts", async (_, { getState, dispatch }) => {
   // Упрощенная версия: всегда используем локальные данные
   await Promise.all([dispatch(fetchBrands()), dispatch(fetchCategories())]);
+  if (localStorage.getItem("products")) {
+    const productsFromStorage = JSON.parse(
+      localStorage.getItem("products") || "[]",
+    ) as Product[];
+    return productsFromStorage;
+  } else {
+    let products: Product[] = handleObj(MOCKED_PRODUCTS);
+    localStorage.setItem("products", JSON.stringify(products));
+    const {
+      brand: { brands },
+      category: { categories },
+    } = getState();
 
-  let products: Product[] = handleObj(MOCKED_PRODUCTS);
+    const productsWithUpdatedBrandsAndCategories = products.map((product) => {
+      const category = categories.find(
+        (category) => category.id === product.category.id,
+      );
+      const brand = brands.find((brand) => brand.id === product.brand.id);
 
-  const {
-    brand: { brands },
-    category: { categories },
-  } = getState();
+      if (!category && !brand) {
+        return product;
+      }
 
-  const productsWithUpdatedBrandsAndCategories = products.map((product) => {
-    const category = categories.find(
-      (category) => category.id === product.category.id,
-    );
-    const brand = brands.find((brand) => brand.id === product.brand.id);
+      return {
+        ...product,
+        category: {
+          ...category,
+          name: category && category.name,
+        },
+        brand: {
+          ...brand,
+          name: brand && brand.name,
+        },
+      };
+    }) as Product[];
 
-    if (!category && !brand) {
-      return product;
-    }
-
-    return {
-      ...product,
-      category: {
-        ...category,
-        name: category && category.name,
-      },
-      brand: {
-        ...brand,
-        name: brand && brand.name,
-      },
-    };
-  }) as Product[];
-
-  return productsWithUpdatedBrandsAndCategories;
+    return productsWithUpdatedBrandsAndCategories;
+  }
 });
 
 export const createProduct = createAsyncThunk(
@@ -187,6 +193,7 @@ export const productSlice = createSlice({
       );
       if (index < 0) return;
       state.products[index] = payload;
+      localStorage.setItem("products", JSON.stringify(state.products));
       state.isLoading = false;
     });
 

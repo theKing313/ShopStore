@@ -26,7 +26,9 @@ import Placeholder from "../../../UI/Placeholder/Placeholder";
 import classes from "./CartPage.module.css";
 
 const INIT_INPUT = {
-  name: "",
+  name: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string).username || ""
+    : "",
   phone: "",
   address: "",
   paymentType: "",
