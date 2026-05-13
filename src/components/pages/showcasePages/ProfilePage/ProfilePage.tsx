@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from "../../../../store/store";
 import { PATHS } from "../../../../constants/routes";
 import classes from "./ProfilePage.module.css";
 import { logOut } from "../../../../store/AuthSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchOrders } from "../../../../store/CommonSlice";
 
 const ProfilePage = () => {
@@ -39,13 +39,14 @@ const ProfilePage = () => {
       alert(`❌ Укажите сумму от 1 до ${userBonuses} бонусов`);
     }
   };
+  const user = useSelector((state: RootState) => state.auth.user);
+
   const dispatch = useDispatch<AppDispatch>();
-  useState(() => {
+  useEffect(() => {
     if (user) {
       dispatch(fetchOrders());
     }
-  });
-  const user = useSelector((state: RootState) => state.auth.user);
+  }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
 
