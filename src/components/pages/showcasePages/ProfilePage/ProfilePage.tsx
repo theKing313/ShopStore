@@ -8,6 +8,10 @@ import { useState } from "react";
 
 const ProfilePage = () => {
   const [profileState, setProfileState] = useState("PROFILE");
+  const [bonusesToSpend, setBonusesToSpend] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [userBonuses, setUserBonuses] = useState(50);
+
   const profileLists = (state: any, action: any): any => {
     switch (action.type) {
       case "PROFILE":
@@ -20,6 +24,18 @@ const ProfilePage = () => {
       // return { ...state, isLoading: true, error: null };
       default:
         return state;
+    }
+  };
+
+  const handleSpendBonuses = () => {
+    const amount = parseInt(bonusesToSpend);
+    if (amount > 0 && amount <= userBonuses) {
+      setAppliedDiscount(amount);
+      setUserBonuses(userBonuses - amount);
+      setBonusesToSpend("");
+      alert(`✅ Применена скидка ${amount}₽ за счёт бонусов!`);
+    } else {
+      alert(`❌ Укажите сумму от 1 до ${userBonuses} бонусов`);
     }
   };
   const user = useSelector((state: RootState) => state.auth.user);
@@ -81,16 +97,50 @@ const ProfilePage = () => {
         {user.isVerified ? (
           <div className={classes.bonusCard}>
             <span className={classes.bonusLabel}>Бонусы</span>
-            <strong className={classes.bonusValue}>50 Т</strong>
+            <strong className={classes.bonusValue}>{userBonuses} Т</strong>
             <p className={classes.bonusText}>
               Спасибо за подтверждение email! Вы можете тратить бонусы в
               магазине.
             </p>
+            <div style={{ marginTop: "12px" }}>
+              <input
+                type="number"
+                min="1"
+                max={userBonuses}
+                value={bonusesToSpend}
+                onChange={(e) => setBonusesToSpend(e.target.value)}
+                placeholder="Сумма"
+                style={{
+                  width: "100%",
+                  padding: "6px",
+                  marginBottom: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ddd",
+                  fontSize: "12px",
+                }}
+              />
+              <button
+                onClick={handleSpendBonuses}
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  background: "#2ecc71",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                Потратить
+              </button>
+            </div>
           </div>
         ) : (
           <div className={classes.bonusCard}>
             <span className={classes.bonusLabel}>Бонусы</span>
-            <strong className={classes.bonusValue}>50 Т</strong>
+            <strong className={classes.bonusValue}>{userBonuses} Т</strong>
 
             <p className={classes.bonusText}>
               Подтвердите email, чтобы тратить бонусы в магазине.
@@ -106,6 +156,23 @@ const ProfilePage = () => {
               <h1 className={classes.title}>Профиль</h1>
               <span className={classes.status}>Активный</span>
             </div>
+
+            {appliedDiscount > 0 && (
+              <div
+                style={{
+                  background: "#d4edda",
+                  border: "1px solid #28a745",
+                  color: "#155724",
+                  padding: "12px 16px",
+                  borderRadius: "8px",
+                  marginBottom: "20px",
+                  fontWeight: "500",
+                }}
+              >
+                ✅ Скидка {appliedDiscount}₽ применена! Используйте её при
+                оплате.
+              </div>
+            )}
 
             <div className={classes.profileGrid}>
               <section className={classes.profileCard}>

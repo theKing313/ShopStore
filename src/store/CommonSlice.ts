@@ -46,7 +46,7 @@ export const fetchOrders = createAsyncThunk(
     //   return rejectWithValue(FETCH_ORDERS_ERROR_MESSAGE);
     // }
 
-    const response = await fetch(`${BASE_URL}/orders`);
+    const response = await fetch(`${BASE_URL}/api/orders`);
     if (!response.ok) {
       dispatch(
         showAlert({
@@ -70,7 +70,7 @@ export const createOrder = createAsyncThunk(
   ) => {
     try {
       console.log("order------------------------", order);
-      const response = await fetch(`${BASE_URL}/orders`, {
+      const response = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
