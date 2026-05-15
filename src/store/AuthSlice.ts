@@ -41,8 +41,8 @@ export const authUser = createAsyncThunk<
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
     console.log(API_URL);
-    alert(API_URL);
-    alert(process.env.REACT_APP_API_URL);
+    // alert(API_URL);
+    // alert(process.env.REACT_APP_API_URL);
     const response = await axios.post(`${API_URL}/api/registration`, userData);
     const token = response.data.token;
     localStorage.setItem("token", token);
@@ -96,6 +96,8 @@ export const sendCode = createAsyncThunk<void, string>(
   "auth/sendCode",
   async (email, { dispatch, rejectWithValue }) => {
     try {
+      console.log("Sending code to email:", email);
+      console.log("API_URL:", API_URL);
       const response = await axios.post(`${API_URL}/api/send-code`, {
         email,
       });
@@ -120,34 +122,31 @@ export const sendCode = createAsyncThunk<void, string>(
   },
 );
 
-export const sendResetCode = createAsyncThunk<void, string>(
+export const sendResetCode = createAsyncThunk<string, string>(
   "auth/sendResetCode",
   async (email, { dispatch, rejectWithValue }) => {
     try {
+      console.log("Sending reset code to email:", email);
+      console.log("API_URL:", API_URL);
       const response = await axios.post(
         `${API_URL}/api/password-reset/request`,
         { email },
       );
-      dispatch(
-        showAlert({
-          type: AlertType.Success,
-          message: response.data.message || "Код для сброса пароля отправлен",
-        }),
-      );
+      return response.data.message || "Код для сброса пароля отправлен";
     } catch (error: any) {
       dispatch(
         showAlert({
           type: AlertType.Error,
           message:
             error.response?.data?.message ||
-            JSON.stringify(error.response?.data) ||
-            "Ошибка отправки кода для сброса пароля",
+            JSON.stringify(error.response) ||
+            `Ошибка отправки кода для сброса пароля ${error}`,
         }),
       );
       return rejectWithValue(
         error.response?.data?.message ||
-          JSON.stringify(error.response?.data) ||
-          "Ошибка отправки кода для сброса пароля",
+          JSON.stringify(error.response) ||
+          `Ошибка отправки кода для сброса пароля ${error}`,
       );
     }
   },

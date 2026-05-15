@@ -9,6 +9,8 @@ import classes from "../AuthPage/AuthPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { sendResetCode } from "../../../../store/AuthSlice";
+import { showAlert } from "../../../../store/CommonSlice";
+import { AlertType } from "../../../../types/common";
 import { PATHS } from "../../../../constants/routes";
 
 const INIT_INPUT = {
@@ -54,9 +56,15 @@ const ForgotPasswordPage: React.FC = () => {
 
   async function handleSubmit() {
     const result = await dispatch(sendResetCode(input.email));
-
+    console.log("Result of sendResetCode:", result);
     if (result.type === "auth/sendResetCode/fulfilled") {
-      navigate(PATHS.resetPassword, { state: { email: input.email } });
+      dispatch(
+        showAlert({
+          type: AlertType.Success,
+          message: `Пароль новый отправлен на вашу почту ${input.email}!`,
+        }),
+      );
+      navigate(PATHS.auth);
     }
   }
 
@@ -88,7 +96,7 @@ const ForgotPasswordPage: React.FC = () => {
             />
             <div className={classes.authActions}>
               <Button mode="primary" type="submit" isLoading={isLoading}>
-                Получить код
+                Отправить на почту
               </Button>
             </div>
           </form>
