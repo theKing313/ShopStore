@@ -71,7 +71,7 @@ export const loginUser = createAsyncThunk<
   try {
     const response = await axios.post(`${API_URL}/api/login`, userData);
     const result = response.data; // { token, user }
-    localStorage.setItem("token", result.token);
+    localStorage.setItem("token", JSON.stringify(result.token.accessToken));
     localStorage.setItem("user", JSON.stringify(result.user));
     dispatch(
       showAlert({
@@ -193,7 +193,7 @@ export const verifyCode = createAsyncThunk<
   try {
     const response = await axios.post(`${API_URL}/api/verify-code`, data);
     const result = response.data; // { token, user, message }
-    localStorage.setItem("token", JSON.stringify(result.token));
+    localStorage.setItem("token", JSON.stringify(result.token.accessToken));
     localStorage.setItem("user", JSON.stringify(result.user));
     dispatch(
       showAlert({
