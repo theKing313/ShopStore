@@ -19,7 +19,7 @@ import classes from "./ProductPage.module.css";
 import { useEffect, useMemo, useState } from "react";
 
 const API_URL =
-  import.meta.env.VITE_API_URL ||
+  process.env.REACT_APP_API_URL ||
   import.meta.env.REACT_APP_API_URL ||
   "http://localhost:5044";
 
