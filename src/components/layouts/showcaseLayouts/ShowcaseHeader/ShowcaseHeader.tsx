@@ -9,6 +9,7 @@ import { RootState } from "../../../../store/store";
 import Menu from "../../../showcase/Menu/Menu";
 import { Link } from "react-router-dom";
 import AuthIcon from "../../../UI/icons/AuthIcon/AuthIcon";
+import { useState, useEffect } from "react";
 
 interface IShowcaseHeaderProps {}
 
@@ -22,6 +23,35 @@ const ShowcaseHeader: React.FC<IShowcaseHeaderProps> = () => {
     0,
   );
   const user = useSelector((state: RootState) => state.auth.user);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isMenuOpen) {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.body.style.overflow = "unset";
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isMenuOpen]);
 
   return (
     <header className={classes.header}>
@@ -67,6 +97,80 @@ const ShowcaseHeader: React.FC<IShowcaseHeaderProps> = () => {
               />
             )}
           </div>
+        </div>
+
+        {/* Бургер-кнопка для мобильных */}
+        <button
+          className={`${classes.burger} ${isMenuOpen ? classes.active : ""}`}
+          onClick={toggleMenu}
+          aria-label="Открыть меню"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      {/* Мобильное меню */}
+      <div
+        className={`${classes.mobileMenu} ${isMenuOpen ? classes.open : ""}`}
+        onClick={closeMenu}
+      >
+        <div
+          className={classes.mobileMenuContent}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={classes.mobileMenuHeader}>
+            <div className={classes.logo}>ShopStore</div>
+          </div>
+
+          <nav className={classes.mobileNav}>
+            <Link
+              to={PATHS.showcase}
+              className={classes.mobileNavLink}
+              onClick={closeMenu}
+            >
+              Главная
+            </Link>
+            <Link
+              to={PATHS.discounts}
+              className={classes.mobileNavLink}
+              onClick={closeMenu}
+            >
+              Акции
+            </Link>
+            <Link
+              to={PATHS.wishlist}
+              className={classes.mobileNavLink}
+              onClick={closeMenu}
+            >
+              Избранное ({wishlist?.length || 0})
+            </Link>
+            <Link
+              to={PATHS.cart}
+              className={classes.mobileNavLink}
+              onClick={closeMenu}
+            >
+              Корзина ({totalProductsQuantityInCart})
+            </Link>
+            {user ? (
+              <Link
+                to={PATHS.profile}
+                className={classes.mobileNavLink}
+                onClick={closeMenu}
+              >
+                Профиль ({user.username})
+              </Link>
+            ) : (
+              <Link
+                to={PATHS.login}
+                className={classes.mobileNavLink}
+                onClick={closeMenu}
+              >
+                Войти
+              </Link>
+            )}
+          </nav>
         </div>
       </div>
     </header>

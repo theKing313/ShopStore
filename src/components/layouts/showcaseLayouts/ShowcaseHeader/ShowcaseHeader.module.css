@@ -130,19 +130,19 @@
   }
 
   .badge-wrapper {
-    gap: 12px;
+    display: none;
+  }
+
+  .actions-wrapper {
+    display: none;
   }
 
   .userLink {
-    padding: 8px 10px;
+    display: none;
   }
 
-  .userLabel {
-    font-size: 10px;
-  }
-
-  .userName {
-    font-size: 13px;
+  .burger {
+    display: flex;
   }
 }
 
@@ -166,7 +166,19 @@
   }
 
   .badge-wrapper {
-    gap: 16px;
+    display: none;
+  }
+
+  .actions-wrapper {
+    display: none;
+  }
+
+  .userLink {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
   }
 }
 
@@ -187,4 +199,117 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  .burger {
+    display: none;
+  }
+}
+
+/* Бургер-кнопка - скрыта по умолчанию */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.burger span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #333;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Мобильное меню */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobileMenu.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileMenuContent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.mobileMenu.open .mobileMenuContent {
+  transform: translateX(0);
+}
+
+.mobileMenuHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.mobileMenuHeader .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.mobileNav {
+  padding: 20px;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 12px 0;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+  transition: color 0.2s ease;
+}
+
+.mobileNavLink:hover {
+  color: #5ec343;
+}
+
+.mobileNavLink:last-child {
+  border-bottom: none;
 }

@@ -486,6 +486,385 @@
   }
 }
 
+/* Таблет (768px - 1100px) */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .page {
+    padding: 28px 20px 64px;
+    gap: 40px;
+  }
+
+  .title {
+    font-size: clamp(2rem, 3vw, 3.5rem);
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .heroStats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .statItem {
+    padding: 14px 16px;
+  }
+
+  .collectionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .collectionCard {
+    min-height: 220px;
+    padding: 18px;
+  }
+
+  .discountSection {
+    padding: 24px;
+  }
+
+  .discountSlide {
+    min-width: 48%;
+    max-width: 48%;
+  }
+
+  .appSection {
+    padding: 32px;
+    gap: 24px;
+  }
+}
+
+/* Мобайл (480px - 768px) */
+@media (max-width: 767px) and (min-width: 481px) {
+  .page {
+    padding: 20px 14px 48px;
+    gap: 32px;
+  }
+
+  .hero {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .description {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .actions {
+    gap: 12px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .statItem {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .statItem strong {
+    font-size: 1.1rem;
+  }
+
+  .discountSection {
+    padding: 20px;
+    gap: 18px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.5rem;
+  }
+
+  .discountActions {
+    gap: 10px;
+  }
+
+  .discountButton {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .discountSlide {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .cardsSection {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .cardLarge {
+    min-height: 280px;
+    padding: 28px;
+  }
+
+  .cardLarge h3 {
+    font-size: 1.5rem;
+  }
+
+  .smallCard {
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .collectionGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .collectionCard {
+    min-height: 200px;
+    padding: 16px;
+  }
+
+  .collectionCard strong {
+    font-size: 1.2rem;
+  }
+
+  .appSection {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .appInfo h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .appInfo p {
+    font-size: 14px;
+  }
+
+  .appBadge {
+    padding: 12px 18px;
+    font-size: 12px;
+  }
+
+  .appGraphic {
+    min-height: 280px;
+  }
+}
+
+/* Мобайл (до 480px) */
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px 40px;
+    gap: 24px;
+  }
+
+  .hero {
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .intro {
+    font-size: 11px;
+    letter-spacing: 1.4px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 12px 20px;
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .heroStats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .statItem {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .statItem strong {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+
+  .statItem span {
+    font-size: 0.85rem;
+  }
+
+  .heroImage {
+    display: none;
+  }
+
+  .discountSection {
+    padding: 16px;
+    gap: 14px;
+    border-radius: 20px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+  }
+
+  .sectionHeader p {
+    font-size: 13px;
+  }
+
+  .discountActions {
+    gap: 8px;
+  }
+
+  .discountButton {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .discountSlide {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .cardsSection {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cardLarge {
+    min-height: 240px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .cardLarge p {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .cardLarge h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .cardLarge small,
+  .cardLarge p:last-child {
+    font-size: 13px;
+  }
+
+  .smallCard {
+    padding: 16px;
+    gap: 10px;
+    border-radius: 16px;
+  }
+
+  .smallCard span {
+    font-size: 11px;
+  }
+
+  .smallCard h4 {
+    font-size: 1.1rem;
+  }
+
+  .smallCard p {
+    font-size: 13px;
+  }
+
+  .collectionGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .collectionCard {
+    min-height: 180px;
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .collectionCard p {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .collectionCard strong {
+    font-size: 1rem;
+  }
+
+  .appSection {
+    padding: 20px;
+    gap: 16px;
+    border-radius: 20px;
+  }
+
+  .appInfo {
+    gap: 14px;
+  }
+
+  .appInfo h2 {
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+  }
+
+  .appInfo p {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .appActions {
+    gap: 10px;
+  }
+
+  .appBadge {
+    padding: 10px 16px;
+    font-size: 11px;
+    border-radius: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .appGraphic {
+    min-height: 240px;
+    border-radius: 20px;
+    display: none;
+  }
+}
+
 @media (max-width: 720px) {
   .page {
     padding: 24px 16px 56px;

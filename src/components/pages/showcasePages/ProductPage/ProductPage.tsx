@@ -18,7 +18,10 @@ import InfoBlock from "./InfoBlock/InfoBlock";
 import classes from "./ProductPage.module.css";
 import { useEffect, useMemo, useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.REACT_APP_API_URL ||
+  "http://localhost:5044";
 
 interface IProductPageProps {}
 
@@ -62,6 +65,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
       setReviewsLoading(true);
       setReviewError("");
       try {
+        console.log("Загрузка отзывов для продукта ID:", productId);
         const response = await fetch(`${API_URL}/api/reviews/${productId}`);
         if (!response.ok) {
           throw new Error("Не удалось загрузить отзывы");
@@ -69,8 +73,11 @@ const ProductPage: React.FC<IProductPageProps> = () => {
         const reviewsData: Review[] = await response.json();
         setReviews(reviewsData);
       } catch (error) {
+        console.error("Ошибка при загрузке отзывов:", error);
         setReviewError(
-          error instanceof Error ? error.message : "Ошибка загрузки отзывов",
+          error instanceof Error
+            ? "Ошибка загрузки отзывов"
+            : "Неизвестная ошибка",
         );
       } finally {
         setReviewsLoading(false);
@@ -109,8 +116,18 @@ const ProductPage: React.FC<IProductPageProps> = () => {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error?.message || "Не удалось отправить отзыв");
+        const contentType = response.headers.get("content-type") || "";
+        let errorMessage = "Не удалось отправить отзыв";
+
+        if (contentType.includes("application/json")) {
+          const errorData = await response.json();
+          errorMessage = errorData?.message || errorMessage;
+        } else {
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        }
+
+        throw new Error(errorMessage);
       }
 
       const createdReview: Review = await response.json();
@@ -337,9 +354,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
                   {reviewsLoading ? (
                     <p className={classes.reviewLoading}>Загрузка отзывов...</p>
                   ) : reviews.length === 0 ? (
-                    <p className={classes.reviewLoading}>
-                      Пока нет отзывов — будьте первым, кто расскажет о товаре.
-                    </p>
+                    <p className={classes.reviewLoading}></p>
                   ) : (
                     <ul className={classes.reviewList}>
                       {reviews.map((review) => (
