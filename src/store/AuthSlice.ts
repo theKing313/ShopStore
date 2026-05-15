@@ -71,6 +71,7 @@ export const loginUser = createAsyncThunk<
   try {
     const response = await axios.post(`${API_URL}/api/login`, userData);
     const result = response.data; // { token, user }
+    console.log(JSON.stringify(result));
     localStorage.setItem("token", JSON.stringify(result.token.accessToken));
     localStorage.setItem("user", JSON.stringify(result.user));
     dispatch(
