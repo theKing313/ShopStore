@@ -51,8 +51,9 @@ const initialState: ProductState = {
     message: "",
   },
 };
-
-// const BASE_URL = "https://e-commerce-65446-default-rtdb.firebaseio.com";
+// const BASE_URL =
+// process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
+const BASE_URL = "http://localhost:5044";
 
 export const fetchProducts = createAsyncThunk<
   Product[],
@@ -67,8 +68,16 @@ export const fetchProducts = createAsyncThunk<
     ) as Product[];
     return productsFromStorage;
   } else {
-    let products: Product[] = handleObj(MOCKED_PRODUCTS);
-    localStorage.setItem("products", JSON.stringify(products));
+    // let products: Product[] = handleObj(MOCKED_PRODUCTS);
+    // localStorage.setItem("products", JSON.stringify(products));
+    console.log("Fetching products from API...", BASE_URL);
+    const response = await fetch(`${BASE_URL}/api/products`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const products: Product[] = await response.json();
     const {
       brand: { brands },
       category: { categories },
@@ -104,10 +113,63 @@ export const fetchProducts = createAsyncThunk<
 export const createProduct = createAsyncThunk(
   "product/createProduct",
   async (product: Partial<Product>, { dispatch }) => {
-    // Упрощенная версия: генерируем id и возвращаем
-    const id = Date.now().toString(); // Простой id
-    const newProduct = { id, ...product } as Product;
+    const response = await fetch(`${BASE_URL}/api/products`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(product),
+    });
+    console.log("Creating product...", product);
+    if (!response.ok) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: CREATE_PRODUCT_ERROR_MESSAGE,
+        }),
+      );
+      // throw new Error(CREATE_PRODUCT_ERROR_MESSAGE);
+    }
+
+    const newProduct: Product = await response.json();
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: "Товар успешно создан",
+      }),
+    );
     return newProduct;
+  },
+);
+export const deleteProductById = createAsyncThunk(
+  "product/deleteProductById",
+  async (id: Product["id"], { dispatch }) => {
+    const response = await fetch(`${BASE_URL}/api/products/${id}`, {
+      method: "DELETE",
+      body: JSON.stringify({ id }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    console.log("Response ", response);
+    if (!response.ok) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: DELETE_PRODUCT_ERROR_MESSAGE,
+        }),
+      );
+      // throw new Error(DELETE_PRODUCT_ERROR_MESSAGE);
+      console.log("Failed to delete product with id:", id);
+      console.log("Response ", response);
+    }
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: "Товар успешно удален",
+      }),
+    );
+    return id;
   },
 );
 
@@ -177,6 +239,14 @@ export const productSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    builder.addCase(deleteProductById.fulfilled, (state, { payload }) => {
+      const index = state.products.findIndex(
+        (product) => product.id === payload,
+      );
+      state.products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(state.products));
+      state.isLoading = false;
+    });
     builder.addCase(fetchProducts.fulfilled, (state, { payload }) => {
       state.products = payload;
       state.isLoading = false;
@@ -185,6 +255,7 @@ export const productSlice = createSlice({
     builder.addCase(createProduct.fulfilled, (state, { payload }) => {
       state.products.push(payload);
       state.isLoading = false;
+      localStorage.setItem("products", JSON.stringify(state.products));
     });
 
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {

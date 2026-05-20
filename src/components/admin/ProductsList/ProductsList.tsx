@@ -5,7 +5,11 @@ import {
   NO_FILTERED_RESULTS,
   NO_WAY_TO_CHANGE_THIS_PRODUCT,
 } from "../../../constants/messages";
-import { deleteProduct, selectProduct } from "../../../store/ProductSlice";
+import {
+  deleteProduct,
+  deleteProductById,
+  selectProduct,
+} from "../../../store/ProductSlice";
 import { AppDispatch } from "../../../store/store";
 import { Brand, Category, Option, Product } from "../../../types/common";
 import AreaLoader from "../../UI/AreaLoader/AreaLoader";
@@ -246,7 +250,8 @@ const ProductsList: React.FC<IProductsListProps> = ({
   };
 
   const deleteProductHandler = (id: Product["id"]) => {
-    dispatch(deleteProduct(id));
+    // dispatch(deleteProduct(id));
+    dispatch(deleteProductById(id));
   };
 
   const editProductHandler = (id: Product["id"]) => {
