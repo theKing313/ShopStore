@@ -17,7 +17,7 @@ interface IPriceProps {
   to: number;
 }
 const WishlistPage: React.FC = () => {
-  const [price, setPrice] = useState<IPriceProps>({ from: 399, to: 2999 });
+  const [price, setPrice] = useState<IPriceProps>({ from: 0, to: 999999 });
   const [isOpen, setIsOpen] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
@@ -30,6 +30,8 @@ const WishlistPage: React.FC = () => {
   const wishlistProducts = products.filter((product) =>
     wishlist.includes(product.id),
   );
+  console.log("Wishlist products:", wishlistProducts);
+  console.log("All products:", products);
   const { productsTorender } = useFilterByBrand(
     wishlistProducts,
     brands,
@@ -39,9 +41,9 @@ const WishlistPage: React.FC = () => {
     selectedMaterials,
     selectedColors,
   );
-  const hasProducts = wishlistProducts.length > 0;
   const { search, setSearch, filteredProducts } = useSearch(productsTorender);
-
+  const hasProducts = filteredProducts.length > 0;
+  console.log("Filtered wishlist products:", filteredProducts);
   const sizes = ["XS", "S", "M", "L", "XL"];
   const materials = ["Хлопок", "Полиэстер", "Лён", "Шерсть", "Смесь"];
   const colors = ["Чёрный", "Белый", "Синий", "Красный", "Зелёный", "Серый"];

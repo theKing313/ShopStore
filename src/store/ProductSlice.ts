@@ -76,7 +76,27 @@ export const fetchProducts = createAsyncThunk<
         "Content-type": "application/json",
       },
     });
-    const products: Product[] = await response.json();
+    const apiProducts = await response.json();
+    const products: Product[] = apiProducts.map((product: any) => {
+      const discountFromApi =
+        product.discount ??
+        (product.discountPercent != null
+          ? {
+              percent: product.discountPercent,
+              discountedPrice:
+                product.discountedPrice ??
+                Math.round(
+                  product.price -
+                    (product.price * product.discountPercent) / 100,
+                ),
+            }
+          : null);
+
+      return {
+        ...product,
+        discount: discountFromApi,
+      } as Product;
+    });
     const {
       brand: { brands },
       category: { categories },

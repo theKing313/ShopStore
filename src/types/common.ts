@@ -46,6 +46,9 @@ export type Product = {
   materials?: string[];
   colors?: string[];
   description: string;
+
+  discountPercent?: number;
+  discountedPrice?: number;
   discount?: {
     percent: number;
     discountedPrice: number;

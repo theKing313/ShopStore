@@ -51,7 +51,7 @@ const useFilterByBrand = (
       // 2. Проверка по цене (всегда)
       let matchesPrice = null;
       if (price) {
-        const finalPrice = product.discount?.discountedPrice || product.price;
+        const finalPrice = product.discountedPrice ?? product.price;
         matchesPrice = finalPrice >= price.from && finalPrice <= price.to;
       }
 

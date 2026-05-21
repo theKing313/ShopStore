@@ -9,7 +9,8 @@ interface IProductCardProps {
   name: Product["name"];
   price: Product["price"];
   image: Product["image"];
-  discount?: Product["discount"];
+  discountPercent?: Product["discountPercent"];
+  discountedPrice?: Product["discountedPrice"];
   brand: Product["brand"];
   category: Product["category"];
   onWishlistClick: () => void;
@@ -21,13 +22,21 @@ const ProductCard: React.FC<IProductCardProps> = ({
   name,
   price,
   image,
-  discount,
+  discountPercent,
+  discountedPrice,
   brand,
   category,
   isAddedToWishlist,
   id,
   onWishlistClick,
 }) => {
+  const percent = discountPercent ?? undefined;
+  const calculatedDiscountedPrice =
+    discountedPrice ??
+    (percent != null ? Math.round(price - (price * percent) / 100) : undefined);
+  const hasDiscount =
+    percent != null && percent > 0 && calculatedDiscountedPrice != null;
+
   return (
     <li className={classes["product-card"]}>
       <Link
@@ -42,15 +51,15 @@ const ProductCard: React.FC<IProductCardProps> = ({
           </IconButton>
         </div>
         <div className={classes["discount-chip"]}>
-          {discount && (
-            <Chip text={"-" + discount.percent + "%"} mode={"attention"} />
+          {hasDiscount && (
+            <Chip text={"-" + discountPercent + "%"} mode={"attention"} />
           )}
         </div>
       </Link>
 
-      {discount ? (
+      {hasDiscount ? (
         <span className={`${classes.price}`}>
-          <span className={classes.price}>{discount.discountedPrice} ₽</span>
+          <span className={classes.price}>{calculatedDiscountedPrice} ₽</span>
           <span className={classes["old-price"]}>{price} ₽</span>
         </span>
       ) : (

@@ -26,7 +26,11 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
   const sizes = ["XS", "S", "M", "L", "XL"];
   const materials = ["Хлопок", "Полиэстер", "Лён", "Шерсть", "Смесь"];
   const colors = ["Чёрный", "Белый", "Синий", "Красный", "Зелёный", "Серый"];
-  const discountedProducts = products.filter((product) => product.discount);
+  const discountedProducts = products.filter(
+    (product) => product.discountPercent && product.discountPercent > 0,
+  );
+  console.log("All products:", products);
+  console.log("Discounted products:", discountedProducts);
 
   //
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);

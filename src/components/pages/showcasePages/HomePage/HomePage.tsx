@@ -151,7 +151,8 @@ const HomePage: React.FC = () => {
                   name={product.name}
                   price={product.price}
                   image={product.image}
-                  discount={product.discount}
+                  discountPercent={product.discountPercent}
+                  discountedPrice={product.discountedPrice}
                   brand={product.brand}
                   category={product.category}
                   onWishlistClick={() => handleWishlist(product.id)}
