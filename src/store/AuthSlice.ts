@@ -6,8 +6,7 @@ import { AlertType, CartItem, Product, user } from "../types/common";
 import { RootState } from "./store";
 import { showAlert } from "./CommonSlice";
 
-const API_URL =
-  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
 
 type WishList = Product["id"][];
 
@@ -36,23 +35,32 @@ export const logOut = createAsyncThunk(
   },
 );
 export const authUser = createAsyncThunk<
-  string,
+  { token: string; user: any },
   { username: string; email: string; password: string }
 >("user/auth", async (userData, { dispatch, rejectWithValue }) => {
   try {
-    console.log(API_URL);
-    // alert(API_URL);
-    // alert(process.env.REACT_APP_API_URL);
+    console.log(
+      "Attempting to authenticate user with data:",
+      API_URL,
+      userData,
+    );
     const response = await axios.post(`${API_URL}/api/registration`, userData);
-    const token = response.data.token;
-    localStorage.setItem("token", token);
+    console.log("Authentication response:", response.data);
+    const token = response.data.token?.accessToken || response.data.token;
+    const user = response.data.user || null;
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
     dispatch(
       showAlert({
         type: AlertType.Success,
-        message: "User authenticated successfully!",
+        message: "Регистрация прошла успешно",
       }),
     );
-    return token;
+    return { token, user };
   } catch (error: any) {
     dispatch(
       showAlert({
@@ -72,7 +80,9 @@ export const loginUser = createAsyncThunk<
     const response = await axios.post(`${API_URL}/api/login`, userData);
     const result = response.data; // { token, user }
     console.log(JSON.stringify(result));
-    localStorage.setItem("token", JSON.stringify(result.token.accessToken));
+    if (result.token?.accessToken) {
+      localStorage.setItem("token", result.token.accessToken);
+    }
     localStorage.setItem("user", JSON.stringify(result.user));
     dispatch(
       showAlert({
@@ -99,7 +109,7 @@ export const sendCode = createAsyncThunk<void, string>(
     try {
       console.log("Sending code to email:", email);
       console.log("API_URL:", API_URL);
-      const response = await axios.post(`${API_URL}/api/send-code`, {
+      await axios.post(`${API_URL}/api/send-code`, {
         email,
       });
       dispatch(
@@ -130,11 +140,13 @@ export const sendResetCode = createAsyncThunk<string, string>(
       console.log("Sending reset code to email:", email);
       console.log("API_URL:", API_URL);
       const response = await axios.post(
-        `${API_URL}/api/password-reset/request`,
+        `${API_URL}/api/password-reset/confirm`,
         { email },
       );
+      console.log("Reset code response:", response.data);
       return response.data.message || "Код для сброса пароля отправлен";
     } catch (error: any) {
+      console.error("Error sending reset code:", error);
       dispatch(
         showAlert({
           type: AlertType.Error,
@@ -286,10 +298,12 @@ export const userSlice = createSlice({
         // Можно добавить loading state если нужно
       })
       .addCase(authUser.fulfilled, (state, action) => {
-        state.token = action.payload;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
       })
       .addCase(authUser.rejected, (state) => {
         state.token = null;
+        state.user = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.token = action.payload.token;

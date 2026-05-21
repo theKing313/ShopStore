@@ -8,7 +8,7 @@ import classes from "./AuthPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { Link, useNavigate } from "react-router-dom";
-import { authUser, sendCode } from "../../../../store/AuthSlice";
+import { authUser } from "../../../../store/AuthSlice";
 import { PATHS } from "../../../../constants/routes";
 
 const INIT_INPUT = {
@@ -70,8 +70,11 @@ const AuthPage: React.FC = () => {
       email: input.email,
       password: input.password,
     };
-    dispatch(authUser(userData));
-    navigate(PATHS.codeVerification, { state: userData });
+    const result = await dispatch(authUser(userData));
+    console.log("Результат авторизации:", result);
+    // if (authUser.fulfilled.match(result)) {
+    //   navigate(PATHS.showcase);
+    // }
   }
 
   const handleGoBack = () => {
@@ -140,7 +143,7 @@ const AuthPage: React.FC = () => {
 
             <div className={classes.authActions}>
               <Button mode={"primary"} type={"submit"} isLoading={isLoading}>
-                Отправить код
+                Зегистрироваться
               </Button>
             </div>
           </form>
