@@ -11,6 +11,65 @@
   gap: 20px;
 }
 
+.fileInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+}
+
+.fileLabel {
+  font-weight: 700;
+  color: #111827;
+}
+
+.fileInput {
+  border: 1px dashed #94a3b8;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.fileHint,
+.fileName,
+.fileCurrent {
+  color: #475569;
+  font-size: 14px;
+  margin: 0;
+}
+
+.fileName {
+  font-weight: 600;
+}
+
+.filePreview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.previewImage {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #dbeafe;
+}
+
+.fileCurrent {
+  line-height: 1.5;
+}
+
 .action {
   display: flex;
   flex-direction: column-reverse;

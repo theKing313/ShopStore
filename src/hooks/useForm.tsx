@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 
 type Error = {
   [key: string]: string | undefined;
@@ -8,25 +8,28 @@ type Option = {
   [key: string]: string;
 };
 
-const useForm = <T extends {}>(
+type ValidatorInputValue = string | File | { [key: string]: string };
+
+const useForm = <
+  T extends {},
+  V extends ValidatorInputValue = string | { [key: string]: string },
+>(
   initInput: T,
-  callback: () => void,
-  validator: (
-    field: string,
-    inputValue: string | { [key: string]: string },
-  ) => { [key: string]: string } | null,
+  callback: () => Promise<void> | void,
+  validator: (field: string, inputValue: V) => { [key: string]: string } | null,
 ): {
   input: T;
   errors: Error;
-  setInput: React.Dispatch<React.SetStateAction<T>>;
+  setInput: Dispatch<SetStateAction<T>>;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => void;
   resetForm: () => void;
-  submit: (e: React.FormEvent<HTMLFormElement>) => void;
+  submit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
   handleChangeSelect: (option: Option) => void;
+  clearValidation: (field: keyof Error) => void;
 } => {
   const [input, setInput] = useState(initInput);
   const [errors, setErrors] = useState<Error>({});
@@ -61,25 +64,32 @@ const useForm = <T extends {}>(
     }));
   };
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isFormValid = validate();
 
     if (!isFormValid) return;
 
-    callback();
-    resetForm();
+    try {
+      const callbackResult = callback();
+      if (
+        callbackResult &&
+        typeof (callbackResult as Promise<void>).then === "function"
+      ) {
+        await callbackResult;
+      }
+      resetForm();
+    } catch {
+      // keeping the form state intact if callback fails
+    }
   };
 
   const validate = () => {
     let isValid = true;
 
     Object.entries(input).forEach(([key, value]) => {
-      const inputErrorObj = validator(
-        key,
-        value as string | { [key: string]: string },
-      );
+      const inputErrorObj = validator(key, value as V);
       if (inputErrorObj) {
         isValid = false;
         setErrors((prev) => ({ ...prev, ...inputErrorObj }));
@@ -113,6 +123,7 @@ const useForm = <T extends {}>(
     resetForm,
     submit,
     handleChangeSelect,
+    clearValidation,
   };
 };
 

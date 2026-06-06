@@ -1,6 +1,6 @@
 export const productFormValidator = (
   field: string,
-  inputValue: string | { [key: string]: string },
+  inputValue: string | File | { [key: string]: string },
 ) => {
   const validateFields = [
     "name",
@@ -15,6 +15,16 @@ export const productFormValidator = (
 
   if (!validateFields.includes(field)) {
     return null;
+  }
+
+  if (inputValue instanceof File) {
+    if (field === "image") {
+      return null;
+    }
+
+    return {
+      [field]: "Поле не может быть пустым",
+    };
   }
 
   if (typeof inputValue === "string") {

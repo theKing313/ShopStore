@@ -12,10 +12,15 @@ const HomePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useSelector((state: RootState) => state.product);
   const { wishlist } = useSelector((state: RootState) => state.user);
-  const discountProducts = useMemo(
-    () => products.filter((product) => product.discount),
-    [products],
-  );
+  const discountProducts = useMemo(() => {
+    return products.filter((product) => {
+      const percent = product.discountPercent ?? product.discount?.percent ?? 0;
+      const hasDiscountPrice =
+        product.discountedPrice != null &&
+        product.discountedPrice < product.price;
+      return percent > 0 || hasDiscountPrice;
+    });
+  }, [products]);
   const [discountIndex, setDiscountIndex] = useState(0);
 
   const handleWishlist = (id: string) => {
