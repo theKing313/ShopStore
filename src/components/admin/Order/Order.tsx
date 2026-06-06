@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store/store";
+import { showAlert } from "../../../store/CommonSlice";
+import { AlertType } from "../../../types/common";
 import {
   CartItem,
   Order as OrderItem,
@@ -8,6 +12,7 @@ import classes from "./Order.module.css";
 import OrderCartItem from "./OrderCartItem/OrderCartItem";
 
 interface IOrderProps {
+  id: string;
   userName: string;
   userPhone: string;
   userAddress: string;
@@ -15,10 +20,13 @@ interface IOrderProps {
   totalPrice: OrderItem["totalPrice"];
   totalDiscount: OrderItem["totalDiscount"];
   totalWeight: OrderItem["totalWeight"];
+  status: OrderItem["status"];
   cart: OrderCartItemType[];
+  onStatusChange?: (newStatus: OrderItem["status"]) => void;
 }
 
 const Order: React.FC<IOrderProps> = ({
+  id,
   userName,
   userPhone,
   userAddress,
@@ -27,12 +35,85 @@ const Order: React.FC<IOrderProps> = ({
   cart,
   totalDiscount,
   totalWeight,
+  status,
+  onStatusChange,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
   const date = new Date(timestamp).toLocaleDateString("Ru-ru");
+
+  const statuses: OrderItem["status"][] = [
+    "PENDING",
+    "PROCESSING",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+  ];
+
+  const statusColors: Record<OrderItem["status"], string> = {
+    PENDING: "#fbbf24",
+    PROCESSING: "#60a5fa",
+    SHIPPED: "#34d399",
+    DELIVERED: "#10b981",
+    CANCELLED: "#ef4444",
+  };
+
+  const statusLabels: Record<OrderItem["status"], string> = {
+    PENDING: "Ожидание",
+    PROCESSING: "Обработка",
+    SHIPPED: "Отправлено",
+    DELIVERED: "Доставлено",
+    CANCELLED: "Отменено",
+  };
 
   const toggle = () => {
     setIsCollapsed((prev) => !prev);
+  };
+
+  const handleStatusChange = async (newStatus: OrderItem["status"]) => {
+    if (newStatus === status) return;
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch(
+        `http://localhost:5044/api/orders/${id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Не удалось обновить статус заказа");
+      }
+
+      dispatch(
+        showAlert({
+          type: AlertType.Success,
+          message: "Статус заказа успешно обновлён",
+        }),
+      );
+
+      if (onStatusChange) {
+        onStatusChange(newStatus);
+      }
+    } catch (error) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ошибка при обновлении статуса",
+        }),
+      );
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -42,6 +123,24 @@ const Order: React.FC<IOrderProps> = ({
         <td className={classes["sumarry-cell"]}>{userName}</td>
         <td className={classes["sumarry-cell"]}>{userPhone}</td>
         <td className={classes["sumarry-cell"]}>{userAddress}</td>
+        <td className={classes["sumarry-cell"]}>
+          <select
+            className={classes["status-select"]}
+            value={status}
+            onChange={(e) =>
+              handleStatusChange(e.target.value as OrderItem["status"])
+            }
+            disabled={isUpdating}
+            onClick={(e) => e.stopPropagation()}
+            style={{ backgroundColor: statusColors[status] }}
+          >
+            {statuses.map((s) => (
+              <option key={s} value={s}>
+                {statusLabels[s]}
+              </option>
+            ))}
+          </select>
+        </td>
         <td className={classes["sumarry-cell"]}>{totalPrice} ₽</td>
       </tr>
 

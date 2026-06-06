@@ -10,7 +10,7 @@
 }
 
 .order-content-title {
-  font-family: 'Nunito';
+  font-family: "Nunito";
   padding: 0;
   font-size: 22px;
   display: block;
@@ -30,7 +30,7 @@
 }
 
 .summary {
-  font-family: 'Nunito';
+  font-family: "Nunito";
   text-align: right;
   font-weight: 700;
   font-size: 20px;
@@ -59,6 +59,27 @@
   background-color: #fff;
 }
 
+.status-select {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.status-select:hover:not(:disabled) {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .no-pointer-events,
   .order-content {
@@ -70,28 +91,28 @@
   }
 
   .sumarry-cell:nth-of-type(1):before {
-    content: 'Дата заказа';
+    content: "Дата заказа";
     font-weight: 600;
     width: 100px;
   }
 
   .sumarry-cell:nth-of-type(2):before {
-    content: 'Покупатель';
+    content: "Покупатель";
     font-weight: 600;
   }
 
   .sumarry-cell:nth-of-type(3):before {
-    content: 'Телефон';
+    content: "Телефон";
     font-weight: 600;
   }
 
   .sumarry-cell:nth-of-type(4):before {
-    content: 'Адрес';
+    content: "Адрес";
     font-weight: 600;
   }
 
   .sumarry-cell:nth-of-type(5):before {
-    content: 'Сумма';
+    content: "Сумма";
     font-weight: 600;
   }
 }

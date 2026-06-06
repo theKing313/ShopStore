@@ -129,5 +129,6 @@ export type Order = {
   totalWeight: number;
   totalDiscount: number;
   totalQuantity: number;
+  status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   createdAt: string;
 };
