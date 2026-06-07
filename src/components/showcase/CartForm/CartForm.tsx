@@ -113,6 +113,12 @@ const CartForm: React.FC<ICartFormProps> = ({
           {errors.paymentType && (
             <span className={classes.error}>{errors.paymentType}</span>
           )}
+          {value.paymentType === "card" && (
+            <p className={classes.hint}>
+              После оформления заказа вы перейдёте на страницу YooCheckout для
+              ввода тестовой карты.
+            </p>
+          )}
         </div>
 
         <div className={classes["form-group"]}>

@@ -131,4 +131,6 @@ export type Order = {
   totalQuantity: number;
   status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   createdAt: string;
+  metadata?: any;
+  paymentUrl?: string;
 };

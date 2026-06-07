@@ -185,6 +185,21 @@ const CartPage: React.FC = () => {
     console.log("order------------------------", order);
 
     if (createOrder.fulfilled.match(result)) {
+      const payload = result.payload as any;
+
+      if (payload?.paymentUrl) {
+        dispatch(clearCart());
+        dispatch(setToLocalStorage("cart"));
+        dispatch(
+          showAlert({
+            type: AlertType.Success,
+            message: "Перенаправляем на оплату картой...",
+          }),
+        );
+        window.location.href = payload.paymentUrl;
+        return;
+      }
+
       dispatch(clearCart());
       dispatch(setToLocalStorage("cart"));
       dispatch(
@@ -194,6 +209,7 @@ const CartPage: React.FC = () => {
         }),
       );
       setInput(INIT_INPUT);
+      navigate(`${PATHS.cart}/${PATHS.success}`);
       return;
     }
 

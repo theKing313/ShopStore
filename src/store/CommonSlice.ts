@@ -65,6 +65,8 @@ export const fetchOrders = createAsyncThunk(
   },
 );
 
+export type OrderResponse = Order & { paymentUrl?: string };
+
 export const createOrder = createAsyncThunk(
   "common/createOrder",
   async (
@@ -92,7 +94,7 @@ export const createOrder = createAsyncThunk(
       }
 
       const data = await response.json();
-      return data as Order;
+      return data as OrderResponse;
     } catch (error) {
       dispatch(
         showAlert({
