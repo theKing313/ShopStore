@@ -1,18 +1,28 @@
 import Actions from "../../../layouts/adminLayouts/Actions/Actions";
 import Content from "../../../layouts/adminLayouts/Content/Content";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../store/store";
 import Order from "../../../admin/Order/Order";
 import Card from "../../../UI/Card/Card";
 import Loader from "../../../UI/Loader/Loader";
 import Placeholder from "../../../UI/Placeholder/Placeholder";
 import { NO_ORDERS } from "../../../../constants/messages";
 import { OrderItem } from "../../../../types/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchOrders } from "../../../../store/CommonSlice";
 
 const OrdersPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchOrders());
+  }, [dispatch]);
+
   const { orders, isLoading } = useSelector((state: RootState) => state.common);
-  const [localOrders, setLocalOrders] = useState(orders);
+  const [localOrders, setLocalOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+    setLocalOrders(orders);
+  }, [orders]);
 
   console.log(orders);
 

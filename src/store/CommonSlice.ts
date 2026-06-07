@@ -25,8 +25,8 @@ const initialState: CommonState = {
     message: "",
   },
 };
-const BASE_URL =
-  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
+// new row violates row-level security policy
 
 export const fetchOrders = createAsyncThunk(
   "common/fetchOrders",
@@ -57,6 +57,9 @@ export const fetchOrders = createAsyncThunk(
       return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
     }
     const data = await response.json();
+    console.log("Orders fetched from API:", data);
+    console.log("Orders fetched from API (stringified):", JSON.stringify(data));
+    console.log(BASE_URL);
     const brands: Order[] = handleObj(data);
     return brands;
   },

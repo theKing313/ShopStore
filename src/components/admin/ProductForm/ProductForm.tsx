@@ -108,8 +108,36 @@ const ProductForm: React.FC<IProductFormProps> = ({
 
     if (imageFile) {
       try {
-        imageUrl = await uploadProductImage(imageFile);
+        console.log("[ProductForm] Начинаю загрузку изображения на сервер...");
+        const formData = new FormData();
+        formData.append("file", imageFile);
+
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          // try to read json error body
+          let body = null;
+          try {
+            body = await uploadRes.json();
+          } catch (e) {
+            /* ignore parse error */
+          }
+          const message =
+            (body && body.message) || uploadRes.statusText || "Upload failed";
+          throw new Error(message);
+        }
+
+        const result = await uploadRes.json();
+        imageUrl = result.url;
+        console.log("[ProductForm] Сервер вернул URL:", imageUrl);
       } catch (error) {
+        console.error(
+          "[ProductForm] Ошибка при загрузке изображения на сервер:",
+          error,
+        );
         const message =
           error instanceof Error
             ? error.message

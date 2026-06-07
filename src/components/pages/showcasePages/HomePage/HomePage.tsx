@@ -11,6 +11,7 @@ import classes from "./HomePage.module.css";
 const HomePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useSelector((state: RootState) => state.product);
+  console.log("HomePage products:", products);
   const { wishlist } = useSelector((state: RootState) => state.user);
   const discountProducts = useMemo(() => {
     return products.filter((product) => {

@@ -53,7 +53,7 @@ const initialState: ProductState = {
 };
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
 // const BASE_URL = "http://localhost:5044";
-
+console.log("ProductSlice BASE_URL:", BASE_URL);
 export const fetchProducts = createAsyncThunk<
   Product[],
   void,
@@ -77,6 +77,7 @@ export const fetchProducts = createAsyncThunk<
       },
     });
     const apiProducts = await response.json();
+    console.log("Products fetched from API:", apiProducts);
     const products: Product[] = apiProducts.map((product: any) => {
       const discountFromApi =
         product.discount ??
