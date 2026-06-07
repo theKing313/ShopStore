@@ -6,6 +6,7 @@ import classes from "./ProfilePage.module.css";
 import { logOut } from "../../../../store/AuthSlice";
 import { useEffect, useState } from "react";
 import { fetchOrders, showAlert } from "../../../../store/CommonSlice";
+import type { Order } from "../../../../types/common";
 import { AlertType } from "../../../../types/common";
 
 const ProfilePage = () => {
@@ -51,6 +52,8 @@ const ProfilePage = () => {
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
   const [now, setNow] = useState(Date.now());
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -61,6 +64,30 @@ const ProfilePage = () => {
   }, []);
 
   const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
+
+  const isCancelableStatus = (status: Order["status"]) =>
+    status === "PENDING" || status === "PROCESSING";
+
+  const openOrderModal = (order: Order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  const closeOrderModal = () => {
+    setSelectedOrder(null);
+    setIsModalOpen(false);
+  };
+
+  const modalOrder = selectedOrder;
+
+  const formatDuration = (remainingMs: number) => {
+    if (remainingMs <= 0) return "00:00:00";
+    const hrs = Math.floor(remainingMs / (1000 * 60 * 60));
+    const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((remainingMs % (1000 * 60)) / 1000);
+    return `${hrs}:${mins.toString().padStart(2, "0")}:
+      ${secs.toString().padStart(2, "0")}`.replace(/\s+/g, "");
+  };
 
   const statusLabels: Record<string, string> = {
     PENDING: "Ожидание",
@@ -340,44 +367,56 @@ const ProfilePage = () => {
                           const created = new Date(order.timestamp).getTime();
                           const elapsed = now - created;
                           const remaining = twoHoursMs - elapsed;
-                          if (remaining > 0 && order.status !== "CANCELLED") {
-                            const hrs = Math.floor(
-                              remaining / (1000 * 60 * 60),
-                            );
-                            const mins = Math.floor(
-                              (remaining % (1000 * 60 * 60)) / (1000 * 60),
-                            );
-                            const secs = Math.floor(
-                              (remaining % (1000 * 60)) / 1000,
-                            );
-                            return (
-                              <div style={{ marginTop: "8px" }}>
-                                <div
-                                  style={{ color: "#2563eb", fontWeight: 600 }}
-                                >
-                                  Можно отменить: {hrs}:
-                                  {mins.toString().padStart(2, "0")}:
-                                  {secs.toString().padStart(2, "0")}
-                                </div>
-                                <button
-                                  onClick={() => cancelOrder(order.id)}
-                                  style={{
-                                    marginTop: "8px",
-                                    padding: "8px 12px",
-                                    background: "#ef4444",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "6px",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  Отменить заказ
-                                </button>
+                          const canCancel =
+                            remaining > 0 &&
+                            order.status !== "CANCELLED" &&
+                            isCancelableStatus(order.status);
+                          return (
+                            <div style={{ marginTop: "8px" }}>
+                              <div
+                                style={{ color: "#2563eb", fontWeight: 600 }}
+                              >
+                                {canCancel
+                                  ? `Можно отменить: ${formatDuration(
+                                      remaining,
+                                    )}`
+                                  : order.status !== "CANCELLED"
+                                    ? "Время отмены истекло"
+                                    : "Заказ отменён"}
                               </div>
-                            );
-                          }
-                          return null;
+                              <button
+                                onClick={() => cancelOrder(order.id)}
+                                disabled={!canCancel}
+                                style={{
+                                  marginTop: "8px",
+                                  padding: "8px 12px",
+                                  background: canCancel ? "#ef4444" : "#9ca3af",
+                                  color: "white",
+                                  border: "none",
+                                  borderRadius: "6px",
+                                  cursor: canCancel ? "pointer" : "not-allowed",
+                                }}
+                              >
+                                Отменить заказ
+                              </button>
+                            </div>
+                          );
                         })()}
+                      <button
+                        onClick={() => openOrderModal(order)}
+                        style={{
+                          marginTop: "10px",
+                          padding: "10px 14px",
+                          background: "#2563eb",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "12px",
+                          cursor: "pointer",
+                          fontWeight: 700,
+                        }}
+                      >
+                        Подробнее
+                      </button>
                       <p className={classes.orderTotal}>
                         Сумма:{" "}
                         {order.totalPrice
@@ -405,6 +444,66 @@ const ProfilePage = () => {
           </div>
         )}
       </main>
+
+      {isModalOpen && modalOrder && (
+        <div
+          className={classes.modalOverlay}
+          onClick={closeOrderModal}
+          role="button"
+          tabIndex={0}
+        >
+          <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={classes.modalHeader}>
+              <div>
+                <h2 className={classes.modalTitle}>
+                  Заказ #{modalOrder.orderNumber}
+                </h2>
+                <p className={classes.modalSubtitle}>
+                  {new Date(modalOrder.createdAt).toLocaleString("ru-RU")}
+                </p>
+              </div>
+              <button onClick={closeOrderModal} className={classes.modalClose}>
+                ✕
+              </button>
+            </div>
+            <div className={classes.modalBody}>
+              <div className={classes.modalSection}>
+                <h3>Информация о заказе</h3>
+                <p>Статус: {statusLabels[modalOrder.status]}</p>
+                <p>Итого: {modalOrder.totalPrice} ₽</p>
+                <p>Скидка: {modalOrder.totalDiscount} ₽</p>
+                <p>Вес: {modalOrder.totalWeight} кг</p>
+                <p>Кол-во товаров: {modalOrder.totalQuantity}</p>
+              </div>
+              <div className={classes.modalSection}>
+                <h3>Адрес доставки</h3>
+                <p>{modalOrder.userName}</p>
+                <p>{modalOrder.userPhone}</p>
+                <p>{modalOrder.userAddress}</p>
+              </div>
+              <div className={classes.modalSection}>
+                <h3>Товары</h3>
+                <div className={classes.modalTable}>
+                  <div className={classes.modalTableRowHeader}>
+                    <span>Название</span>
+                    <span>Кол-во</span>
+                    <span>Цена</span>
+                    <span>Итого</span>
+                  </div>
+                  {modalOrder.cart.map((item) => (
+                    <div key={item.id} className={classes.modalTableRow}>
+                      <span>{item.name}</span>
+                      <span>{item.quantity}</span>
+                      <span>{item.price} ₽</span>
+                      <span>{item.totalPrice} ₽</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
