@@ -5,7 +5,8 @@ import { PATHS } from "../../../../constants/routes";
 import classes from "./ProfilePage.module.css";
 import { logOut } from "../../../../store/AuthSlice";
 import { useEffect, useState } from "react";
-import { fetchOrders } from "../../../../store/CommonSlice";
+import { fetchOrders, showAlert } from "../../../../store/CommonSlice";
+import { AlertType } from "../../../../types/common";
 
 const ProfilePage = () => {
   const [profileState, setProfileState] = useState("PROFILE");
@@ -49,6 +50,51 @@ const ProfilePage = () => {
   }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
+
+  const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
+
+  const statusLabels: Record<string, string> = {
+    PENDING: "Ожидание",
+    PROCESSING: "В обработке",
+    SHIPPED: "Отправлено",
+    DELIVERED: "Доставлено",
+    CANCELLED: "Отменено",
+  };
+
+  const twoHoursMs = 2 * 60 * 60 * 1000;
+
+  const cancelOrder = async (orderId: string) => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "CANCELLED" }),
+      });
+      if (!res.ok) {
+        let msg = `Ошибка: ${res.status}`;
+        try {
+          const data = await res.json();
+          msg = data.message || data.error || msg;
+        } catch {}
+        dispatch(
+          // @ts-ignore
+          showAlert({ type: AlertType.Error, message: msg }),
+        );
+        return;
+      }
+
+      dispatch(
+        // @ts-ignore
+        showAlert({ type: AlertType.Success, message: "Заказ отменён" }),
+      );
+      dispatch(fetchOrders());
+    } catch (err) {
+      dispatch(
+        // @ts-ignore
+        showAlert({ type: AlertType.Error, message: "Ошибка отмены заказа" }),
+      );
+    }
+  };
 
   const handleLogOut = () => {
     dispatch(logOut());
@@ -278,8 +324,51 @@ const ProfilePage = () => {
                     </div>
                     <div className={classes.orderDetails}>
                       <p className={classes.orderStatus}>
-                        Статус: {order.orderType || "В обработке"}
+                        Статус: {statusLabels[order.status] || "В обработке"}
                       </p>
+                      {order.timestamp &&
+                        (() => {
+                          const created = new Date(order.timestamp).getTime();
+                          const elapsed = Date.now() - created;
+                          const remaining = twoHoursMs - elapsed;
+                          if (remaining > 0 && order.status !== "CANCELLED") {
+                            const hrs = Math.floor(
+                              remaining / (1000 * 60 * 60),
+                            );
+                            const mins = Math.floor(
+                              (remaining % (1000 * 60 * 60)) / (1000 * 60),
+                            );
+                            const secs = Math.floor(
+                              (remaining % (1000 * 60)) / 1000,
+                            );
+                            return (
+                              <div style={{ marginTop: "8px" }}>
+                                <div
+                                  style={{ color: "#2563eb", fontWeight: 600 }}
+                                >
+                                  Можно отменить: {hrs}:
+                                  {mins.toString().padStart(2, "0")}:
+                                  {secs.toString().padStart(2, "0")}
+                                </div>
+                                <button
+                                  onClick={() => cancelOrder(order.id)}
+                                  style={{
+                                    marginTop: "8px",
+                                    padding: "8px 12px",
+                                    background: "#ef4444",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "6px",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Отменить заказ
+                                </button>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
                       <p className={classes.orderTotal}>
                         Сумма:{" "}
                         {order.totalPrice
