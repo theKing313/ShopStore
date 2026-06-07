@@ -114,11 +114,15 @@ const ProductForm: React.FC<IProductFormProps> = ({
         const formData = new FormData();
         formData.append("file", imageFile);
 
-        const response = await axios.post("/api/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
+        const response = await axios.post(
+          "https://backendstore-9jt0.onrender.com/api/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           },
-        });
+        );
 
         console.log(
           "[ProductForm] Изображение успешно загружено. Результат:",
