@@ -406,7 +406,8 @@ const ProfilePage = () => {
                       {order.cart &&
                         order.cart.length > 0 &&
                         (() => {
-                          const first: any = order.cart[0];
+                          // const first: any = order.cart[0];
+                          const first: any = order;
                           const imgSrc =
                             first.image ||
                             first.imageUrl ||
@@ -414,7 +415,7 @@ const ProfilePage = () => {
                             "";
                           return (
                             <Link
-                              to={first.id ? `/product/${first.id}` : "/"}
+                              to={first.id ? `/product/${order.id}` : "/"}
                               className={classes.productLink}
                               style={{
                                 display: "flex",
