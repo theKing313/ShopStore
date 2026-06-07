@@ -88,7 +88,24 @@ const Order: React.FC<IOrderProps> = ({
       );
 
       if (!response.ok) {
-        throw new Error("Не удалось обновить статус заказа");
+        // Try to extract server error message for debugging
+        let errMessage = `Request failed with status ${response.status}`;
+        try {
+          const data = await response.json();
+          if (data && (data.message || data.error)) {
+            errMessage = data.message || data.error;
+          } else {
+            errMessage = JSON.stringify(data);
+          }
+        } catch (e) {
+          try {
+            const text = await response.text();
+            if (text) errMessage = text;
+          } catch {}
+        }
+
+        console.error("Update order status failed:", errMessage, response);
+        throw new Error(errMessage || "Не удалось обновить статус заказа");
       }
 
       dispatch(
