@@ -402,21 +402,64 @@ const ProfilePage = () => {
                             </div>
                           );
                         })()}
-                      <button
-                        onClick={() => openOrderModal(order)}
-                        style={{
-                          marginTop: "10px",
-                          padding: "10px 14px",
-                          background: "#2563eb",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "12px",
-                          cursor: "pointer",
-                          fontWeight: 700,
-                        }}
-                      >
-                        Подробнее
-                      </button>
+                      {/* Широкая ссылка на первый товар заказа с миниатюрой */}
+                      {order.cart &&
+                        order.cart.length > 0 &&
+                        (() => {
+                          const first: any = order.cart[0];
+                          const imgSrc =
+                            first.image ||
+                            first.imageUrl ||
+                            first.thumbnail ||
+                            "";
+                          return (
+                            <Link
+                              to={first.id ? `/product/${first.id}` : "/"}
+                              className={classes.productLink}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                width: "100%",
+                                marginTop: "10px",
+                                padding: "10px 14px",
+                                background: "#111827",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "12px",
+                                textDecoration: "none",
+                                fontWeight: 700,
+                                justifyContent: "flex-start",
+                              }}
+                            >
+                              {imgSrc ? (
+                                <img
+                                  src={imgSrc}
+                                  alt={first.name}
+                                  style={{
+                                    width: 44,
+                                    height: 44,
+                                    objectFit: "cover",
+                                    borderRadius: 8,
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  style={{
+                                    width: 44,
+                                    height: 44,
+                                    background: "#374151",
+                                    borderRadius: 8,
+                                  }}
+                                />
+                              )}
+                              <span style={{ flex: 1 }}>{first.name}</span>
+                              <span style={{ opacity: 0.85 }}>
+                                {first.price} ₽
+                              </span>
+                            </Link>
+                          );
+                        })()}
                       <p className={classes.orderTotal}>
                         Сумма:{" "}
                         {order.totalPrice
