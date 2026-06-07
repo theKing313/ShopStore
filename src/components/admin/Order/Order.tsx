@@ -77,7 +77,7 @@ const Order: React.FC<IOrderProps> = ({
     setIsUpdating(true);
     try {
       const response = await fetch(
-        `http://localhost:5044/api/orders/${id}/status`,
+        `https://backendstore-9jt0.onrender.com/api/orders/${id}/status`,
         {
           method: "PATCH",
           headers: {
