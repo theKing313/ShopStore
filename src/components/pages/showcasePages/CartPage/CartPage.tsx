@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NO_PRODUCTS_IN_CART } from "../../../../constants/messages";
 import { PATHS } from "../../../../constants/routes";
@@ -33,10 +33,6 @@ const INIT_INPUT = {
   address: "",
   paymentType: "",
   orderType: "",
-  cardNumber: "",
-  cardExpiry: "",
-  cardCvv: "",
-  cardHolder: "",
 };
 
 const CartPage: React.FC = () => {
@@ -47,7 +43,7 @@ const CartPage: React.FC = () => {
   );
   const { wishlist } = useSelector((state: RootState) => state.user);
   const { products } = useSelector((state: RootState) => state.product);
-  const { error, isLoading } = useSelector((state: RootState) => state.common);
+  const { isLoading } = useSelector((state: RootState) => state.common);
   const authUser = useSelector((state: RootState) => state.auth.user);
   const localStorageUser = (() => {
     try {
@@ -78,12 +74,6 @@ const CartPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!input.paymentType) newErrors.paymentType = "Выберите тип оплаты";
     if (!input.orderType) newErrors.orderType = "Выберите тип заказа";
-    if (input.paymentType === "card") {
-      if (!input.cardNumber) newErrors.cardNumber = "Введите номер карты";
-      if (!input.cardExpiry) newErrors.cardExpiry = "Введите срок действия";
-      if (!input.cardCvv) newErrors.cardCvv = "Введите CVV";
-      if (!input.cardHolder) newErrors.cardHolder = "Введите имя владельца";
-    }
     if (!cartUser || !cartUser.phone || !cartUser.address) {
       if (!input.name) newErrors.name = "Введите имя";
       if (!input.phone) newErrors.phone = "Введите телефон";
@@ -168,10 +158,6 @@ const CartPage: React.FC = () => {
       userAddress: cartUser?.address || input.address,
       paymentType: input.paymentType,
       orderType: input.orderType,
-      cardNumber: input.cardNumber,
-      cardExpiry: input.cardExpiry,
-      cardCvv: input.cardCvv,
-      cardHolder: input.cardHolder,
       cart: cart,
       timestamp: Date.now(),
       totalPrice: price,
