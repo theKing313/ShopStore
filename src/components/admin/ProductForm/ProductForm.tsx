@@ -15,6 +15,7 @@ import { uploadProductImage } from "../../../lib/supabaseClient";
 import ProductFormSelect from "./ProductFormSelect/ProductFormSelect";
 import { productFormValidator } from "../../../utils/validators";
 import { GENDER } from "../../../constants/common";
+import axios from "axios";
 
 const INIT_INPUT = {
   name: "",
@@ -109,48 +110,38 @@ const ProductForm: React.FC<IProductFormProps> = ({
     if (imageFile) {
       try {
         console.log("[ProductForm] Начинаю загрузку изображения на сервер...");
+
         const formData = new FormData();
         formData.append("file", imageFile);
 
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
+        const response = await axios.post("/api/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         });
 
-        if (!uploadRes.ok) {
-          // try to read json error body
-          let body = null;
-          try {
-            body = await uploadRes.json();
-          } catch (e) {
-            /* ignore parse error */
-          }
-          const message =
-            (body && body.message) || uploadRes.statusText || "Upload failed";
-          throw new Error(message);
-        }
-
-        const result = await uploadRes.json();
         console.log(
           "[ProductForm] Изображение успешно загружено. Результат:",
-          result,
+          response.data,
         );
-        imageUrl = result.url;
+
+        imageUrl = response.data.url;
+
         console.log("[ProductForm] Сервер вернул URL:", imageUrl);
-      } catch (error) {
-        console.error(
-          "[ProductForm] Ошибка при загрузке изображения на сервер:",
-          error,
-        );
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Не удалось загрузить изображение товара";
+      } catch (error: any) {
+        console.error("[ProductForm] Полная ошибка:", error);
+
+        console.error("status:", error?.response?.status);
+        console.error("data:", error?.response?.data);
+        console.error("headers:", error?.response?.headers);
 
         dispatch(
           showAlert({
             type: AlertType.Error,
-            message,
+            message:
+              error?.response?.data?.message ||
+              error?.message ||
+              "Не удалось загрузить изображение",
           }),
         );
 
