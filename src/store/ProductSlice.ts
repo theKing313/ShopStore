@@ -51,7 +51,8 @@ const initialState: ProductState = {
     message: "",
   },
 };
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
+const BASE_URL =
+  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 // const BASE_URL = "http://localhost:5044";
 console.log("ProductSlice BASE_URL:", BASE_URL);
 export const fetchProducts = createAsyncThunk<
