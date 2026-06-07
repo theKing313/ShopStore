@@ -50,6 +50,15 @@ const ProfilePage = () => {
   }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
 
@@ -329,7 +338,7 @@ const ProfilePage = () => {
                       {order.timestamp &&
                         (() => {
                           const created = new Date(order.timestamp).getTime();
-                          const elapsed = Date.now() - created;
+                          const elapsed = now - created;
                           const remaining = twoHoursMs - elapsed;
                           if (remaining > 0 && order.status !== "CANCELLED") {
                             const hrs = Math.floor(
