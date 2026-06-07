@@ -131,6 +131,10 @@ const ProductForm: React.FC<IProductFormProps> = ({
         }
 
         const result = await uploadRes.json();
+        console.log(
+          "[ProductForm] Изображение успешно загружено. Результат:",
+          result,
+        );
         imageUrl = result.url;
         console.log("[ProductForm] Сервер вернул URL:", imageUrl);
       } catch (error) {

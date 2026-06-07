@@ -60,15 +60,6 @@ const ShowcaseHeader: React.FC<IShowcaseHeaderProps> = () => {
   return (
     <>
       <header className={classes.header}>
-        <div className={classes.topBar}>
-          <Link
-            to={`${PATHS.admin}${PATHS.orders}`}
-            className={classes.adminLink}
-          >
-            Перейти в админку
-          </Link>
-        </div>
-
         <div className={classes.wrapper}>
           <Link to={PATHS.showcase} className={classes.logoLink}>
             <div className={classes.logo}>ShopStore</div>

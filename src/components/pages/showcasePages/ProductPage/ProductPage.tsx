@@ -162,6 +162,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     name,
     description,
     image,
+    images,
     brand,
     price,
     weight,
@@ -441,14 +442,16 @@ const ProductPage: React.FC<IProductPageProps> = () => {
               <div className={classes["image-wrapper"]}>
                 <img src={image} alt={name} className={classes.image} />
                 <div className={classes.gallery}>
-                  {[image, image, image].map((src, index) => (
-                    <img
-                      key={index}
-                      src={src}
-                      alt={`${name} ${index}`}
-                      className={classes.thumbnail}
-                    />
-                  ))}
+                  {(images?.length ? images : [image, image, image]).map(
+                    (src, index) => (
+                      <img
+                        key={index}
+                        src={src}
+                        alt={`${name} ${index}`}
+                        className={classes.thumbnail}
+                      />
+                    ),
+                  )}
                 </div>
               </div>
             </div>

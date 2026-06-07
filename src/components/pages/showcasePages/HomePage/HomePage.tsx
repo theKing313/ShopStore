@@ -157,6 +157,7 @@ const HomePage: React.FC = () => {
                   name={product.name}
                   price={product.price}
                   image={product.image}
+                  images={product.images}
                   discountPercent={product.discountPercent}
                   discountedPrice={product.discountedPrice}
                   brand={product.brand}

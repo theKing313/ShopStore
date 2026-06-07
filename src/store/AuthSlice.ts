@@ -5,6 +5,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { AlertType, CartItem, Product, user } from "../types/common";
 import { RootState } from "./store";
 import { showAlert } from "./CommonSlice";
+import { loginAdmin } from "./adminSlice";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
 
@@ -310,6 +311,14 @@ export const userSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state) => {
+        state.token = null;
+        state.user = null;
+      })
+      .addCase(loginAdmin.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+      })
+      .addCase(loginAdmin.rejected, (state) => {
         state.token = null;
         state.user = null;
       })

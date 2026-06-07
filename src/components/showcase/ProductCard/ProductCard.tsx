@@ -9,6 +9,7 @@ interface IProductCardProps {
   name: Product["name"];
   price: Product["price"];
   image: Product["image"];
+  images?: Product["images"];
   discountPercent?: Product["discountPercent"];
   discountedPrice?: Product["discountedPrice"];
   brand: Product["brand"];
@@ -22,6 +23,7 @@ const ProductCard: React.FC<IProductCardProps> = ({
   name,
   price,
   image,
+  images,
   discountPercent,
   discountedPrice,
   brand,
@@ -37,13 +39,36 @@ const ProductCard: React.FC<IProductCardProps> = ({
   const hasDiscount =
     percent != null && percent > 0 && calculatedDiscountedPrice != null;
 
+  const hoverImages = images?.length ? images : [image];
+  const hasHoverGallery = hoverImages.length > 1;
+  const focusPositions = ["20% 30%", "50% 50%", "80% 40%"];
+
   return (
     <li className={classes["product-card"]}>
       <Link
         to={generatePath("/:url/:id", { url: category?.url || "catalog", id })}
         className={classes["image-wrapper"]}
       >
-        <img src={image} alt={name} className={classes.image} />
+        {hasHoverGallery ? (
+          <div className={classes["image-slider"]}>
+            <div className={classes["image-track"]}>
+              {hoverImages.map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`${name} preview ${index + 1}`}
+                  className={`${classes.image} ${classes["slider-image"]}`}
+                  style={{
+                    objectPosition:
+                      focusPositions[index % focusPositions.length],
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <img src={image} alt={name} className={classes.image} />
+        )}
 
         <div className={classes["wishlist-btn"]}>
           <IconButton onClick={onWishlistClick}>

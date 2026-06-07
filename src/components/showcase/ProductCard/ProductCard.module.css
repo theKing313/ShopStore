@@ -23,7 +23,7 @@
 }
 
 .image-wrapper::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -35,7 +35,7 @@
 }
 
 .image-wrapper:hover::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -45,11 +45,45 @@
   transition: background-color 120ms linear;
 }
 
+.image-slider {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.image-track {
+  display: flex;
+  transition: transform 500ms ease;
+}
+
+.image-wrapper:hover .image-track {
+  animation: hover-slide 3s infinite ease-in-out;
+}
+
+@keyframes hover-slide {
+  0%,
+  24% {
+    transform: translateX(0);
+  }
+  33%,
+  57% {
+    transform: translateX(-33.3333%);
+  }
+  66%,
+  100% {
+    transform: translateX(-66.6667%);
+  }
+}
+
 .image {
   border-radius: 4px;
   object-fit: contain;
   display: block;
   width: 100%;
+}
+
+.slider-image {
+  flex: 0 0 100%;
 }
 
 .discount-chip {
@@ -102,10 +136,9 @@
   gap: 10px;
 }
 
-
 @media screen and (min-width: 768px) {
   .image {
-      min-height: 331px;
+    min-height: 331px;
   }
 }
 

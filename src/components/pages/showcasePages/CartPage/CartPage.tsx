@@ -167,8 +167,14 @@ const CartPage: React.FC = () => {
     };
 
     const result = await dispatch(createOrder(order));
-
-    console.log("order------------------------", order);
+    // const result = {
+    //   type: "common/createOrder/fulfilled",
+    //   payload: {
+    //     id: "12345",
+    //     paymentUrl: "https://payment-gateway.com/pay/12345",
+    //   },
+    // }
+    console.log("result------------------------", result);
 
     if (createOrder.fulfilled.match(result)) {
       const payload = result.payload as any;
@@ -186,16 +192,16 @@ const CartPage: React.FC = () => {
         return;
       }
 
-      dispatch(clearCart());
-      dispatch(setToLocalStorage("cart"));
-      dispatch(
-        showAlert({
-          type: AlertType.Success,
-          message: "Заказ успешно создан, корзина очищена.",
-        }),
-      );
-      setInput(INIT_INPUT);
-      navigate(`${PATHS.cart}/${PATHS.success}`);
+      // dispatch(clearCart());
+      // dispatch(setToLocalStorage("cart"));
+      // dispatch(
+      //   showAlert({
+      //     type: AlertType.Success,
+      //     message: "Заказ успешно создан, корзина очищена.",
+      //   }),
+      // );
+      // setInput(INIT_INPUT);
+      // navigate(`${PATHS.cart}/${PATHS.success}`);
       return;
     }
 

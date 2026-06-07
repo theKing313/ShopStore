@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Alert, AlertType, CartItem, Error, Order } from "../types/common";
+import { AlertType } from "../types/common";
+import type { Alert, CartItem, Error, Order } from "../types/common";
 import { handleObj, wait } from "../utils/helpers";
 import { CREATE_ORDER_ERROR_MESSAGE } from "../constants/messages";
 import MOCKED_COMMON from "../mocks/common.json";
@@ -74,7 +75,9 @@ export const createOrder = createAsyncThunk(
     { dispatch, rejectWithValue },
   ) => {
     try {
-      console.log("order------------------------", order);
+      console.log("🚀 BASE_URL:", BASE_URL);
+      console.log("📦 Order data:", order);
+
       const response = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: {
@@ -83,26 +86,37 @@ export const createOrder = createAsyncThunk(
         body: JSON.stringify(order),
       });
 
+      console.log("📡 Response status:", response.status);
+      console.log("📡 Response ok:", response.ok);
+
+      const data = await response.json();
+      console.log("✅ Response data:", data);
+
       if (!response.ok) {
+        const errorMessage =
+          data?.message || data?.error || CREATE_ORDER_ERROR_MESSAGE;
+        console.error("❌ API Error:", errorMessage);
         dispatch(
           showAlert({
             type: AlertType.Error,
-            message: CREATE_ORDER_ERROR_MESSAGE,
+            message: errorMessage,
           }),
         );
-        return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
+        return rejectWithValue(errorMessage);
       }
 
-      const data = await response.json();
       return data as OrderResponse;
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : CREATE_ORDER_ERROR_MESSAGE;
+      console.error("💥 Catch error:", error);
       dispatch(
         showAlert({
           type: AlertType.Error,
-          message: CREATE_ORDER_ERROR_MESSAGE,
+          message: errorMessage,
         }),
       );
-      return rejectWithValue(CREATE_ORDER_ERROR_MESSAGE);
+      return rejectWithValue(errorMessage);
     }
   },
 );

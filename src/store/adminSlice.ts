@@ -1,12 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { AlertType, CartItem, Product } from "../types/common";
-import { RootState } from "./store";
+import { AlertType } from "../types/common";
 import { showAlert } from "./CommonSlice";
-import axios from "axios";
-
-const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:5044";
 
 export type AdminState = {
   admin: any;
@@ -16,37 +11,44 @@ const initialState: AdminState = {
   admin: null,
 };
 export const loginAdmin = createAsyncThunk<
-  { user: any; password: string },
+  { token: string; user: any },
   { password: string; name: string; email: string }
 >("admin/login", async (userData, { dispatch, rejectWithValue }) => {
   try {
-    // const response = await axios.post(
-    //   `${API_URL}/api/login`,
-    //   userData,
-    // );
-    if (userData.email !== "admin@gmail.com" || userData.password !== "1234") {
+    if (
+      userData.email !== "admin@gmail.com" ||
+      userData.password !== "123456"
+    ) {
       throw new Error("Неверные учетные данные");
-    } else {
-      // const result = response.data; // { token, user }
-      // localStorage.setItem("token", result.token);
-      localStorage.setItem("admin", JSON.stringify(userData.name));
     }
+
+    const user = {
+      username: userData.name,
+      email: userData.email,
+      phone: "",
+      address: "",
+      isVerified: true,
+    };
+
+    localStorage.setItem("token", "admin-token");
+    localStorage.setItem("user", JSON.stringify(user));
+
     dispatch(
       showAlert({
         type: AlertType.Success,
-        message: "Вход выполнен успешно!",
+        message: "Вход в админку выполнен успешно!",
       }),
     );
-    return { user: userData.name, password: userData.password };
+
+    return { token: "admin-token", user };
   } catch (error: any) {
     dispatch(
       showAlert({
         type: AlertType.Error,
-        // Выводим конкретное сообщение от сервера, если оно пришло, иначе стандартное
-        message: typeof error === "string" ? error : "Ошибка входа",
+        message: error.message || "Ошибка входа",
       }),
     );
-    return rejectWithValue(error || "Ошибка входа");
+    return rejectWithValue(error.message || "Ошибка входа");
   }
 });
 export const adminSlice = createSlice({

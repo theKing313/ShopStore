@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../../../store/AuthSlice";
+import { loginAdmin } from "../../../../store/adminSlice";
 import { PATHS } from "../../../../constants/routes";
 
 const INIT_INPUT = {
@@ -69,14 +70,31 @@ const LoginPage: React.FC = () => {
       password: input.password,
     };
 
-    const result = await dispatch(loginUser(userData));
+    // Check if it's admin
+    const isAdmin =
+      userData.email === "admin@gmail.com" && userData.password === "123456";
 
-    if (loginUser.fulfilled.match(result)) {
-      navigate(PATHS.showcase);
-      return;
+    if (isAdmin) {
+      const result = await dispatch(
+        loginAdmin({
+          name: "admin",
+          email: userData.email,
+          password: userData.password,
+        }),
+      );
+      if (loginAdmin.fulfilled.match(result)) {
+        navigate(`${PATHS.admin}${PATHS.orders}`);
+        return;
+      }
+    } else {
+      const result = await dispatch(loginUser(userData));
+      if (loginUser.fulfilled.match(result)) {
+        navigate(PATHS.showcase);
+        return;
+      }
     }
 
-    console.warn("Login failed, stay on login page", result);
+    console.warn("Login failed, stay on login page");
   }
 
   const handleGoBack = () => {
