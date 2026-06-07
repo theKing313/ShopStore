@@ -406,22 +406,26 @@ const ProfilePage = () => {
                       {order.cart &&
                         order.cart.length > 0 &&
                         (() => {
-                          // const first: any = order.cart[0];
-                          const first: any = order;
+                          const first: any = order.cart[0];
                           const imgSrc =
+                            first?.image?.url ||
                             first.image ||
                             first.imageUrl ||
                             first.thumbnail ||
                             "";
+                          const productId = first.productId || first.id;
                           return (
                             <Link
-                              to={first.id ? `/product/${order.id}` : "/"}
+                              to={productId ? `/product/${productId}` : "/"}
                               className={classes.productLink}
                               style={{
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "10px",
                                 width: "100%",
+                                maxWidth: "100%",
+                                boxSizing: "border-box",
+                                overflow: "hidden",
                                 marginTop: "10px",
                                 padding: "10px 14px",
                                 background: "#111827",
@@ -430,7 +434,7 @@ const ProfilePage = () => {
                                 borderRadius: "12px",
                                 textDecoration: "none",
                                 fontWeight: 700,
-                                justifyContent: "flex-start",
+                                justifyContent: "space-between",
                               }}
                             >
                               {imgSrc ? (
@@ -454,8 +458,19 @@ const ProfilePage = () => {
                                   }}
                                 />
                               )}
-                              <span style={{ flex: 1 }}>{first.name}</span>
-                              <span style={{ opacity: 0.85 }}>
+                              <span
+                                style={{
+                                  flex: 1,
+                                  minWidth: 0,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  marginLeft: 8,
+                                }}
+                              >
+                                {first.name}
+                              </span>
+                              <span style={{ marginLeft: 12, opacity: 0.95 }}>
                                 {first.price} ₽
                               </span>
                             </Link>
