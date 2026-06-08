@@ -46,10 +46,11 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
     };
 
     load();
+    const intervalId = window.setInterval(load, 5000);
 
-    // No realtime for now; simple polling could be added later
     return () => {
       isMounted = false;
+      window.clearInterval(intervalId);
     };
   }, [orderId, BASE_URL]);
 

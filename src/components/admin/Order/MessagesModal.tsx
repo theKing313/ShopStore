@@ -35,12 +35,14 @@ const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
       }
     };
     load();
+    const intervalId = window.setInterval(load, 5000);
 
     // No realtime for now
     return () => {
       isMounted = false;
+      window.clearInterval(intervalId);
     };
-  }, [orderId]);
+  }, [orderId, BASE_URL]);
 
   const send = async () => {
     if (!text.trim()) return;
