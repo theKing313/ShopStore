@@ -128,6 +128,8 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     discount,
     gender,
   } = product;
+
+  const handleSubmitReview = async () => {
     setReviewError("");
     setReviewSuccess("");
 
@@ -176,22 +178,6 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     }
   };
 
-  if (!product) {
-    return <NotFound />;
-  }
-
-  const {
-    id,
-    name,
-    description,
-    image,
-    images,
-    brand,
-    price,
-    weight,
-    discount,
-    gender,
-  } = product;
   const chipText =
     gender.url === "male"
       ? "Мужская коллекция"
