@@ -290,6 +290,28 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #111827;
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.backButton:hover {
+  background: #1f2937;
+  transform: translateX(-1px);
+}
+
 .authLink {
   display: inline-flex;
   align-items: center;

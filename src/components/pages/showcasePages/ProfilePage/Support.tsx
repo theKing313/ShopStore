@@ -102,17 +102,10 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
         {onBack && (
           <button
             onClick={onBack}
-            style={{
-              padding: "6px 12px",
-              background: "#6b7280",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontSize: "12px",
-            }}
+            className={classes.backButton}
+            aria-label="Назад"
           >
-            ← Назад
+            ←
           </button>
         )}
       </div>

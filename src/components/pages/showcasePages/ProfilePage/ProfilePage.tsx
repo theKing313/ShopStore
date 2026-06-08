@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import Support from "./Support";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { PATHS } from "../../../../constants/routes";
@@ -59,8 +59,17 @@ const ProfilePage = () => {
     }
   };
   const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(PATHS.showcase);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -298,8 +307,18 @@ const ProfilePage = () => {
         {profileState === "PROFILE" && (
           <div className={classes.profileInfo}>
             <div className={classes.headerRow}>
-              <h1 className={classes.title}>Профиль</h1>
-              <span className={classes.status}>Активный</span>
+              <button
+                type="button"
+                className={classes.backButton}
+                onClick={handleGoBack}
+                aria-label="Назад"
+              >
+                ←
+              </button>
+              <div>
+                <h1 className={classes.title}>Профиль</h1>
+                <span className={classes.status}>Активный</span>
+              </div>
             </div>
 
             {appliedDiscount > 0 && (
