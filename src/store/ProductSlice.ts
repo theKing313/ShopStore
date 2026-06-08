@@ -1,18 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { AlertType, Error, Product } from "../types/common";
-import { handleObj } from "../utils/helpers";
+import { AlertType, type Error, Product } from "../types/common";
 import { RootState } from "./store";
 import {
   CREATE_PRODUCT_ERROR_MESSAGE,
   DELETE_PRODUCT_ERROR_MESSAGE,
-  FETCH_PRODUCTS_ERROR_MESSAGE,
   UPDATE_PRODUCT_ERROR_MESSAGE,
 } from "../constants/messages";
 import { fetchBrands } from "./BrandSlice";
 import { fetchCategories } from "./CategorySlice";
 import { showAlert } from "./CommonSlice";
-import MOCKED_PRODUCTS from "../mocks/products.json";
 
 export type ProductState = {
   products: Product[];
