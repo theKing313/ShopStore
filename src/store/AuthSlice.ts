@@ -15,18 +15,21 @@ export type UserState = {
   user: user | null;
   token: string | null;
   loading: boolean;
+  checked: boolean;
 };
 
 const initialState: UserState = {
   user: null,
   token: null,
   loading: false,
+  checked: false,
 };
 export const logOut = createAsyncThunk(
   "user/logout",
   async (_, { dispatch }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("adminSessionExpiresAt");
     dispatch(
       showAlert({
         type: AlertType.Info,
@@ -256,12 +259,25 @@ export const checkAuth = createAsyncThunk<{ token: string; user: any }, void>(
       return rejectWithValue("No token");
     }
 
+    const fakeUser = localStorage.getItem("user");
+    const user = fakeUser ? JSON.parse(fakeUser) : null;
+
+    if (user?.email === "admin@gmail.com") {
+      const expiresAt = Number(
+        localStorage.getItem("adminSessionExpiresAt") || "0",
+      );
+      if (!expiresAt || Date.now() > expiresAt) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("adminSessionExpiresAt");
+        return rejectWithValue("Admin session expired");
+      }
+    }
+
     // Имитация проверки токена (заглушка)
     return new Promise<{ token: string; user: any }>((resolve) => {
       setTimeout(() => {
-        const fakeUser = localStorage.getItem("user");
-
-        resolve({ token, user: fakeUser ? JSON.parse(fakeUser) : null });
+        resolve({ token, user });
       }, 500);
     });
 
@@ -301,14 +317,17 @@ export const userSlice = createSlice({
       .addCase(authUser.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.checked = true;
       })
       .addCase(authUser.rejected, (state) => {
         state.token = null;
         state.user = null;
+        state.checked = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.checked = true;
       })
       .addCase(loginUser.rejected, (state) => {
         state.token = null;
@@ -317,6 +336,7 @@ export const userSlice = createSlice({
       .addCase(loginAdmin.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.checked = true;
       })
       .addCase(loginAdmin.rejected, (state) => {
         state.token = null;
@@ -325,23 +345,34 @@ export const userSlice = createSlice({
       .addCase(verifyCode.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.checked = true;
       })
       .addCase(verifyCode.rejected, (state) => {
         state.token = null;
         state.user = null;
       })
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.loading = false;
+        state.checked = true;
       })
       .addCase(checkAuth.rejected, (state) => {
         state.token = null;
         state.user = null;
+        state.loading = false;
+        state.checked = true;
         localStorage.removeItem("token");
+        localStorage.removeItem("adminSessionExpiresAt");
       })
       .addCase(logOut.fulfilled, (state) => {
         state.token = null;
         state.user = null;
+        state.checked = true;
+        state.loading = false;
       });
   },
 });

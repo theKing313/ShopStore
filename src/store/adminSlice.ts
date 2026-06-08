@@ -32,6 +32,10 @@ export const loginAdmin = createAsyncThunk<
 
     localStorage.setItem("token", "admin-token");
     localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem(
+      "adminSessionExpiresAt",
+      String(Date.now() + 5 * 60 * 1000),
+    );
 
     dispatch(
       showAlert({
