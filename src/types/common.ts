@@ -54,6 +54,7 @@ export type Product = {
     discountedPrice: number;
   } | null;
   image: string;
+  colorImages?: Record<string, string>;
   images?: string[];
   name: string;
   brand: {

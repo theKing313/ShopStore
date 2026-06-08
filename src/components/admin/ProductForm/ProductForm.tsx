@@ -51,6 +51,7 @@ const INIT_INPUT = {
   sizes: [] as string[],
   materials: [] as string[],
   colors: [] as string[],
+  colorImages: {} as Record<string, string | File>,
 };
 
 interface IProductFormProps {
@@ -94,6 +95,9 @@ const ProductForm: React.FC<IProductFormProps> = ({
       sizes: productToBeEdited.sizes ?? [],
       materials: productToBeEdited.materials ?? [],
       colors: productToBeEdited.colors ?? [],
+      colorImages:
+        ((productToBeEdited as any).colorImages as Record<string, string>) ||
+        {},
     }));
   }, [productToBeEdited, setInput]);
 
@@ -124,6 +128,21 @@ const ProductForm: React.FC<IProductFormProps> = ({
     }));
   };
 
+  const handleColorImageChange = (
+    color: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0] ?? null;
+
+    setInput((prevState) => ({
+      ...prevState,
+      colorImages: {
+        ...prevState.colorImages,
+        [color]: file ?? "",
+      },
+    }));
+  };
+
   async function submitHandler() {
     const price = Math.round(+input.price);
     const weight = +input.weight;
@@ -140,48 +159,32 @@ const ProductForm: React.FC<IProductFormProps> = ({
       };
     }
 
+    // Загрузка основной картинки
     if (imageFile) {
       try {
-        console.log("[ProductForm] Начинаю загрузку изображения на сервер...");
-
+        console.log("[ProductForm] Загружаю основное изображение...");
         const formData = new FormData();
         formData.append("file", imageFile);
 
         const response = await axios.post(
           "https://backendstore-9jt0.onrender.com/api/upload",
           formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          },
-        );
-
-        console.log(
-          "[ProductForm] Изображение успешно загружено. Результат:",
-          response.data,
+          { headers: { "Content-Type": "multipart/form-data" } },
         );
 
         imageUrl = response.data.url;
-
-        console.log("[ProductForm] Сервер вернул URL:", imageUrl);
+        console.log("[ProductForm] Основное изображение загружено:", imageUrl);
       } catch (error: any) {
-        console.error("[ProductForm] Полная ошибка:", error);
-
-        console.error("status:", error?.response?.status);
-        console.error("data:", error?.response?.data);
-        console.error("headers:", error?.response?.headers);
-
+        console.error(
+          "[ProductForm] Ошибка при загрузке основного изображения:",
+          error,
+        );
         dispatch(
           showAlert({
             type: AlertType.Error,
-            message:
-              error?.response?.data?.message ||
-              error?.message ||
-              "Не удалось загрузить изображение",
+            message: "Не удалось загрузить основное изображение",
           }),
         );
-
         return;
       }
     }
@@ -190,14 +193,49 @@ const ProductForm: React.FC<IProductFormProps> = ({
       imageUrl = productToBeEdited.image;
     }
 
-    if (!imageUrl) {
-      dispatch(
-        showAlert({
-          type: AlertType.Error,
-          message: "Выберите файл изображения.",
-        }),
-      );
-      return;
+    // Подготовка colorImages: загрузка картинок для каждого цвета
+    const colorImages: Record<string, string> = {};
+
+    for (const color of input.colors) {
+      const colorImageValue = input.colorImages[color];
+
+      // Если это File, загружаем на сервер
+      if (colorImageValue instanceof File) {
+        try {
+          console.log(
+            `[ProductForm] Загружаю изображение для цвета "${color}"...`,
+          );
+          const formData = new FormData();
+          formData.append("file", colorImageValue);
+
+          const response = await axios.post(
+            "https://backendstore-9jt0.onrender.com/api/upload",
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } },
+          );
+
+          colorImages[color] = response.data.url;
+          console.log(
+            `[ProductForm] Изображение для "${color}" загружено:`,
+            response.data.url,
+          );
+        } catch (error: any) {
+          console.error(
+            `[ProductForm] Ошибка при загрузке для "${color}":`,
+            error,
+          );
+          dispatch(
+            showAlert({
+              type: AlertType.Error,
+              message: `Ошибка при загрузке изображения для цвета "${color}"`,
+            }),
+          );
+          return;
+        }
+      } else if (typeof colorImageValue === "string" && colorImageValue) {
+        // Если это уже URL, используем как есть
+        colorImages[color] = colorImageValue;
+      }
     }
 
     if (productToBeEdited.id) {
@@ -205,6 +243,7 @@ const ProductForm: React.FC<IProductFormProps> = ({
         ...productToBeEdited,
         ...input,
         image: imageUrl,
+        colorImages,
         price,
         discount,
         weight,
@@ -217,6 +256,7 @@ const ProductForm: React.FC<IProductFormProps> = ({
         description: input.description,
         discount,
         image: imageUrl,
+        colorImages,
         name: input.name,
         price,
         weight,
@@ -347,7 +387,7 @@ const ProductForm: React.FC<IProductFormProps> = ({
 
             <div className={classes.fileInputContainer}>
               <label className={classes.fileLabel} htmlFor="imageFile">
-                Загрузить файл изображения
+                Основное изображение товара
               </label>
               <input
                 className={classes.fileInput}
@@ -359,8 +399,7 @@ const ProductForm: React.FC<IProductFormProps> = ({
                 required={!productToBeEdited.id}
               />
               <p className={classes.fileHint}>
-                Загрузите фото товара в формате PNG или JPEG. Файл станет
-                публично доступным через Supabase Storage.
+                Загрузите фото товара в формате PNG или JPEG.
               </p>
 
               {input.image instanceof File ? (
@@ -384,6 +423,50 @@ const ProductForm: React.FC<IProductFormProps> = ({
                 )
               )}
             </div>
+
+            {input.colors.length > 0 && (
+              <div className={classes.colorImagesContainer}>
+                <span className={classes.containerLabel}>
+                  Изображения для каждого цвета
+                </span>
+                {input.colors.map((color) => (
+                  <div key={color} className={classes.colorImageBlock}>
+                    <label
+                      className={classes.fileLabel}
+                      htmlFor={`colorImage-${color}`}
+                    >
+                      Изображение для цвета: <strong>{color}</strong>
+                    </label>
+                    <input
+                      className={classes.fileInput}
+                      id={`colorImage-${color}`}
+                      type="file"
+                      accept="image/png,image/jpeg"
+                      onChange={(e) => handleColorImageChange(color, e)}
+                    />
+                    <p className={classes.fileHint}>
+                      Загрузите фото для цвета {color}
+                    </p>
+
+                    {input.colorImages[color] instanceof File ? (
+                      <p className={classes.fileName}>
+                        Выбран файл: {(input.colorImages[color] as File).name}
+                      </p>
+                    ) : (
+                      input.colorImages[color] && (
+                        <div className={classes.filePreview}>
+                          <img
+                            className={classes.previewImage}
+                            src={input.colorImages[color] as string}
+                            alt={`Изображение для ${color}`}
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className={classes.container}>
               <Input

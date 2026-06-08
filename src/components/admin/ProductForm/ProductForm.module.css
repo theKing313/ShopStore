@@ -55,6 +55,33 @@
   height: 16px;
 }
 
+.colorImagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+.containerLabel {
+  font-weight: 700;
+  color: #0369a1;
+  font-size: 16px;
+}
+
+.colorImageBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+}
+
 .fileInputContainer {
   display: flex;
   flex-direction: column;
