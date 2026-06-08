@@ -94,7 +94,40 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     );
   }, [reviews]);
 
-  const handleSubmitReview = async () => {
+  const recommendation = useMemo(() => {
+    if (selectedMaterial === "Хлопок") {
+      return "Мягкий и дышащий материал для повседневной носки.";
+    }
+    if (selectedMaterial === "Смешанный") {
+      return "Устойчив к деформациям и быстро сохнет.";
+    }
+    return "Легкий и комфортный трикотаж для активного дня.";
+  }, [selectedMaterial]);
+
+  // Получаем картинку для выбранного цвета или дефолтную
+  const displayImage = useMemo(() => {
+    if (selectedColor && product?.colorImages?.[selectedColor]) {
+      return product.colorImages[selectedColor];
+    }
+    return product?.image || "";
+  }, [selectedColor, product?.colorImages, product?.image]);
+
+  if (!product) {
+    return <NotFound />;
+  }
+
+  const {
+    id,
+    name,
+    description,
+    image,
+    images,
+    brand,
+    price,
+    weight,
+    discount,
+    gender,
+  } = product;
     setReviewError("");
     setReviewSuccess("");
 
@@ -143,16 +176,6 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     }
   };
 
-  const recommendation = useMemo(() => {
-    if (selectedMaterial === "Хлопок") {
-      return "Мягкий и дышащий материал для повседневной носки.";
-    }
-    if (selectedMaterial === "Смешанный") {
-      return "Устойчив к деформациям и быстро сохнет.";
-    }
-    return "Легкий и комфортный трикотаж для активного дня.";
-  }, [selectedMaterial]);
-
   if (!product) {
     return <NotFound />;
   }
@@ -176,14 +199,6 @@ const ProductPage: React.FC<IProductPageProps> = () => {
         ? "Женская коллекция"
         : "Унисекс";
   const isWished = wishlist.includes(id);
-
-  // Получаем картинку для выбранного цвета или дефолтную
-  const displayImage = useMemo(() => {
-    if (selectedColor && product.colorImages?.[selectedColor]) {
-      return product.colorImages[selectedColor];
-    }
-    return image;
-  }, [selectedColor, product.colorImages, image]);
 
   const cartItem: CartItem = {
     productId: id,
