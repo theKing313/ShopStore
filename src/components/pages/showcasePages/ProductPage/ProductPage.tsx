@@ -48,6 +48,28 @@ const ProductPage: React.FC<IProductPageProps> = () => {
   const sizeOptions = product?.sizes ?? [];
   const materialOptions = product?.materials ?? [];
   const colorOptions = product?.colors ?? [];
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const galleryImages = useMemo(() => {
+    const imagesSet = new Set<string>();
+
+    if (selectedColor && product?.colorImages?.[selectedColor]) {
+      imagesSet.add(product.colorImages[selectedColor]);
+    }
+
+    if (product?.images?.length) {
+      product.images.forEach((src) => {
+        if (src) imagesSet.add(src);
+      });
+    }
+
+    if (product?.image) {
+      imagesSet.add(product.image);
+    }
+
+    return Array.from(imagesSet);
+  }, [product, selectedColor]);
 
   useEffect(() => {
     if (!product) {
@@ -58,6 +80,25 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     setSelectedMaterial(product.materials?.[0] ?? "");
     setSelectedColor(product.colors?.[0] ?? "");
   }, [product]);
+
+  useEffect(() => {
+    if (galleryImages.length === 0) {
+      setActiveImageIndex(0);
+      return;
+    }
+
+    const selectedColorImage =
+      selectedColor && product?.colorImages?.[selectedColor]
+        ? product.colorImages[selectedColor]
+        : null;
+
+    if (selectedColorImage) {
+      const foundIndex = galleryImages.indexOf(selectedColorImage);
+      setActiveImageIndex(foundIndex >= 0 ? foundIndex : 0);
+    } else {
+      setActiveImageIndex(0);
+    }
+  }, [galleryImages, selectedColor, product?.colorImages]);
 
   useEffect(() => {
     async function loadReviews() {
@@ -104,30 +145,35 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     return "Легкий и комфортный трикотаж для активного дня.";
   }, [selectedMaterial]);
 
-  // Получаем картинку для выбранного цвета или дефолтную
-  const displayImage = useMemo(() => {
-    if (selectedColor && product?.colorImages?.[selectedColor]) {
-      return product.colorImages[selectedColor];
-    }
-    return product?.image || "";
-  }, [selectedColor, product?.colorImages, product?.image]);
+  const displayImage = galleryImages[activeImageIndex] || product?.image || "";
+
+  const openGallery = (index: number) => {
+    setActiveImageIndex(index);
+    setIsGalleryOpen(true);
+  };
+
+  const closeGallery = () => setIsGalleryOpen(false);
+
+  const showPrevImage = () => {
+    setActiveImageIndex((prev) =>
+      galleryImages.length > 0
+        ? (prev - 1 + galleryImages.length) % galleryImages.length
+        : 0,
+    );
+  };
+
+  const showNextImage = () => {
+    setActiveImageIndex((prev) =>
+      galleryImages.length > 0 ? (prev + 1) % galleryImages.length : 0,
+    );
+  };
 
   if (!product) {
     return <NotFound />;
   }
 
-  const {
-    id,
-    name,
-    description,
-    image,
-    images,
-    brand,
-    price,
-    weight,
-    discount,
-    gender,
-  } = product;
+  const { id, name, description, brand, price, weight, discount, gender } =
+    product;
 
   const handleSubmitReview = async () => {
     setReviewError("");
@@ -450,19 +496,108 @@ const ProductPage: React.FC<IProductPageProps> = () => {
               </div>
 
               <div className={classes["image-wrapper"]}>
-                <img src={displayImage} alt={name} className={classes.image} />
+                <button
+                  type="button"
+                  className={classes.mainImageButton}
+                  onClick={() => openGallery(activeImageIndex)}
+                >
+                  <img
+                    src={displayImage}
+                    alt={name}
+                    className={classes.image}
+                  />
+                  <div className={classes.imageZoomHint}>
+                    Нажмите, чтобы открыть галерею
+                  </div>
+                  {selectedColor && product.colorImages?.[selectedColor] && (
+                    <span className={classes.colorBadge}>{selectedColor}</span>
+                  )}
+                </button>
+
                 <div className={classes.gallery}>
-                  {(images?.length ? images : [image, image, image]).map(
-                    (src, index) => (
+                  {galleryImages.map((src, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className={`${classes.thumbnailButton} ${
+                        activeImageIndex === index
+                          ? classes.thumbnailActive
+                          : ""
+                      }`}
+                      onClick={() => setActiveImageIndex(index)}
+                    >
                       <img
-                        key={index}
                         src={src}
-                        alt={`${name} ${index}`}
+                        alt={`${name} ${index + 1}`}
                         className={classes.thumbnail}
                       />
-                    ),
-                  )}
+                    </button>
+                  ))}
                 </div>
+
+                {isGalleryOpen && (
+                  <div
+                    className={classes.lightboxOverlay}
+                    onClick={closeGallery}
+                  >
+                    <div
+                      className={classes.lightbox}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        className={classes.lightboxClose}
+                        onClick={closeGallery}
+                        aria-label="Закрыть"
+                      >
+                        ×
+                      </button>
+                      <div className={classes.lightboxContent}>
+                        <button
+                          type="button"
+                          className={classes.lightboxNav}
+                          onClick={showPrevImage}
+                          aria-label="Предыдущее изображение"
+                        >
+                          ‹
+                        </button>
+                        <img
+                          src={galleryImages[activeImageIndex]}
+                          alt={`${name} ${activeImageIndex + 1}`}
+                          className={classes.lightboxImage}
+                        />
+                        <button
+                          type="button"
+                          className={classes.lightboxNav}
+                          onClick={showNextImage}
+                          aria-label="Следующее изображение"
+                        >
+                          ›
+                        </button>
+                      </div>
+                      <div className={classes.lightboxThumbnails}>
+                        {galleryImages.map((src, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            className={`${classes.lightboxThumbButton} ${
+                              activeImageIndex === index
+                                ? classes.lightboxThumbActive
+                                : ""
+                            }`}
+                            onClick={() => setActiveImageIndex(index)}
+                          >
+                            <img
+                              src={src}
+                              alt={`Превью ${index + 1}`}
+                              className={classes.lightboxThumbImage}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </>
