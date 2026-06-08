@@ -90,7 +90,7 @@ const ProfilePage = () => {
   const [now, setNow] = useState(Date.now());
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  console.log("Orders in ProfilePage:", orders);
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setNow(Date.now());
