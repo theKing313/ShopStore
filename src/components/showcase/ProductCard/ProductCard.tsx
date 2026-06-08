@@ -10,6 +10,7 @@ interface IProductCardProps {
   price: Product["price"];
   image: Product["image"];
   images?: Product["images"];
+  colorImages?: Product["colorImages"];
   discountPercent?: Product["discountPercent"];
   discountedPrice?: Product["discountedPrice"];
   brand: Product["brand"];
@@ -24,6 +25,7 @@ const ProductCard: React.FC<IProductCardProps> = ({
   price,
   image,
   images,
+  colorImages,
   discountPercent,
   discountedPrice,
   brand,
@@ -39,7 +41,15 @@ const ProductCard: React.FC<IProductCardProps> = ({
   const hasDiscount =
     percent != null && percent > 0 && calculatedDiscountedPrice != null;
 
-  const hoverImages = images?.length ? images : [image];
+  const colorPreviewImages = colorImages
+    ? Object.values(colorImages).filter((src): src is string => Boolean(src))
+    : [];
+  const hoverImages =
+    colorPreviewImages.length > 0
+      ? colorPreviewImages
+      : images?.length
+        ? images
+        : [image];
   const hasHoverGallery = hoverImages.length > 1;
   const focusPositions = ["20% 30%", "50% 50%", "80% 40%"];
 
