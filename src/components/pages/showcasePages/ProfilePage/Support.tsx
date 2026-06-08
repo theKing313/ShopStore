@@ -51,15 +51,18 @@ const Support: React.FC<Props> = ({ orderId }) => {
   const send = async () => {
     if (!text.trim()) return;
     try {
-      await fetch("/api/support_messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user?.id || null,
-          orderId: orderId || null,
-          content: text.trim(),
-        }),
-      });
+      await fetch(
+        "https://backendstore-9jt0.onrender.com/api/support_messages",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user?.id || null,
+            orderId: orderId || null,
+            content: text.trim(),
+          }),
+        },
+      );
       // reload messages
       const res = await fetch(
         orderId
