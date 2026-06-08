@@ -36,9 +36,11 @@ const Support: React.FC<Props> = ({ orderId }) => {
         const res = await fetch(q);
         const data = await res.json();
         if (!isMounted) return;
-        setMessages(data || []);
+        // Ensure data is an array
+        setMessages(Array.isArray(data) ? data : []);
       } catch (e) {
-        console.error(e);
+        console.error("Failed to load messages:", e);
+        setMessages([]);
       }
     };
 
@@ -48,12 +50,12 @@ const Support: React.FC<Props> = ({ orderId }) => {
     return () => {
       isMounted = false;
     };
-  }, [orderId]);
+  }, [orderId, BASE_URL]);
 
   const send = async () => {
     if (!text.trim()) return;
     try {
-      await fetch(`${BASE_URL}/api/support_messages`, {
+      const postRes = await fetch(`${BASE_URL}/api/support_messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -62,6 +64,11 @@ const Support: React.FC<Props> = ({ orderId }) => {
           content: text.trim(),
         }),
       });
+
+      if (!postRes.ok) {
+        console.error("Failed to send message:", postRes.status);
+      }
+
       // reload messages
       const res = await fetch(
         orderId
@@ -69,9 +76,9 @@ const Support: React.FC<Props> = ({ orderId }) => {
           : `${BASE_URL}/api/support_messages`,
       );
       const data = await res.json();
-      setMessages(data || []);
+      setMessages(Array.isArray(data) ? data : []);
     } catch (e) {
-      console.error(e);
+      console.error("Error sending message:", e);
     }
     setText("");
   };
