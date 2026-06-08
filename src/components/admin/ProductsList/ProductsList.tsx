@@ -5,11 +5,7 @@ import {
   NO_FILTERED_RESULTS,
   NO_WAY_TO_CHANGE_THIS_PRODUCT,
 } from "../../../constants/messages";
-import {
-  deleteProduct,
-  deleteProductById,
-  selectProduct,
-} from "../../../store/ProductSlice";
+import { deleteProductById, selectProduct } from "../../../store/ProductSlice";
 import { AppDispatch } from "../../../store/store";
 import { Brand, Category, Option, Product } from "../../../types/common";
 import AreaLoader from "../../UI/AreaLoader/AreaLoader";
@@ -52,7 +48,11 @@ const ProductsList: React.FC<IProductsListProps> = ({
 
   const productsByBrandCount = products.reduce<Record<string, number>>(
     (acc, product) => {
-      acc[product.brand.id] = (acc[product.brand.id] || 0) + 1;
+      const brandId = product.brand?.id;
+      if (!brandId) {
+        return acc;
+      }
+      acc[brandId] = (acc[brandId] || 0) + 1;
       return acc;
     },
     {},
@@ -72,7 +72,9 @@ const ProductsList: React.FC<IProductsListProps> = ({
       (product) => product.category.id === id,
     );
     const brandIds = Array.from(
-      new Set(filteredProducts.map((product) => product.brand.id)),
+      new Set(
+        filteredProducts.map((product) => product.brand?.id).filter(Boolean),
+      ),
     );
     const filteredBrands = brands.filter((brand) =>
       brandIds.includes(brand.id),
@@ -82,7 +84,7 @@ const ProductsList: React.FC<IProductsListProps> = ({
       const filteredProductsByCategoryAndBrand = products.filter((product) => {
         return (
           product.category.id === id &&
-          product.brand.id === selectedBrandOption.id
+          product.brand?.id === selectedBrandOption.id
         );
       });
       return {
@@ -105,7 +107,7 @@ const ProductsList: React.FC<IProductsListProps> = ({
     selectedCategoryOptionId: Option["id"] = "",
   ) => {
     const filteredProducts = products.filter(
-      (product) => product.brand.id === id,
+      (product) => product.brand?.id === id,
     );
     const categoriesIds = Array.from(
       new Set(filteredProducts.map((product) => product.category.id)),
@@ -118,7 +120,7 @@ const ProductsList: React.FC<IProductsListProps> = ({
       const filteredProductsByCategoryAndBrand = products.filter((product) => {
         return (
           product.category.id === selectedCategoryOption.id &&
-          product.brand.id === id
+          product.brand?.id === id
         );
       });
 
