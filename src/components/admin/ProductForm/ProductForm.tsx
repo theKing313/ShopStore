@@ -11,11 +11,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { createProduct, updateProduct } from "../../../store/ProductSlice";
 import { showAlert } from "../../../store/CommonSlice";
-import { uploadProductImage } from "../../../lib/supabaseClient";
 import ProductFormSelect from "./ProductFormSelect/ProductFormSelect";
 import { productFormValidator } from "../../../utils/validators";
 import { GENDER } from "../../../constants/common";
 import axios from "axios";
+
+const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL"];
+const MATERIAL_OPTIONS = ["Хлопок", "Полиэстер", "Лён", "Шерсть"];
+const COLOR_OPTIONS = [
+  "Синий",
+  "Чёрный",
+  "Белый",
+  "Красный",
+  "Зелёный",
+  "Серый",
+];
 
 const INIT_INPUT = {
   name: "",
@@ -38,6 +48,9 @@ const INIT_INPUT = {
     name: "",
     url: "",
   },
+  sizes: [] as string[],
+  materials: [] as string[],
+  colors: [] as string[],
 };
 
 interface IProductFormProps {
@@ -78,8 +91,28 @@ const ProductForm: React.FC<IProductFormProps> = ({
         ? productToBeEdited.weight.toString()
         : "",
       price: productToBeEdited.price ? productToBeEdited.price.toString() : "",
+      sizes: productToBeEdited.sizes ?? [],
+      materials: productToBeEdited.materials ?? [],
+      colors: productToBeEdited.colors ?? [],
     }));
   }, [productToBeEdited, setInput]);
+
+  const toggleArrayField = (
+    field: "sizes" | "materials" | "colors",
+    value: string,
+  ) => {
+    setInput((prevState) => {
+      const currentValues = (prevState[field] as string[]) || [];
+      const nextValues = currentValues.includes(value)
+        ? currentValues.filter((item) => item !== value)
+        : [...currentValues, value];
+
+      return {
+        ...prevState,
+        [field]: nextValues,
+      };
+    });
+  };
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -189,6 +222,9 @@ const ProductForm: React.FC<IProductFormProps> = ({
         weight,
         brand: input.brand,
         gender: input.gender,
+        sizes: input.sizes ?? [],
+        materials: input.materials ?? [],
+        colors: input.colors ?? [],
       };
 
       await dispatch(createProduct(newProduct));
@@ -257,6 +293,56 @@ const ProductForm: React.FC<IProductFormProps> = ({
                 value={input.gender.name || ""}
                 field={"gender"}
               />
+            </div>
+
+            <div className={classes.optionGroups}>
+              <div className={classes.optionGroup}>
+                <span className={classes.groupLabel}>Размеры</span>
+                <div className={classes.optionList}>
+                  {SIZE_OPTIONS.map((size) => (
+                    <label key={size} className={classes.optionItem}>
+                      <input
+                        type="checkbox"
+                        checked={input.sizes?.includes(size)}
+                        onChange={() => toggleArrayField("sizes", size)}
+                      />
+                      {size}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className={classes.optionGroup}>
+                <span className={classes.groupLabel}>Материалы</span>
+                <div className={classes.optionList}>
+                  {MATERIAL_OPTIONS.map((material) => (
+                    <label key={material} className={classes.optionItem}>
+                      <input
+                        type="checkbox"
+                        checked={input.materials?.includes(material)}
+                        onChange={() => toggleArrayField("materials", material)}
+                      />
+                      {material}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className={classes.optionGroup}>
+                <span className={classes.groupLabel}>Цвета</span>
+                <div className={classes.optionList}>
+                  {COLOR_OPTIONS.map((color) => (
+                    <label key={color} className={classes.optionItem}>
+                      <input
+                        type="checkbox"
+                        checked={input.colors?.includes(color)}
+                        onChange={() => toggleArrayField("colors", color)}
+                      />
+                      {color}
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className={classes.fileInputContainer}>
