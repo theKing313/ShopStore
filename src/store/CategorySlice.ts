@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { AlertType, Category, Error } from "../types/common";
-import { handleObj } from "../utils/helpers";
+import { Category, Error } from "../types/common";
 import {
   CREATE_CATEGORY_ERROR_MESSAGE,
   DELETE_CATEGORY_ERROR_MESSAGE,
   FETCH_CATEGORIES_ERROR_MESSAGE,
   UPDATE_CATEGORY_ERROR_MESSAGE,
 } from "../constants/messages";
-import { showAlert } from "./CommonSlice";
-import MOCKED_CATEGORIES from "../mocks/categories.json";
+
+const BASE_URL =
+  process.env.VITE_API_URL || "https://backendstore-9jt0.onrender.com";
 
 export type CategoryState = {
   categories: Category[];
@@ -38,35 +38,81 @@ const initialState: CategoryState = {
 
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
-  async (_, { dispatch }) => {
-    // Упрощенная версия: используем локальные данные
-    const categories: Category[] = handleObj(MOCKED_CATEGORIES);
-    return categories;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`);
+      if (!response.ok) {
+        const error = await response.json();
+        return rejectWithValue(error.message || FETCH_CATEGORIES_ERROR_MESSAGE);
+      }
+      const categories = await response.json();
+      return categories as Category[];
+    } catch (error) {
+      return rejectWithValue(FETCH_CATEGORIES_ERROR_MESSAGE);
+    }
   },
 );
 
 export const createCategory = createAsyncThunk(
   "category/createCategory",
-  async (category: Partial<Category>, { dispatch }) => {
-    // Упрощенная версия: генерируем id
-    const id = Date.now().toString();
-    return { id, ...category } as Category;
+  async (category: Partial<Category>, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        return rejectWithValue(error.message || CREATE_CATEGORY_ERROR_MESSAGE);
+      }
+      const createdCategory = await response.json();
+      return createdCategory as Category;
+    } catch (error) {
+      return rejectWithValue(CREATE_CATEGORY_ERROR_MESSAGE);
+    }
   },
 );
 
 export const updateCategory = createAsyncThunk(
   "category/updateCategory",
-  async (category: Category, { dispatch }) => {
-    // Упрощенная версия: возвращаем обновленный
-    return category;
+  async (category: Category, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/categories/${category.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(category),
+        },
+      );
+      if (!response.ok) {
+        const error = await response.json();
+        return rejectWithValue(error.message || UPDATE_CATEGORY_ERROR_MESSAGE);
+      }
+      const updatedCategory = await response.json();
+      return updatedCategory as Category;
+    } catch (error) {
+      return rejectWithValue(UPDATE_CATEGORY_ERROR_MESSAGE);
+    }
   },
 );
 
 export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
-  async (id: Category["id"], { dispatch }) => {
-    // Упрощенная версия: возвращаем id
-    return id;
+  async (id: Category["id"], { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        return rejectWithValue(error.message || DELETE_CATEGORY_ERROR_MESSAGE);
+      }
+      return id;
+    } catch (error) {
+      return rejectWithValue(DELETE_CATEGORY_ERROR_MESSAGE);
+    }
   },
 );
 
