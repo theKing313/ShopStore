@@ -22,6 +22,8 @@ const Support: React.FC<Props> = ({ orderId }) => {
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [text, setText] = useState("");
   const user = useSelector((state: RootState) => state.auth.user);
+  const BASE_URL =
+    process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 
   useEffect(() => {
     let isMounted = true;
@@ -29,8 +31,8 @@ const Support: React.FC<Props> = ({ orderId }) => {
     const load = async () => {
       try {
         const q = orderId
-          ? `/api/support_messages?orderId=${encodeURIComponent(orderId)}`
-          : "/api/support_messages";
+          ? `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`
+          : `${BASE_URL}/api/support_messages`;
         const res = await fetch(q);
         const data = await res.json();
         if (!isMounted) return;
@@ -51,23 +53,20 @@ const Support: React.FC<Props> = ({ orderId }) => {
   const send = async () => {
     if (!text.trim()) return;
     try {
-      await fetch(
-        "https://backendstore-9jt0.onrender.com/api/support_messages",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: user?.id || null,
-            orderId: orderId || null,
-            content: text.trim(),
-          }),
-        },
-      );
+      await fetch(`${BASE_URL}/api/support_messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id || null,
+          orderId: orderId || null,
+          content: text.trim(),
+        }),
+      });
       // reload messages
       const res = await fetch(
         orderId
-          ? `/api/support_messages?orderId=${encodeURIComponent(orderId)}`
-          : "/api/support_messages",
+          ? `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`
+          : `${BASE_URL}/api/support_messages`,
       );
       const data = await res.json();
       setMessages(data || []);
