@@ -90,6 +90,7 @@ export type CartItem = {
   selectedSize?: string;
   selectedMaterial?: string;
   selectedColor?: string;
+  colorImages?: Record<string, string>;
 };
 
 export type Review = {
