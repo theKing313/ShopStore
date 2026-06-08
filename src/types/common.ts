@@ -12,6 +12,7 @@ export type user = {
   isVerified: boolean;
   birthDate?: string;
   birthday?: string;
+  id?: string;
 };
 export type Alert = {
   action?: "cart" | "wishlist";

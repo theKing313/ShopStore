@@ -1,4 +1,5 @@
 import { useState } from "react";
+// import MessagesModal from "./MessagesModal";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../store/store";
 import { showAlert } from "../../../store/CommonSlice";
@@ -10,6 +11,7 @@ import {
 } from "../../../types/common";
 import classes from "./Order.module.css";
 import OrderCartItem from "./OrderCartItem/OrderCartItem";
+import MessagesModal from "./MessagesModal";
 
 interface IOrderProps {
   id: string;
@@ -70,6 +72,12 @@ const Order: React.FC<IOrderProps> = ({
   const toggle = () => {
     setIsCollapsed((prev) => !prev);
   };
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const openMessages = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMessagesOpen(true);
+  };
+  const closeMessages = () => setIsMessagesOpen(false);
 
   const handleStatusChange = async (newStatus: OrderItem["status"]) => {
     if (newStatus === status) return;
@@ -159,7 +167,19 @@ const Order: React.FC<IOrderProps> = ({
           </select>
         </td>
         <td className={classes["sumarry-cell"]}>{totalPrice} ₽</td>
+        <td className={classes["sumarry-cell"]}>
+          <button onClick={openMessages} style={{ padding: "6px 8px" }}>
+            Сообщ.
+          </button>
+        </td>
       </tr>
+      {isMessagesOpen && (
+        <tr>
+          <td colSpan={7}>
+            <MessagesModal orderId={id} onClose={closeMessages} />
+          </td>
+        </tr>
+      )}
 
       {isCollapsed && (
         <>

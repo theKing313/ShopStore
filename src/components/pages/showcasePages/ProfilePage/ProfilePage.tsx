@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+// import Support from "./Support";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { PATHS } from "../../../../constants/routes";
 import classes from "./ProfilePage.module.css";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 import { fetchOrders, showAlert } from "../../../../store/CommonSlice";
 import type { Order, user } from "../../../../types/common";
 import { AlertType } from "../../../../types/common";
+import Support from "./Support";
 
 const ProfilePage = () => {
   const [profileState, setProfileState] = useState("PROFILE");
@@ -27,6 +29,9 @@ const ProfilePage = () => {
         break;
       case "ORDERS":
         setProfileState("ORDERS");
+        break;
+      case "SUPPORT":
+        setProfileState("SUPPORT");
         break;
       // return { ...state, isLoading: true, error: null };
       default:
@@ -210,9 +215,13 @@ const ProfilePage = () => {
             >
               Заказы
             </Link>
-            {/* <Link to={PATHS.wishlist} className={classes.menuItem}>
-              Бонусы
-            </Link> */}
+            <Link
+              to={PATHS.profile}
+              className={classes.menuItem}
+              onClick={() => profileLists({}, { type: "SUPPORT" })}
+            >
+              Поддержка
+            </Link>
             <Link
               to={PATHS.showcase}
               className={classes.menuItem}
@@ -392,6 +401,11 @@ const ProfilePage = () => {
                 </button>
               </section>
             </div>
+          </div>
+        )}
+        {profileState === "SUPPORT" && (
+          <div className={classes.profileInfo}>
+            <Support />
           </div>
         )}
         {profileState === "ORDERS" && (

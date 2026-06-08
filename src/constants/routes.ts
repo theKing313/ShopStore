@@ -2,6 +2,7 @@ export const PATHS = {
   showcase: "/",
   discounts: "/discounts",
   products: "products",
+  support: "support",
   admin: "/admin/",
   settings: "settings",
   orders: "orders",
