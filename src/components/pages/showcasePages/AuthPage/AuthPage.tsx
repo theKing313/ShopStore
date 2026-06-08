@@ -72,9 +72,9 @@ const AuthPage: React.FC = () => {
     };
     const result = await dispatch(authUser(userData));
     console.log("Результат авторизации:", result);
-    // if (authUser.fulfilled.match(result)) {
-    //   navigate(PATHS.showcase);
-    // }
+    if (authUser.fulfilled.match(result)) {
+      navigate(PATHS.showcase);
+    }
   }
 
   const handleGoBack = () => {
