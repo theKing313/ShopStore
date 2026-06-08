@@ -5,10 +5,10 @@ import classes from "./Order.module.css";
 
 type SupportMessage = {
   id: string;
-  user_id?: string | null;
-  order_id?: string | null;
+  userId?: number | null;
+  orderId?: string | null;
   content: string;
-  created_at?: string | null;
+  createdAt?: string | null;
 };
 
 const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
@@ -17,17 +17,19 @@ const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
 }) => {
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [text, setText] = useState("");
+  const BASE_URL =
+    process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 
   useEffect(() => {
     let isMounted = true;
     const load = async () => {
       try {
         const res = await fetch(
-          `/api/support_messages?orderId=${encodeURIComponent(orderId)}`,
+          `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`,
         );
         const data = await res.json();
         if (!isMounted) return;
-        setMessages(data || []);
+        setMessages(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error(e);
       }
@@ -43,16 +45,16 @@ const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
   const send = async () => {
     if (!text.trim()) return;
     try {
-      await fetch("/api/support_messages", {
+      await fetch(`${BASE_URL}/api/support_messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderId, content: text.trim() }),
       });
       const res = await fetch(
-        `/api/support_messages?orderId=${encodeURIComponent(orderId)}`,
+        `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`,
       );
       const data = await res.json();
-      setMessages(data || []);
+      setMessages(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error(e);
     }
@@ -79,7 +81,7 @@ const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
             style={{ padding: 8, borderBottom: "1px solid #eee" }}
           >
             <div style={{ fontSize: 12, color: "#666" }}>
-              {m.created_at ? new Date(m.created_at).toLocaleString() : ""}
+              {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
             </div>
             <div style={{ marginTop: 4 }}>{m.content}</div>
           </div>
