@@ -74,7 +74,7 @@ const ProfilePage = () => {
     setProfilePhone(source.phone || "");
     setProfileBirthdate(source.birthDate || source.birthday || "");
 
-    dispatch(fetchOrders());
+    dispatch(fetchOrders(String(user.id)));
   }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);

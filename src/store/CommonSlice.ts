@@ -26,28 +26,18 @@ const initialState: CommonState = {
     message: "",
   },
 };
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5044";
+const BASE_URL =
+  process.env.REACT_APP_API_URL || "https://backendstore-9jt0.onrender.com";
 // new row violates row-level security policy
 
-export const fetchOrders = createAsyncThunk(
+export const fetchOrders = createAsyncThunk<any, string | undefined>(
   "common/fetchOrders",
-  async (_, { dispatch, rejectWithValue }) => {
-    // const response = await fetch(`${BASE_URL}/orders.json`);
-    // const orders: Order[] = handleObj(MOCKED_COMMON as any);
-    // console.log("orders", orders);
-    // return orders;
-    // const orders: Order[] = handleObj(data);
-    // if (!response.ok) {
-    //   dispatch(
-    //     showAlert({
-    //       type: AlertType.Error,
-    //       message: FETCH_ORDERS_ERROR_MESSAGE,
-    //     }),
-    //   );
-    //   return rejectWithValue(FETCH_ORDERS_ERROR_MESSAGE);
-    // }
+  async (userId, { dispatch, rejectWithValue }) => {
+    const endpoint = userId
+      ? `${BASE_URL}/api/orders?userId=${encodeURIComponent(userId)}`
+      : `${BASE_URL}/api/orders`;
 
-    const response = await fetch(`${BASE_URL}/api/orders`);
+    const response = await fetch(endpoint);
     if (!response.ok) {
       dispatch(
         showAlert({

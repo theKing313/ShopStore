@@ -30,6 +30,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useSelector((state: RootState) => state.product);
   const { wishlist } = useSelector((state: RootState) => state.user);
+  const authUser = useSelector((state: RootState) => state.auth.user);
   const product = products.find(
     (product) => product.id === productId,
   ) as Product;
@@ -127,6 +128,12 @@ const ProductPage: React.FC<IProductPageProps> = () => {
 
     loadReviews();
   }, [productId]);
+
+  useEffect(() => {
+    if (authUser?.username) {
+      setReviewName((prev) => (prev && prev.trim() ? prev : authUser.username));
+    }
+  }, [authUser]);
 
   const averageRating = useMemo(() => {
     if (reviews.length === 0) return 0;

@@ -158,6 +158,7 @@ const CartPage: React.FC = () => {
 
   async function handleSubmit() {
     const order = {
+      userId: authUser?.id,
       userName: cartUser?.username || input.name,
       userPhone: cartUser?.phone || input.phone,
       userAddress: cartUser?.address || input.address,
