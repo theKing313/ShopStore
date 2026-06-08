@@ -266,7 +266,7 @@ const ProductForm: React.FC<IProductFormProps> = ({
         materials: input.materials ?? [],
         colors: input.colors ?? [],
       };
-
+      console.log("NEW PRODUCT", newProduct);
       await dispatch(createProduct(newProduct));
     }
 

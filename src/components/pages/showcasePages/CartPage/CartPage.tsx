@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { NO_PRODUCTS_IN_CART } from "../../../../constants/messages";
 import { PATHS } from "../../../../constants/routes";
 import {
@@ -37,7 +37,6 @@ const INIT_INPUT = {
 
 const CartPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const { cart, user: persistedUser } = useSelector(
     (state: RootState) => state.user,
   );
@@ -45,6 +44,8 @@ const CartPage: React.FC = () => {
   const { products } = useSelector((state: RootState) => state.product);
   const { isLoading } = useSelector((state: RootState) => state.common);
   const authUser = useSelector((state: RootState) => state.auth.user);
+  const discountEligible =
+    !!authUser && localStorage.getItem("firstOrderDiscount") === "true";
   const localStorageUser = (() => {
     try {
       const stored = localStorage.getItem("user");
@@ -116,6 +117,8 @@ const CartPage: React.FC = () => {
     .toFixed(2);
   const profit = cart.reduce((res, { profit = 0 }) => res + profit, 0);
   const quantity = cart.reduce((res, { quantity }) => res + quantity, 0);
+  const discountAmount = discountEligible ? price / 2 : 0;
+  const summaryPrice = discountEligible ? price - discountAmount : price;
   const hasProducts = cart.length > 0;
   const selectedMaterial = cartProducts.find(
     (item) => item.selectedMaterial,
@@ -127,13 +130,15 @@ const CartPage: React.FC = () => {
     (item) => item.selectedColor,
   )?.selectedColor;
   const summaryProps = {
-    price,
+    price: summaryPrice,
     weight,
     profit,
     quantity,
     selectedMaterial,
     selectedSize,
     selectedColor,
+    discount: discountAmount,
+    originalPrice: discountEligible ? price : undefined,
   };
 
   const handleWishlist = ({
@@ -160,9 +165,9 @@ const CartPage: React.FC = () => {
       orderType: input.orderType,
       cart: cart,
       timestamp: Date.now(),
-      totalPrice: price,
+      totalPrice: summaryPrice,
       totalWeight: weight,
-      totalDiscount: profit,
+      totalDiscount: profit + discountAmount,
       totalQuantity: quantity,
     };
 
@@ -178,6 +183,9 @@ const CartPage: React.FC = () => {
 
     if (createOrder.fulfilled.match(result)) {
       const payload = result.payload as any;
+      if (discountEligible) {
+        localStorage.removeItem("firstOrderDiscount");
+      }
 
       if (payload?.paymentUrl) {
         dispatch(clearCart());
@@ -255,6 +263,27 @@ const CartPage: React.FC = () => {
                   <span className={classes.title}>
                     {cartUser ? "Доставка" : "Ваши данные"}
                   </span>
+
+                  {!authUser && hasProducts && (
+                    <div
+                      style={{
+                        marginBottom: 16,
+                        padding: "14px 16px",
+                        backgroundColor: "#fff7e6",
+                        border: "1px solid #ffd591",
+                        borderRadius: 12,
+                        color: "#663c00",
+                      }}
+                    >
+                      <Link
+                        to={PATHS.auth}
+                        style={{ color: "#663c00", fontWeight: 700 }}
+                      >
+                        Зарегистрируйтесь сейчас
+                      </Link>{" "}
+                      и получите 50% скидки на первый заказ.
+                    </div>
+                  )}
 
                   {cartUser && (
                     <div className={classes["user-summary"]}>

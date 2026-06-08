@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { PATHS } from "../../../../constants/routes";
 import classes from "./ProfilePage.module.css";
-import { logOut } from "../../../../store/AuthSlice";
+import { logOut, setUser } from "../../../../store/AuthSlice";
 import { useEffect, useState } from "react";
 import { fetchOrders, showAlert } from "../../../../store/CommonSlice";
-import type { Order } from "../../../../types/common";
+import type { Order, user } from "../../../../types/common";
 import { AlertType } from "../../../../types/common";
 
 const ProfilePage = () => {
@@ -14,6 +14,10 @@ const ProfilePage = () => {
   const [bonusesToSpend, setBonusesToSpend] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [userBonuses, setUserBonuses] = useState(50);
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [profilePhone, setProfilePhone] = useState("");
+  const [profileBirthdate, setProfileBirthdate] = useState("");
 
   const profileLists = (state: any, action: any): any => {
     switch (action.type) {
@@ -45,9 +49,19 @@ const ProfilePage = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    if (user) {
-      dispatch(fetchOrders());
-    }
+    if (!user) return;
+
+    const storedUser = localStorage.getItem("user");
+    const parsedUser: user | null = storedUser ? JSON.parse(storedUser) : null;
+
+    const source = parsedUser || user;
+
+    setProfileName(source.username || "");
+    setProfileEmail(source.email || "");
+    setProfilePhone(source.phone || "");
+    setProfileBirthdate(source.birthDate || source.birthday || "");
+
+    dispatch(fetchOrders());
   }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
@@ -98,6 +112,28 @@ const ProfilePage = () => {
   };
 
   const twoHoursMs = 2 * 60 * 60 * 1000;
+
+  const saveProfile = () => {
+    if (!user) return;
+
+    const updatedUser: user = {
+      ...user,
+      username: profileName,
+      email: profileEmail,
+      phone: profilePhone,
+      birthDate: profileBirthdate,
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    dispatch(setUser(updatedUser));
+
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: "Данные профиля сохранены",
+      }),
+    );
+  };
 
   const cancelOrder = async (orderId: string) => {
     try {
@@ -174,9 +210,9 @@ const ProfilePage = () => {
             >
               Заказы
             </Link>
-            <Link to={PATHS.wishlist} className={classes.menuItem}>
+            {/* <Link to={PATHS.wishlist} className={classes.menuItem}>
               Бонусы
-            </Link>
+            </Link> */}
             <Link
               to={PATHS.showcase}
               className={classes.menuItem}
@@ -186,7 +222,7 @@ const ProfilePage = () => {
             </Link>
           </nav>
         </div>
-        {user.isVerified ? (
+        {/* {user.isVerified ? (
           <div className={classes.bonusCard}>
             <span className={classes.bonusLabel}>Бонусы</span>
             <strong className={classes.bonusValue}>{userBonuses} Т</strong>
@@ -238,7 +274,7 @@ const ProfilePage = () => {
               Подтвердите email, чтобы тратить бонусы в магазине.
             </p>
           </div>
-        )}
+        )} */}
       </aside>
 
       <main className={classes.content}>
@@ -273,21 +309,30 @@ const ProfilePage = () => {
                   <label className={classes.label}>Имя и фамилия</label>
                   <input
                     className={classes.input}
-                    defaultValue={user.username || ""}
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    placeholder="Введите имя"
                   />
                 </div>
                 <div className={classes.field}>
                   <label className={classes.label}>Email</label>
                   <input
                     className={classes.input}
-                    defaultValue={user.email || ""}
+                    type="email"
+                    value={profileEmail}
+                    onChange={(e) => setProfileEmail(e.target.value)}
+                    placeholder="example@mail.ru"
                   />
                 </div>
                 <div className={classes.field}>
                   <label className={classes.label}>Телефон</label>
                   <input
                     className={classes.input}
-                    defaultValue={user.phone || "+7 (___) ___-__-__"}
+                    type="tel"
+                    inputMode="tel"
+                    value={profilePhone}
+                    onChange={(e) => setProfilePhone(e.target.value)}
+                    placeholder="+7 (___) ___-__-__"
                   />
                 </div>
               </section>
@@ -308,7 +353,12 @@ const ProfilePage = () => {
                 </div>
                 <div className={classes.field}>
                   <label className={classes.label}>Дата рождения</label>
-                  <input className={classes.input} type="date" />
+                  <input
+                    className={classes.input}
+                    type="date"
+                    value={profileBirthdate}
+                    onChange={(e) => setProfileBirthdate(e.target.value)}
+                  />
                 </div>
                 <div className={classes.switchRow}>
                   <div>
@@ -333,7 +383,13 @@ const ProfilePage = () => {
                   </label>
                 </div>
 
-                <button className={classes.saveButton}>Сохранить</button>
+                <button
+                  className={classes.saveButton}
+                  type="button"
+                  onClick={saveProfile}
+                >
+                  Сохранить
+                </button>
               </section>
             </div>
           </div>

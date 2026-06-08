@@ -348,10 +348,10 @@ const ProductsList: React.FC<IProductsListProps> = ({
                         )}
                       </div>
                     </td>
-                    <td className={classes.cell}>{category.name}</td>
-                    <td className={classes.cell}>{brand.name}</td>
+                    <td className={classes.cell}>{category?.name ?? "—"}</td>
+                    <td className={classes.cell}>{brand?.name ?? "—"}</td>
                     <td className={classes.cell}>
-                      {productsByBrandCount[brand.id]} шт.
+                      {productsByBrandCount[brand?.id || ""] || 0} шт.
                     </td>
                     <td className={classes.cell}>{price} ₽</td>
                     <td className={classes["action-cell"]}>

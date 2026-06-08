@@ -10,6 +10,8 @@ export type user = {
   phone: string;
   address: string;
   isVerified: boolean;
+  birthDate?: string;
+  birthday?: string;
 };
 export type Alert = {
   action?: "cart" | "wishlist";

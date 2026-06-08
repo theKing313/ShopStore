@@ -116,6 +116,7 @@
 
 .title {
   margin: 0;
+  padding-bottom: 14px;
   font-size: 2.4rem;
   font-weight: 800;
 }
@@ -133,6 +134,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
+  min-width: 0;
 }
 
 .profileCard {
@@ -140,6 +142,7 @@
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+  min-width: 0;
 }
 
 .sectionTitle {
@@ -168,13 +171,16 @@
 }
 
 .input {
+  display: block;
   width: 100%;
+  min-width: 0;
   padding: 16px 18px;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   background: #f8fafc;
   font-size: 1rem;
   color: #111827;
+  box-sizing: border-box;
 }
 
 .input:focus {
@@ -495,6 +501,15 @@ input:checked + .slider:before {
   .profileGrid {
     grid-template-columns: 1fr;
   }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menuItem {
+    width: 100%;
+  }
 }
 
 @media (max-width: 720px) {
@@ -509,9 +524,30 @@ input:checked + .slider:before {
     border-radius: 24px;
   }
 
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .profileGrid {
+    gap: 20px;
+  }
+
   .switchRow {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .menu {
+    gap: 12px;
+  }
+
+  .menuItem {
+    padding: 12px 16px;
   }
 }
 
@@ -521,13 +557,24 @@ input:checked + .slider:before {
     border-radius: 24px;
   }
 
-  .orderHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  .modal {
+    width: 100%;
+    max-height: 100vh;
+    padding: 20px;
   }
 
-  .orderItems ul {
-    padding-left: 16px;
+  .modalTableRowHeader,
+  .modalTableRow {
+    grid-template-columns: 1fr 0.8fr 0.8fr 0.8fr;
   }
+}
+
+.orderHeader {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.orderItems ul {
+  padding-left: 16px;
 }

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PRODUCT_ADDED_TO_CART } from "../../../constants/messages";
+import {
+  PRODUCT_ADDED_TO_CART,
+  FIRST_ORDER_REGISTER_ALERT,
+} from "../../../constants/messages";
 import { showAlert } from "../../../store/CommonSlice";
 import { AppDispatch, RootState } from "../../../store/store";
 import { setProductToCart, setToLocalStorage } from "../../../store/UserSlice";
@@ -16,6 +19,7 @@ const AddToCartBtn: React.FC<IAddToCartBtnProps> = ({ product }) => {
   const [isCLicked, setIsClicked] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { cart } = useSelector((state: RootState) => state.user);
+  const authUser = useSelector((state: RootState) => state.auth.user);
   const productInCart = cart.find(
     (cartItem) =>
       cartItem.productId === product.productId &&
@@ -37,10 +41,19 @@ const AddToCartBtn: React.FC<IAddToCartBtnProps> = ({ product }) => {
 
     dispatch(setProductToCart(product));
     dispatch(setToLocalStorage("cart"));
+
+    const message = authUser
+      ? PRODUCT_ADDED_TO_CART
+      : `${PRODUCT_ADDED_TO_CART} ${FIRST_ORDER_REGISTER_ALERT}`;
+
+    if (!authUser) {
+      localStorage.setItem("firstOrderDiscount", "true");
+    }
+
     dispatch(
       showAlert({
         type: AlertType.Success,
-        message: PRODUCT_ADDED_TO_CART,
+        message,
         action: "cart",
       }),
     );

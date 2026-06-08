@@ -9,6 +9,8 @@ interface ICartSummaryProps {
   selectedMaterial?: CartItem["selectedMaterial"];
   selectedSize?: CartItem["selectedSize"];
   selectedColor?: CartItem["selectedColor"];
+  discount?: number;
+  originalPrice?: number;
 }
 
 const CartSummary: React.FC<ICartSummaryProps> = ({
@@ -19,6 +21,8 @@ const CartSummary: React.FC<ICartSummaryProps> = ({
   selectedMaterial,
   selectedSize,
   selectedColor,
+  discount,
+  originalPrice,
 }) => {
   return (
     <div className={classes["cart-summary"]}>
@@ -61,6 +65,19 @@ const CartSummary: React.FC<ICartSummaryProps> = ({
           <span>Цвет</span>
           <span>{selectedColor}</span>
         </div>
+      )}
+
+      {discount && originalPrice !== undefined && (
+        <>
+          <div className={classes["cart-summary-row"]}>
+            <span>Сумма до скидки</span>
+            <span>{originalPrice} ₽</span>
+          </div>
+          <div className={classes["cart-summary-row"]}>
+            <span>Скидка за регистрацию</span>
+            <span className={classes["discount-amount"]}>-{discount} ₽</span>
+          </div>
+        </>
       )}
     </div>
   );

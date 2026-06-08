@@ -20,6 +20,8 @@ interface ICartProps {
   selectedMaterial: ProductCartItem["selectedMaterial"];
   selectedSize: ProductCartItem["selectedSize"];
   selectedColor: ProductCartItem["selectedColor"];
+  discount?: number;
+  originalPrice?: number;
 }
 
 const Cart: React.FC<ICartProps> = ({
@@ -33,6 +35,8 @@ const Cart: React.FC<ICartProps> = ({
   selectedMaterial,
   selectedSize,
   selectedColor,
+  discount,
+  originalPrice,
 }) => {
   return (
     <div className={classes.cart}>
@@ -59,6 +63,8 @@ const Cart: React.FC<ICartProps> = ({
         selectedMaterial={selectedMaterial}
         selectedSize={selectedSize}
         selectedColor={selectedColor}
+        discount={discount}
+        originalPrice={originalPrice}
       />
     </div>
   );
