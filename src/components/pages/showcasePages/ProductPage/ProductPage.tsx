@@ -51,8 +51,9 @@ const ProductPage: React.FC<IProductPageProps> = () => {
   const colorOptions = product?.colors ?? [];
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-
+  console.log("Product in ProductPage:", product);
   const galleryImages = useMemo(() => {
+    console.log("product in galleryImages useMemo:", product);
     const imagesSet = new Set<string>();
 
     if (selectedColor && product?.colorImages?.[selectedColor]) {
