@@ -197,8 +197,32 @@ export const deleteProductById = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async (product: Product, { dispatch }) => {
-    // Упрощенная версия: просто возвращаем обновленный продукт
-    return product;
+    const response = await fetch(`${BASE_URL}/api/products/${product.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(product),
+    });
+
+    if (!response.ok) {
+      dispatch(
+        showAlert({
+          type: AlertType.Error,
+          message: UPDATE_PRODUCT_ERROR_MESSAGE,
+        }),
+      );
+      throw new Error(UPDATE_PRODUCT_ERROR_MESSAGE);
+    }
+
+    const updatedProduct: Product = await response.json();
+    dispatch(
+      showAlert({
+        type: AlertType.Success,
+        message: "Товар успешно обновлён",
+      }),
+    );
+    return updatedProduct;
   },
 );
 
