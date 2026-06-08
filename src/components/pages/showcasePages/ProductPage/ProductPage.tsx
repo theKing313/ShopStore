@@ -177,6 +177,14 @@ const ProductPage: React.FC<IProductPageProps> = () => {
         : "Унисекс";
   const isWished = wishlist.includes(id);
 
+  // Получаем картинку для выбранного цвета или дефолтную
+  const displayImage = useMemo(() => {
+    if (selectedColor && product.colorImages?.[selectedColor]) {
+      return product.colorImages[selectedColor];
+    }
+    return image;
+  }, [selectedColor, product.colorImages, image]);
+
   const cartItem: CartItem = {
     productId: id,
     name,
@@ -190,6 +198,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
     totalWeight: weight,
     discountedPrice: discount?.discountedPrice,
     discount: discount?.percent,
+    colorImages: product.colorImages,
   };
 
   return (
@@ -440,7 +449,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
               </div>
 
               <div className={classes["image-wrapper"]}>
-                <img src={image} alt={name} className={classes.image} />
+                <img src={displayImage} alt={name} className={classes.image} />
                 <div className={classes.gallery}>
                   {(images?.length ? images : [image, image, image]).map(
                     (src, index) => (
