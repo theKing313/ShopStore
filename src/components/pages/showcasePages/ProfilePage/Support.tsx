@@ -8,17 +8,18 @@ import { RootState } from "../../../../store/store";
 
 type SupportMessage = {
   id: string;
-  user_id?: string | null;
-  order_id?: string | null;
+  userId?: number | null;
+  orderId?: string | null;
   content: string;
-  created_at?: string | null;
+  createdAt?: string | null;
 };
 
 interface Props {
   orderId?: string | null;
+  onBack?: () => void;
 }
 
-const Support: React.FC<Props> = ({ orderId }) => {
+const Support: React.FC<Props> = ({ orderId, onBack }) => {
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [text, setText] = useState("");
   const user = useSelector((state: RootState) => state.auth.user);
@@ -85,7 +86,27 @@ const Support: React.FC<Props> = ({ orderId }) => {
 
   return (
     <div className={classes.profileCard}>
-      <h2 className={classes.sectionTitle}>Поддержка / Сообщения</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2 className={classes.sectionTitle}>
+          {orderId ? `Поддержка заказа #${orderId}` : "Общая поддержка"}
+        </h2>
+        {onBack && (
+          <button
+            onClick={onBack}
+            style={{
+              padding: "6px 12px",
+              background: "#6b7280",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "12px",
+            }}
+          >
+            ← Назад
+          </button>
+        )}
+      </div>
       <div style={{ maxHeight: 300, overflow: "auto", marginBottom: 12 }}>
         {messages.map((m) => (
           <div
@@ -93,7 +114,7 @@ const Support: React.FC<Props> = ({ orderId }) => {
             style={{ padding: 8, borderBottom: "1px solid #eee" }}
           >
             <div style={{ fontSize: 12, color: "#666" }}>
-              {m.created_at ? new Date(m.created_at).toLocaleString() : ""}
+              {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
             </div>
             <div style={{ marginTop: 4 }}>{m.content}</div>
           </div>

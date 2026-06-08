@@ -20,6 +20,14 @@ const ProfilePage = () => {
   const [profileEmail, setProfileEmail] = useState("");
   const [profilePhone, setProfilePhone] = useState("");
   const [profileBirthdate, setProfileBirthdate] = useState("");
+  const [selectedOrderIdForSupport, setSelectedOrderIdForSupport] = useState<
+    string | null
+  >(null);
+
+  const openSupportForOrder = (orderId: string) => {
+    setSelectedOrderIdForSupport(orderId);
+    setProfileState("SUPPORT");
+  };
 
   const profileLists = (state: any, action: any): any => {
     switch (action.type) {
@@ -405,7 +413,10 @@ const ProfilePage = () => {
         )}
         {profileState === "SUPPORT" && (
           <div className={classes.profileInfo}>
-            <Support />
+            <Support
+              orderId={selectedOrderIdForSupport}
+              onBack={() => setProfileState("ORDERS")}
+            />
           </div>
         )}
         {profileState === "ORDERS" && (
@@ -565,6 +576,22 @@ const ProfilePage = () => {
                           </ul>
                         </div>
                       )}
+                      <button
+                        onClick={() => openSupportForOrder(order.id)}
+                        style={{
+                          marginTop: 12,
+                          padding: "8px 12px",
+                          background: "#2563eb",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Поддержка
+                      </button>
                     </div>
                   </div>
                 ))}
