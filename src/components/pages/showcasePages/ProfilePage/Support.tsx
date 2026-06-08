@@ -56,13 +56,17 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
 
   const send = async () => {
     if (!text.trim()) return;
+    if (!orderId) {
+      console.error("Cannot send support message without orderId");
+      return;
+    }
     try {
       const postRes = await fetch(`${BASE_URL}/api/support_messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user?.id || null,
-          orderId: orderId || null,
+          orderId,
           content: text.trim(),
         }),
       });
@@ -73,9 +77,7 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
 
       // reload messages
       const res = await fetch(
-        orderId
-          ? `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`
-          : `${BASE_URL}/api/support_messages`,
+        `${BASE_URL}/api/support_messages?orderId=${encodeURIComponent(orderId)}`,
       );
       const data = await res.json();
       setMessages(Array.isArray(data) ? data : []);
@@ -87,7 +89,13 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
 
   return (
     <div className={classes.profileCard}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <h2 className={classes.sectionTitle}>
           {orderId ? `Поддержка заказа #${orderId}` : "Общая поддержка"}
         </h2>
@@ -123,17 +131,29 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
         {messages.length === 0 && <div>Сообщений пока нет.</div>}
       </div>
 
+      {!orderId && (
+        <div style={{ marginBottom: 12, color: "#b91c1c" }}>
+          Выберите заказ, чтобы отправить сообщение по конкретному заказу.
+        </div>
+      )}
+
       <div>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Напишите сообщение в поддержку"
+          placeholder={
+            orderId
+              ? "Напишите сообщение в поддержку"
+              : "Сначала выберите заказ"
+          }
           style={{ width: "100%", minHeight: 80 }}
+          disabled={!orderId}
         />
         <button
           className={classes.saveButton}
           onClick={send}
           style={{ marginTop: 8 }}
+          disabled={!orderId}
         >
           Отправить
         </button>
