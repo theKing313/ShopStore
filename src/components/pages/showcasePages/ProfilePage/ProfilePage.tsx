@@ -87,8 +87,32 @@ const ProfilePage = () => {
   }, [dispatch, user]);
   // const orders = useSelector((state: RootState) => state.common.orders);
   const orders = useSelector((state: RootState) => state.common.orders);
+  const products = useSelector((state: RootState) => state.product.products);
   const [now, setNow] = useState(Date.now());
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  const findProductImage = (
+    productId: string,
+    selectedColor?: string,
+  ): string => {
+    const product = products.find((item) => item.id === productId);
+    if (!product) return "";
+
+    if (selectedColor && product.colorImages?.[selectedColor]) {
+      return product.colorImages[selectedColor];
+    }
+
+    if (product.image) return product.image;
+
+    if (product.colorImages) {
+      const firstImage = Object.values(product.colorImages).find(
+        (src) => typeof src === "string" && src,
+      );
+      return firstImage || "";
+    }
+
+    return "";
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   console.log("Orders in ProfilePage:", orders);
   useEffect(() => {
@@ -507,13 +531,16 @@ const ProfilePage = () => {
                         order.cart.length > 0 &&
                         (() => {
                           const first: any = order.cart[0];
+                          const productId = first.productId || first.id;
                           const imgSrc =
                             first?.image?.url ||
                             first.image ||
                             first.imageUrl ||
                             first.thumbnail ||
+                            (productId
+                              ? findProductImage(productId, first.selectedColor)
+                              : "") ||
                             "";
-                          const productId = first.productId || first.id;
                           return (
                             <Link
                               to={productId ? `/product/${productId}` : "/"}
