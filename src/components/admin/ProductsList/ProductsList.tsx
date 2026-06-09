@@ -272,7 +272,7 @@ const ProductsList: React.FC<IProductsListProps> = ({
               <th>Название</th>
               <th className={classes["category-th"]}>Категория</th>
               <th className={classes["brand-th"]}>Бренд</th>
-              <th>Кол-во</th>
+              {/* <th>Кол-во</th> */}
               <th className={classes["price-th"]}>Цена</th>
               <th className={classes["action-th"]}></th>
             </tr>
@@ -350,9 +350,9 @@ const ProductsList: React.FC<IProductsListProps> = ({
                     </td>
                     <td className={classes.cell}>{category?.name ?? "—"}</td>
                     <td className={classes.cell}>{brand?.name ?? "—"}</td>
-                    <td className={classes.cell}>
+                    {/* <td className={classes.cell}>
                       {productsByBrandCount[brand?.id || ""] || 0} шт.
-                    </td>
+                    </td> */}
                     <td className={classes.cell}>{price} ₽</td>
                     <td className={classes["action-cell"]}>
                       <div className={classes.action}>
