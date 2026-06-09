@@ -140,7 +140,7 @@ const HomePage: React.FC = () => {
             autoPlay
             interval={4500}
             showDots
-            showArrows
+            showArrows={false}
             variant="full"
           />
         </div>

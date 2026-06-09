@@ -36,6 +36,8 @@
 .sidebarTop {
   position: fixed;
   width: 15%;
+  left: 53px;
+  top: 90px;
   padding: 28px 24px;
   border-radius: 32px;
   background: #fff;
