@@ -65,43 +65,62 @@ const MessagesModal: React.FC<{ orderId: string; onClose: () => void }> = ({
 
   return (
     <div className={classes.modal} style={{ padding: 12 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h3>Сообщения заказа #{orderId}</h3>
-        <button onClick={onClose}>✕</button>
+      <div className={classes.messageHeader}>
+        <h3>Поддержка заказа #{orderId}</h3>
+        <button className={classes.closeButton} onClick={onClose}>
+          ✕
+        </button>
       </div>
 
-      <div style={{ maxHeight: 300, overflow: "auto", marginBottom: 12 }}>
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            style={{ padding: 8, borderBottom: "1px solid #eee" }}
-          >
-            <div style={{ fontSize: 12, color: "#666" }}>
-              {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
+      <div className={classes.messageList}>
+        {messages.map((m) => {
+          const isUserMessage = m.userId != null;
+          const authorLabel = isUserMessage ? "Пользователь" : "Админ";
+
+          return (
+            <div
+              key={m.id}
+              className={`${classes.messageRow} ${
+                isUserMessage ? classes.userRow : classes.adminRow
+              }`}
+            >
+              <div className={classes.messageBubble}>
+                <div
+                  className={
+                    isUserMessage
+                      ? classes.messageLabelUser
+                      : classes.messageLabelAdmin
+                  }
+                >
+                  {authorLabel}
+                </div>
+                <div className={classes.messageText}>{m.content}</div>
+                <div className={classes.messageTimestamp}>
+                  {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
+                </div>
+              </div>
             </div>
-            <div style={{ marginTop: 4 }}>{m.content}</div>
-          </div>
-        ))}
-        {messages.length === 0 && <div>Нет сообщений по заказу.</div>}
+          );
+        })}
+        {messages.length === 0 && (
+          <div className={classes.messageEmpty}>Нет сообщений по заказу.</div>
+        )}
       </div>
 
-      <div>
+      <div className={classes.messageInputSection}>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{ width: "100%", minHeight: 80 }}
+          className={classes.messageTextarea}
+          placeholder="Напишите сообщение в поддержку"
         />
-        <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+        <div className={classes.messageActions}>
           <button className={classes["status-select"]} onClick={send}>
             Отправить
           </button>
-          <button onClick={onClose}>Закрыть</button>
+          <button className={classes.closeButtonSecondary} onClick={onClose}>
+            Закрыть
+          </button>
         </div>
       </div>
     </div>
