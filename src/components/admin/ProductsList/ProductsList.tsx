@@ -44,6 +44,20 @@ const ProductsList: React.FC<IProductsListProps> = ({
     useState<Category[]>(categories);
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(brands);
   const dispatch = useDispatch<AppDispatch>();
+  // const filteredGenders = Array.from(
+  //   new Set(products.map((product)
+  //     .filter((
+  //       product,
+  //     ) => product.gender).map((product) => product.gender))),
+  // ).map((gender) => ({ id: gender, name:  gender} as Option));
+  const filteredGenders = Array.from(
+    new Set(
+      products
+        .filter((product) => product.gender)
+        .map((product) => product.gender?.name),
+    ),
+  ).map((gender) => ({ id: gender, name: gender }) as Option);
+  const [selectedGenderOption, setSelectedGenderOption] = useState<Option>({});
   const hasNoFilteredProducts = productList.length === 0;
 
   const productsByBrandCount = products.reduce<Record<string, number>>(
@@ -138,6 +152,21 @@ const ProductsList: React.FC<IProductsListProps> = ({
   };
 
   const handleChangeSelect = (option: Option) => {
+    if (option.field === "gender") {
+      if (!option.id) {
+        setProductList(products);
+        setSelectedGenderOption({});
+        return;
+      }
+
+      const filteredProducts = products.filter(
+        (product) => product.gender?.name === option.id,
+      );
+
+      setProductList(filteredProducts);
+      setSelectedGenderOption(option);
+      return;
+    }
     const isCategoryOptionSetToDefaultAndBrandOptionNotSelected =
       !option.id && option.field === "category" && !selectedBrandOption.id;
     const isCategoryOptionSetToDefaultAndBrandOptionSelected =
@@ -170,9 +199,11 @@ const ProductsList: React.FC<IProductsListProps> = ({
         categories,
         selectedBrandOption.id,
       );
+
       setProductList(filteredProducts);
       setSelectedCategoryOption({});
       setFilteredBrands(brands);
+      setSelectedGenderOption({}); // Сброс выбранного пола при сбросе категории
       return;
     }
 
@@ -272,7 +303,7 @@ const ProductsList: React.FC<IProductsListProps> = ({
               <th>Название</th>
               <th className={classes["category-th"]}>Категория</th>
               <th className={classes["brand-th"]}>Бренд</th>
-              {/* <th>Кол-во</th> */}
+              <th className={classes["gender-th"]}>Пол</th>
               <th className={classes["price-th"]}>Цена</th>
               <th className={classes["action-th"]}></th>
             </tr>
@@ -303,7 +334,17 @@ const ProductsList: React.FC<IProductsListProps> = ({
                   isDisabled={filteredBrands.length === 0}
                 />
               </td>
-              <td></td>
+              <td>
+                <Select
+                  options={filteredGenders}
+                  onSelect={handleChangeSelect}
+                  defaultOptionText={"Выберите пол"}
+                  label=""
+                  value={selectedGenderOption.name}
+                  field={"gender"}
+                  isDisabled={filteredGenders.length === 0}
+                />
+              </td>
               <td></td>
               <td></td>
             </tr>
@@ -350,9 +391,10 @@ const ProductsList: React.FC<IProductsListProps> = ({
                     </td>
                     <td className={classes.cell}>{category?.name ?? "—"}</td>
                     <td className={classes.cell}>{brand?.name ?? "—"}</td>
-                    {/* <td className={classes.cell}>
-                      {productsByBrandCount[brand?.id || ""] || 0} шт.
-                    </td> */}
+                    <td className={classes.cell}>
+                      {gender ? gender.name : "—"}
+                    </td>
+
                     <td className={classes.cell}>{price} ₽</td>
                     <td className={classes["action-cell"]}>
                       <div className={classes.action}>
