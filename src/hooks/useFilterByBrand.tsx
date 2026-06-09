@@ -15,6 +15,7 @@ const useFilterByBrand = (
   selectedSizes: string[] = [],
   selectedMaterials: string[] = [],
   selectedColors: string[] = [],
+  selectedGender: string = "",
 ) => {
   const [checkedFilterItems, setCheckedFilterItems] = useState<string[]>([]);
   const { url } = useParams();
@@ -75,12 +76,16 @@ const useFilterByBrand = (
         (product.colors &&
           product.colors.some((color) => selectedColors.includes(color)));
 
+      const matchesGender =
+        !selectedGender || product.gender.url === selectedGender;
+
       return (
         matchesBrand &&
         matchesPrice &&
         matchesSize &&
         matchesMaterial &&
-        matchesColor
+        matchesColor &&
+        matchesGender
       );
     });
   }, [
@@ -91,6 +96,7 @@ const useFilterByBrand = (
     selectedSizes,
     selectedMaterials,
     selectedColors,
+    selectedGender,
   ]);
 
   return {

@@ -335,7 +335,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
                 </div>
 
                 <div className={classes.options}>
-                  <div className={classes.optionGroup}>
+                  {/* <div className={classes.optionGroup}>
                     <span className={classes.optionTitle}>Материал</span>
                     <div className={classes.optionButtons}>
                       {materialOptions.map((material) => (
@@ -351,7 +351,7 @@ const ProductPage: React.FC<IProductPageProps> = () => {
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className={classes.optionGroup}>
                     <span className={classes.optionTitle}>Размер</span>

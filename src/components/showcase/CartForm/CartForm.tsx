@@ -50,7 +50,6 @@ const CartForm: React.FC<ICartFormProps> = ({
           required
           placeholder={"Как вас зовут?"}
         />
-
         <Input
           label={"Телефон"}
           errorText={errors.phone || ""}
@@ -74,7 +73,6 @@ const CartForm: React.FC<ICartFormProps> = ({
             <option value="">Выберите тип оплаты</option>
             <option value="cash">Наличными при получении</option>
             <option value="card">Картой на сайте</option>
-            <option value="online">Онлайн оплата</option>
           </select>
           {errors.paymentType && (
             <span className={classes.error}>{errors.paymentType}</span>
@@ -99,23 +97,23 @@ const CartForm: React.FC<ICartFormProps> = ({
             <option value="">Выберите тип заказа</option>
             <option value="pickup">Забрать в магазине</option>
             <option value="delivery">Доставка</option>
-            <option value="courier">Курьер</option>
           </select>
           {errors.orderType && (
             <span className={classes.error}>{errors.orderType}</span>
           )}
         </div>
-
-        <Input
-          label={"Адрес"}
-          errorText={errors.address || ""}
-          name={"address"}
-          type={"text"}
-          value={value.address || ""}
-          onChange={onChange}
-          required
-          placeholder={"Куда доставить заказ?"}
-        />
+        {value.orderType === "delivery" && (
+          <Input
+            label={"Адрес"}
+            errorText={errors.address || ""}
+            name={"address"}
+            type={"text"}
+            value={value.address || ""}
+            onChange={onChange}
+            required
+            placeholder={"Куда доставить заказ?"}
+          />
+        )}
 
         <div className={classes.action}>
           <Button mode={"primary"} type={"submit"} isLoading={isLoading}>

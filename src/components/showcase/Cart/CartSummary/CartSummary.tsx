@@ -40,45 +40,20 @@ const CartSummary: React.FC<ICartSummaryProps> = ({
         <span>Всего товаров</span>
         <span>{quantity} шт</span>
       </div>
-
-      <div className={classes["cart-summary-row"]}>
-        <span>Вес</span>
-        <span>{weight} кг</span>
-      </div>
-
-      {selectedMaterial && (
-        <div className={classes["cart-summary-row"]}>
-          <span>Материал</span>
-          <span>{selectedMaterial}</span>
-        </div>
-      )}
-
-      {selectedSize && (
-        <div className={classes["cart-summary-row"]}>
-          <span>Размер</span>
-          <span>{selectedSize}</span>
-        </div>
-      )}
-
-      {selectedColor && (
-        <div className={classes["cart-summary-row"]}>
-          <span>Цвет</span>
-          <span>{selectedColor}</span>
-        </div>
-      )}
-
-      {discount && originalPrice !== undefined && (
+      {discount && originalPrice !== undefined ? (
         <>
           <div className={classes["cart-summary-row"]}>
             <span>Сумма до скидки</span>
-            <span>{originalPrice} ₽</span>
+            <span>{originalPrice && originalPrice.toFixed(2)} ₽</span>
           </div>
           <div className={classes["cart-summary-row"]}>
             <span>Скидка за регистрацию</span>
-            <span className={classes["discount-amount"]}>-{discount} ₽</span>
+            <span className={classes["discount-amount"]}>
+              -{discount && discount.toFixed(2)} ₽
+            </span>
           </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 };

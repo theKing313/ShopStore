@@ -8,7 +8,26 @@
   font-family: "Nunito";
   font-size: 28px;
 }
-
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #111827;
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+  position: fixed;
+  left: 30px;
+  top: 100px;
+  z-index: 1000;
+}
 .checkout-panel {
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NO_PRODUCTS_IN_CART } from "../../../../constants/messages";
 import { PATHS } from "../../../../constants/routes";
 import {
@@ -242,6 +242,15 @@ const CartPage: React.FC = () => {
   // if (cartColors.some((color) => color)) {
   //   summaryProps.selectedColor = cartColors.find((color) => color) || "";
   // }
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(PATHS.showcase);
+    }
+  };
   return (
     <Section>
       <>
@@ -249,6 +258,14 @@ const CartPage: React.FC = () => {
 
         <SectionBody>
           <>
+            <button
+              type="button"
+              className={classes.backButton}
+              onClick={handleGoBack}
+              aria-label="Назад"
+            >
+              ←
+            </button>
             {!hasProducts && <Placeholder text={NO_PRODUCTS_IN_CART} />}
 
             {hasProducts && (

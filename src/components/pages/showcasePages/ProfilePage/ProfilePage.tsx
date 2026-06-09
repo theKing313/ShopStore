@@ -34,12 +34,15 @@ const ProfilePage = () => {
       case "PROFILE":
         // return { ...state, isLoading: true, error: null };
         setProfileState("PROFILE");
+        setActiveTab("profile");
         break;
       case "ORDERS":
         setProfileState("ORDERS");
+        setActiveTab("orders");
         break;
       case "SUPPORT":
         setProfileState("SUPPORT");
+        setActiveTab("support");
         break;
       // return { ...state, isLoading: true, error: null };
       default:
@@ -213,7 +216,7 @@ const ProfilePage = () => {
       );
     }
   };
-
+  const [activeTab, setActiveTab] = useState("profile");
   const handleLogOut = () => {
     dispatch(logOut());
   };
@@ -237,36 +240,68 @@ const ProfilePage = () => {
 
   return (
     <div className={classes.page}>
+      <button
+        type="button"
+        className={classes.backButton}
+        onClick={handleGoBack}
+        aria-label="Назад"
+      >
+        ←
+      </button>
       <aside className={classes.sidebar}>
         <div className={classes.sidebarTop}>
           <div className={classes.brand}>TBOE</div>
           <nav className={classes.menu}>
             <Link
               to={PATHS.profile}
-              className={`${classes.menuItem} ${classes.active}`}
-              onClick={() => profileLists({}, { type: "PROFILE" })}
+              className={`${classes.menuItem} ${activeTab === "profile" ? classes.active : ""}`}
+              onClick={() => {
+                profileLists({}, { type: "PROFILE" });
+                setActiveTab("profile");
+              }}
             >
               Профиль
             </Link>
             <Link
               // to={PATHS.wishlist}
               to={PATHS.profile}
-              className={classes.menuItem}
-              onClick={() => profileLists({}, { type: "ORDERS" })}
+              className={
+                classes.menuItem +
+                " " +
+                (activeTab === "orders" ? classes.active : "")
+              }
+              onClick={() => {
+                profileLists({}, { type: "ORDERS" });
+                setActiveTab("orders");
+              }}
             >
               Заказы
             </Link>
             <Link
               to={PATHS.profile}
-              className={classes.menuItem}
-              onClick={() => profileLists({}, { type: "SUPPORT" })}
+              className={
+                classes.menuItem +
+                " " +
+                (activeTab === "support" ? classes.active : "")
+              }
+              onClick={() => {
+                profileLists({}, { type: "SUPPORT" });
+                setActiveTab("support");
+              }}
             >
               Поддержка
             </Link>
             <Link
               to={PATHS.showcase}
-              className={classes.menuItem}
-              onClick={handleLogOut}
+              className={
+                classes.menuItem +
+                " " +
+                (activeTab === "logout" ? classes.active : "")
+              }
+              onClick={() => {
+                handleLogOut();
+                setActiveTab("profile");
+              }}
             >
               Выйти
             </Link>
@@ -331,17 +366,9 @@ const ProfilePage = () => {
         {profileState === "PROFILE" && (
           <div className={classes.profileInfo}>
             <div className={classes.headerRow}>
-              <button
-                type="button"
-                className={classes.backButton}
-                onClick={handleGoBack}
-                aria-label="Назад"
-              >
-                ←
-              </button>
               <div>
                 <h1 className={classes.title}>Профиль</h1>
-                <span className={classes.status}>Активный</span>
+                {/* <span className={classes.status}>Активный</span> */}
               </div>
             </div>
 

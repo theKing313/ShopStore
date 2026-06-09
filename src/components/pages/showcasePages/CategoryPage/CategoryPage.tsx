@@ -32,6 +32,7 @@ const CategoryPage: React.FC = () => {
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>("");
   const [showFilter, setShowFilter] = useState(false);
 
   const sizes = ["XS", "S", "M", "L", "XL"];
@@ -43,7 +44,7 @@ const CategoryPage: React.FC = () => {
 
   // Получим продукты для этой категории (или пустой массив если категория не найдена)
   const categoryProducts = category
-    ? products.filter((product) => product.category.id === category.id)
+    ? products.filter((product) => product.category?.id === category.id)
     : [];
 
   const { productsTorender } = useFilterByBrand(
@@ -54,6 +55,7 @@ const CategoryPage: React.FC = () => {
     selectedSizes,
     selectedMaterials,
     selectedColors,
+    selectedGender,
   );
 
   if (!category) {
@@ -120,12 +122,15 @@ const CategoryPage: React.FC = () => {
                     setSelectedMaterials={setSelectedMaterials}
                     selectedColors={selectedColors}
                     setSelectedColors={setSelectedColors}
+                    selectedGender={selectedGender}
+                    setSelectedGender={setSelectedGender}
                     onApply={() => console.log("apply")}
                     onReset={() => {
                       setSelectedBrands([]);
                       setSelectedSizes([]);
                       setSelectedMaterials([]);
                       setSelectedColors([]);
+                      setSelectedGender("");
                       setPrice({ from: 0, to: 10000 });
                     }}
                   />

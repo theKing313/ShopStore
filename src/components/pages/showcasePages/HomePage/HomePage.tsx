@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
@@ -11,8 +11,19 @@ import classes from "./HomePage.module.css";
 const HomePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { products } = useSelector((state: RootState) => state.product);
-  console.log("HomePage products:", products);
   const { wishlist } = useSelector((state: RootState) => state.user);
+  const categories = useSelector(
+    (state: RootState) => state.category.categories,
+  );
+
+  const [discountIndex, setDiscountIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Активируем анимации при монтировании
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   const discountProducts = useMemo(() => {
     return products.filter((product) => {
       const percent = product.discountPercent ?? product.discount?.percent ?? 0;
@@ -22,7 +33,6 @@ const HomePage: React.FC = () => {
       return percent > 0 || hasDiscountPrice;
     });
   }, [products]);
-  const [discountIndex, setDiscountIndex] = useState(0);
 
   const handleWishlist = (id: string) => {
     const isWished = wishlist.includes(id);
@@ -68,13 +78,29 @@ const HomePage: React.FC = () => {
     [],
   );
 
+  // Формируем карточки категорий динамически
+  const categoryCards = useMemo(() => {
+    return categories.slice(0, 3).map((category: any) => {
+      const productCount = products.filter(
+        (p) => p.category?.id === category.id,
+      ).length;
+      return {
+        id: category.id,
+        label: `${productCount} товаров`,
+        title: category.name,
+        description: category.description || "",
+        link: `/${category.url}`,
+      };
+    });
+  }, [categories, products]);
+
   const maxDiscountIndex = Math.max(0, discountProducts.length - 3);
   const nextDiscount = () =>
     setDiscountIndex((prev) => Math.min(prev + 1, maxDiscountIndex));
   const prevDiscount = () => setDiscountIndex((prev) => Math.max(prev - 1, 0));
 
   return (
-    <div className={classes.page}>
+    <div className={`${classes.page} ${isVisible ? classes.visible : ""}`}>
       <section className={classes.hero}>
         <div className={classes.heroText}>
           <p className={classes.intro}> дипломный проект</p>
@@ -133,6 +159,7 @@ const HomePage: React.FC = () => {
               type="button"
               onClick={prevDiscount}
               className={classes.discountButton}
+              aria-label="Предыдущие товары"
             >
               ←
             </button>
@@ -140,6 +167,7 @@ const HomePage: React.FC = () => {
               type="button"
               onClick={nextDiscount}
               className={classes.discountButton}
+              aria-label="Следующие товары"
             >
               →
             </button>
@@ -179,21 +207,13 @@ const HomePage: React.FC = () => {
           <p>Топовые позиции, которые чаще всего берут наши покупатели.</p>
         </div>
         <div className={classes.cardSmallGrid}>
-          <div className={classes.smallCard}>
-            <span>Акция</span>
-            <h4>Футболки</h4>
-            <p>Базовые модели, которые не выходят из моды.</p>
-          </div>
-          <div className={classes.smallCard}>
-            <span>Новинка</span>
-            <h4>Толстовки</h4>
-            <p>Удобные и теплые, для прогулок и офиса.</p>
-          </div>
-          <div className={classes.smallCard}>
-            <span>Тренд</span>
-            <h4>Кроссовки</h4>
-            <p>Модные модели с ярким дизайном.</p>
-          </div>
+          {categoryCards.map((card: any) => (
+            <Link key={card.id} to={card.link} className={classes.smallCard}>
+              <span>{card.label}</span>
+              <h4>{card.title}</h4>
+              <p>{card.description}</p>
+            </Link>
+          ))}
         </div>
       </section>
 

@@ -41,6 +41,7 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>("");
   //
   const hasProducts = discountedProducts.length > 0;
   const { productsTorender } = useFilterByBrand(
@@ -51,6 +52,7 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
     selectedSizes,
     selectedMaterials,
     selectedColors,
+    selectedGender,
   );
   return (
     <Section>
@@ -84,12 +86,15 @@ const DiscountProductsPage: React.FC<IDiscountProductsPageProps> = () => {
                 setSelectedMaterials={setSelectedMaterials}
                 selectedColors={selectedColors}
                 setSelectedColors={setSelectedColors}
+                selectedGender={selectedGender}
+                setSelectedGender={setSelectedGender}
                 onApply={() => console.log("apply")}
                 onReset={() => {
                   setSelectedBrands([]);
                   setSelectedSizes([]);
                   setSelectedMaterials([]);
                   setSelectedColors([]);
+                  setSelectedGender("");
                   setPrice({ from: 0, to: 3000 });
                 }}
               />

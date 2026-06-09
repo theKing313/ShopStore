@@ -89,13 +89,7 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
 
   return (
     <div className={classes.profileCard}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className={classes.supportHeader}>
         <h2 className={classes.sectionTitle}>
           {orderId ? `Поддержка заказа #${orderId}` : "Общая поддержка"}
         </h2>
@@ -109,28 +103,43 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
           </button>
         )}
       </div>
-      <div style={{ maxHeight: 300, overflow: "auto", marginBottom: 12 }}>
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            style={{ padding: 8, borderBottom: "1px solid #eee" }}
-          >
-            <div style={{ fontSize: 12, color: "#666" }}>
-              {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
+      <div className={classes.supportList}>
+        {messages.map((m) => {
+          const isUserMessage =
+            user && m.userId != null && String(m.userId) === String(user.id);
+
+          return (
+            <div
+              key={m.id}
+              className={`${classes.supportMessageRow} ${
+                isUserMessage ? classes.userMessageRow : classes.adminMessageRow
+              }`}
+            >
+              <div
+                className={`${classes.supportMessage} ${
+                  isUserMessage ? classes.userBubble : classes.adminBubble
+                }`}
+              >
+                <div className={classes.supportMessageContent}>{m.content}</div>
+                <div className={classes.supportTimestamp}>
+                  {m.createdAt ? new Date(m.createdAt).toLocaleString() : ""}
+                </div>
+              </div>
             </div>
-            <div style={{ marginTop: 4 }}>{m.content}</div>
-          </div>
-        ))}
-        {messages.length === 0 && <div>Сообщений пока нет.</div>}
+          );
+        })}
+        {messages.length === 0 && (
+          <div className={classes.supportEmpty}>Сообщений пока нет.</div>
+        )}
       </div>
 
       {!orderId && (
-        <div style={{ marginBottom: 12, color: "#b91c1c" }}>
+        <div className={classes.supportNotice}>
           Выберите заказ, чтобы отправить сообщение по конкретному заказу.
         </div>
       )}
 
-      <div>
+      <div className={classes.supportInputRow}>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -139,13 +148,12 @@ const Support: React.FC<Props> = ({ orderId, onBack }) => {
               ? "Напишите сообщение в поддержку"
               : "Сначала выберите заказ"
           }
-          style={{ width: "100%", minHeight: 80 }}
+          className={classes.supportTextarea}
           disabled={!orderId}
         />
         <button
           className={classes.saveButton}
           onClick={send}
-          style={{ marginTop: 8 }}
           disabled={!orderId}
         >
           Отправить

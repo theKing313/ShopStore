@@ -132,6 +132,37 @@
   gap: 10px;
 }
 
+.genderOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genderBtn {
+  min-width: 90px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.genderBtn:hover {
+  border-color: #111827;
+}
+
+.genderBtn.active {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
+
 .sizeBtn {
   min-width: 48px;
   padding: 12px 0;

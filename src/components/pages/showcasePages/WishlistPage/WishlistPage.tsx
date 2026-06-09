@@ -23,6 +23,7 @@ const WishlistPage: React.FC = () => {
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>("");
   const { products, error } = useSelector((state: RootState) => state.product);
   const { wishlist } = useSelector((state: RootState) => state.user);
   const { brands } = useSelector((state: RootState) => state.brand);
@@ -40,6 +41,7 @@ const WishlistPage: React.FC = () => {
     selectedSizes,
     selectedMaterials,
     selectedColors,
+    selectedGender,
   );
   const { search, setSearch, filteredProducts } = useSearch(productsTorender);
   const hasProducts = filteredProducts.length > 0;
@@ -83,12 +85,15 @@ const WishlistPage: React.FC = () => {
                 setSelectedMaterials={setSelectedMaterials}
                 selectedColors={selectedColors}
                 setSelectedColors={setSelectedColors}
+                selectedGender={selectedGender}
+                setSelectedGender={setSelectedGender}
                 onApply={() => setIsOpen(false)}
                 onReset={() => {
                   setSelectedBrands([]);
                   setSelectedSizes([]);
                   setSelectedMaterials([]);
                   setSelectedColors([]);
+                  setSelectedGender("");
                   setPrice({ from: 399, to: 2999 });
                 }}
               />

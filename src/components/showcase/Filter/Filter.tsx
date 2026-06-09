@@ -29,6 +29,8 @@ interface Props {
   setSelectedMaterials: React.Dispatch<React.SetStateAction<string[]>>;
   selectedColors: string[];
   setSelectedColors: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedGender: string;
+  setSelectedGender: React.Dispatch<React.SetStateAction<string>>;
   onApply: () => void;
   onReset: () => void;
 }
@@ -50,6 +52,8 @@ const FilterPanel: React.FC<Props> = ({
   setSelectedMaterials,
   selectedColors,
   setSelectedColors,
+  selectedGender,
+  setSelectedGender,
   onApply,
   onReset,
 }) => {
@@ -84,6 +88,10 @@ const FilterPanel: React.FC<Props> = ({
     setSelectedColors((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color],
     );
+  };
+
+  const toggleGender = (gender: string) => {
+    setSelectedGender((prev) => (prev === gender ? "" : gender));
   };
 
   const applyFilters = () => {
@@ -153,6 +161,28 @@ const FilterPanel: React.FC<Props> = ({
                 onClick={() => toggleSize(size)}
               >
                 {size}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Пол */}
+        <div className={classes.section}>
+          <h3>Пол</h3>
+          <div className={classes.genderOptions}>
+            {[
+              { value: "male", label: "Мужское" },
+              { value: "female", label: "Женское" },
+            ].map((gender) => (
+              <button
+                key={gender.value}
+                type="button"
+                className={`${classes.genderBtn} ${
+                  selectedGender === gender.value ? classes.active : ""
+                }`}
+                onClick={() => toggleGender(gender.value)}
+              >
+                {gender.label}
               </button>
             ))}
           </div>

@@ -1,3 +1,4 @@
+/* ===== БАЗОВЫЕ НАСТРОЙКИ ===== */
 .page {
   max-width: 1220px;
   margin: 0 auto;
@@ -6,8 +7,60 @@
   flex-direction: column;
   gap: 48px;
   color: #111827;
+  opacity: 0;
+  animation: pageFadeIn 0.6s ease-out forwards;
 }
 
+/* Анимация появления всей страницы */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ДЛЯ СЕКЦИЙ ===== */
+.hero,
+.discountSection,
+.cardsSection,
+.collectionSection,
+.appSection {
+  opacity: 0;
+  animation: sectionReveal 0.7s ease-out forwards;
+}
+
+.hero {
+  animation-delay: 0.1s;
+}
+.discountSection {
+  animation-delay: 0.3s;
+}
+.cardsSection {
+  animation-delay: 0.5s;
+}
+.collectionSection {
+  animation-delay: 0.7s;
+}
+.appSection {
+  animation-delay: 0.9s;
+}
+
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== HERO СЕКЦИЯ ===== */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
@@ -28,40 +81,55 @@
   letter-spacing: 1.6px;
   text-transform: uppercase;
   color: #6b7280;
+  animation: fadeInLeft 0.6s ease-out 0.2s both;
 }
 
 .title {
   margin: 0;
-  font-size: clamp(3rem, 4vw, 5rem);
+  font-size: clamp(2rem, 5vw, 4.5rem);
   line-height: 0.95;
   letter-spacing: -0.04em;
+  animation: fadeInLeft 0.6s ease-out 0.3s both;
 }
 
 .description {
   margin: 0;
   max-width: 580px;
-  font-size: 18px;
+  font-size: clamp(14px, 2vw, 18px);
   line-height: 1.75;
   color: #475569;
+  animation: fadeInLeft 0.6s ease-out 0.4s both;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  animation: fadeInLeft 0.6s ease-out 0.5s both;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .primaryButton,
-.secondaryButton,
-.cardButton {
+.secondaryButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 28px;
+  padding: 14px 28px;
   border-radius: 999px;
   font-weight: 700;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .primaryButton {
@@ -72,6 +140,8 @@
 
 .primaryButton:hover {
   background: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .secondaryButton {
@@ -82,12 +152,27 @@
 
 .secondaryButton:hover {
   background: #f9fafb;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+/* Статистика */
 .heroStats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .statItem {
@@ -95,12 +180,24 @@
   border-radius: 20px;
   background: #f8fafc;
   border: 1px solid #e5e7eb;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.statItem:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .statItem strong {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin-bottom: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .statItem span {
@@ -108,19 +205,52 @@
   font-size: 0.95rem;
 }
 
+/* ===== CAROUSEL В HERO ===== */
 .heroImage {
   display: flex;
   justify-content: flex-end;
+  animation: fadeInRight 0.7s ease-out 0.3s both;
 }
 
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== СЕКЦИЯ СКИДОК ===== */
 .discountSection {
   display: flex;
   flex-direction: column;
   gap: 22px;
   padding: 30px;
   border-radius: 32px;
-  background: #f8fafc;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   box-shadow: 0 25px 60px rgba(15, 23, 42, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.sectionHeader p {
+  margin: 0;
+  color: #64748b;
+  font-size: clamp(13px, 2vw, 16px);
 }
 
 .discountActions {
@@ -138,92 +268,65 @@
   color: #fff;
   font-size: 1.15rem;
   cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .discountButton:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
   background: #0f172a;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.discountButton:active {
+  transform: scale(0.95);
 }
 
 .discountCarousel {
   overflow: hidden;
+  border-radius: 20px;
 }
 
 .discountTrack {
   display: flex;
   gap: 18px;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   padding-bottom: 10px;
 }
 
 .discountSlide {
   min-width: 32%;
   max-width: 32%;
+  animation: cardPopIn 0.5s ease-out both;
 }
 
-.discountSlide:last-child {
-  padding-right: 24px;
+.discountSlide:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.discountSlide:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.discountSlide:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.discountSlide:nth-child(4) {
+  animation-delay: 0.4s;
 }
 
-.promoCard {
-  width: 100%;
-  min-height: 460px;
-  padding: 36px;
-  border-radius: 32px;
-  background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 100%);
-  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+@keyframes cardPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.promoBadge {
-  display: inline-flex;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: #1d4ed8;
-  color: #fff;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 24px;
-}
-
-.promoTitle {
-  margin: 0 0 18px;
-  font-size: clamp(2rem, 2.8vw, 3rem);
-  line-height: 1.05;
-}
-
-.promoText {
-  margin: 0;
-  color: #334155;
-  font-size: 16px;
-  line-height: 1.8;
-  max-width: 420px;
-}
-
-.promoButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-}
-
-.cardLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 24px;
-  border-radius: 999px;
-  background: rgba(17, 24, 39, 0.05);
-  color: #111827;
-  text-decoration: none;
-  font-weight: 700;
-}
-
+/* ===== СЕКЦИЯ КАРТОЧЕК ===== */
 .cardsSection {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -233,30 +336,38 @@
 .cardLarge {
   min-height: 320px;
   border-radius: 28px;
-  padding: 40px;
-  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
-  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.08);
+  padding: clamp(20px, 4vw, 40px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 25px 65px rgba(102, 126, 234, 0.3);
+  color: #fff;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.cardLarge p {
+.cardLarge:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 30px 70px rgba(102, 126, 234, 0.4);
+}
+
+.cardLarge p:first-child {
   margin: 0 0 12px;
-  color: #2563eb;
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 1px;
+  opacity: 0.9;
 }
 
 .cardLarge h3 {
   margin: 0 0 16px;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.05;
 }
 
-.cardLarge small,
 .cardLarge p:last-child {
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   line-height: 1.8;
-  color: #475569;
+  opacity: 0.95;
 }
 
 .cardSmallGrid {
@@ -268,11 +379,17 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 24px;
+  padding: clamp(16px, 3vw, 24px);
   border-radius: 24px;
   background: #fff;
   border: 1px solid #e5e7eb;
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s ease;
+}
+
+.smallCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
 }
 
 .smallCard span {
@@ -280,40 +397,26 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .smallCard h4 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
 }
 
 .smallCard p {
   margin: 0;
   color: #475569;
   line-height: 1.75;
+  font-size: clamp(13px, 1.5vw, 15px);
 }
 
+/* ===== СЕКЦИЯ ПОДБОРОК ===== */
 .collectionSection {
   display: flex;
   flex-direction: column;
   gap: 22px;
-}
-
-.sectionHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-}
-
-.sectionHeader h2 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.sectionHeader p {
-  margin: 0;
-  color: #64748b;
 }
 
 .collectionGrid {
@@ -332,6 +435,12 @@
   padding: 24px;
   color: #fff;
   text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.collectionCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .collectionCard div {
@@ -347,6 +456,14 @@
   inset: 0;
   z-index: 1;
   opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.collectionCard:hover .collectionOverlay,
+.collectionCard:hover .collectionOverlay2,
+.collectionCard:hover .collectionOverlay3,
+.collectionCard:hover .collectionOverlay4 {
+  opacity: 0.95;
 }
 
 .collectionOverlay {
@@ -356,7 +473,6 @@
     rgba(17, 24, 39, 0.85) 100%
   );
 }
-
 .collectionOverlay2 {
   background: linear-gradient(
     180deg,
@@ -364,7 +480,6 @@
     rgba(59, 130, 246, 0.75) 100%
   );
 }
-
 .collectionOverlay3 {
   background: linear-gradient(
     180deg,
@@ -372,7 +487,6 @@
     rgba(16, 185, 129, 0.75) 100%
   );
 }
-
 .collectionOverlay4 {
   background: linear-gradient(
     180deg,
@@ -385,17 +499,14 @@
   background: url("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
-
 .collectionCard:nth-child(2) {
   background: url("https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
-
 .collectionCard:nth-child(3) {
   background: url("https://images.unsplash.com/photo-1503342452485-86f7b31d0ece?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
 }
-
 .collectionCard:nth-child(4) {
   background: url("https://images.unsplash.com/photo-1495121605193-b116b5b9c5d8?auto=format&fit=crop&w=1200&q=80")
     center/cover no-repeat;
@@ -413,13 +524,14 @@
   line-height: 1.1;
 }
 
+/* ===== СЕКЦИЯ ПРИЛОЖЕНИЯ ===== */
 .appSection {
   display: grid;
   grid-template-columns: 1.1fr minmax(320px, 0.9fr);
   gap: 28px;
-  padding: 36px;
+  padding: clamp(20px, 4vw, 36px);
   border-radius: 32px;
-  background: #111827;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
   color: #fff;
   overflow: hidden;
 }
@@ -433,7 +545,7 @@
 
 .appInfo h2 {
   margin: 0;
-  font-size: clamp(2rem, 3vw, 3rem);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
   line-height: 1.05;
 }
 
@@ -442,6 +554,7 @@
   max-width: 560px;
   color: rgba(255, 255, 255, 0.78);
   line-height: 1.8;
+  font-size: clamp(13px, 2vw, 16px);
 }
 
 .appActions {
@@ -452,11 +565,18 @@
 
 .appBadge {
   display: inline-flex;
-  padding: 16px 22px;
+  padding: 14px 22px;
   border-radius: 18px;
   background: #fff;
   color: #111827;
   font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.appBadge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
 }
 
 .appGraphic {
@@ -469,45 +589,27 @@
   min-height: 360px;
 }
 
-@media (max-width: 1100px) {
-  .hero,
-  .cardsSection,
-  .appSection {
-    grid-template-columns: 1fr;
-  }
+/* ===== АДАПТИВНОСТЬ ===== */
 
-  .collectionGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .discountSlide {
-    min-width: 45%;
-    max-width: 45%;
-  }
-}
-
-/* Таблет (768px - 1100px) */
-@media (max-width: 1024px) and (min-width: 768px) {
+/* Планшеты */
+@media (max-width: 1024px) {
   .page {
-    padding: 28px 20px 64px;
-    gap: 40px;
+    padding: 24px 20px 56px;
+    gap: 36px;
   }
 
-  .title {
-    font-size: clamp(2rem, 3vw, 3.5rem);
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
-  .description {
-    font-size: 16px;
+  .heroImage {
+    display: none;
   }
 
-  .heroStats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .statItem {
-    padding: 14px 16px;
+  .cardsSection {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .collectionGrid {
@@ -515,127 +617,110 @@
     gap: 16px;
   }
 
-  .collectionCard {
-    min-height: 220px;
-    padding: 18px;
-  }
-
-  .discountSection {
-    padding: 24px;
-  }
-
   .discountSlide {
-    min-width: 48%;
-    max-width: 48%;
+    min-width: 45%;
+    max-width: 45%;
   }
 
   .appSection {
-    padding: 32px;
+    grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .appGraphic {
+    min-height: 280px;
   }
 }
 
-/* Мобайл (480px - 768px) */
-@media (max-width: 767px) and (min-width: 481px) {
+/* Большие телефоны */
+@media (max-width: 768px) {
   .page {
-    padding: 20px 14px 48px;
-    gap: 32px;
+    padding: 20px 16px 48px;
+    gap: 28px;
   }
 
-  .hero {
-    gap: 20px;
+  .heroText {
+    gap: 16px;
   }
 
   .title {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
   }
 
   .description {
     font-size: 15px;
-    line-height: 1.6;
   }
 
   .actions {
+    flex-direction: column;
     gap: 12px;
   }
 
   .primaryButton,
   .secondaryButton {
-    padding: 14px 24px;
-    font-size: 14px;
+    width: 100%;
+    padding: 16px;
+    font-size: 15px;
   }
 
   .heroStats {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 
   .statItem {
-    padding: 16px;
-    font-size: 14px;
+    padding: 14px 12px;
   }
 
   .statItem strong {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+  }
+
+  .statItem span {
+    font-size: 0.85rem;
   }
 
   .discountSection {
     padding: 20px;
-    gap: 18px;
+    gap: 16px;
   }
 
   .sectionHeader {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-  }
-
-  .sectionHeader h2 {
-    font-size: 1.5rem;
   }
 
   .discountActions {
-    gap: 10px;
+    align-self: flex-end;
   }
 
   .discountButton {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     font-size: 1rem;
   }
 
   .discountSlide {
-    min-width: 100%;
-    max-width: 100%;
-  }
-
-  .cardsSection {
-    grid-template-columns: 1fr;
-    gap: 18px;
+    min-width: 80%;
+    max-width: 80%;
   }
 
   .cardLarge {
     min-height: 280px;
-    padding: 28px;
-  }
-
-  .cardLarge h3 {
-    font-size: 1.5rem;
   }
 
   .smallCard {
     padding: 20px;
-    gap: 12px;
   }
 
   .collectionGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
 
   .collectionCard {
-    min-height: 200px;
-    padding: 16px;
+    min-height: 220px;
+    padding: 20px;
   }
 
   .collectionCard strong {
@@ -644,28 +729,15 @@
 
   .appSection {
     padding: 24px;
-    gap: 20px;
-  }
-
-  .appInfo h2 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-  }
-
-  .appInfo p {
-    font-size: 14px;
   }
 
   .appBadge {
-    padding: 12px 18px;
-    font-size: 12px;
-  }
-
-  .appGraphic {
-    min-height: 280px;
+    width: 100%;
+    justify-content: center;
   }
 }
 
-/* Мобайл (до 480px) */
+/* Маленькие телефоны */
 @media (max-width: 480px) {
   .page {
     padding: 16px 12px 40px;
@@ -674,88 +746,60 @@
 
   .hero {
     gap: 16px;
-    grid-template-columns: 1fr;
-  }
-
-  .title {
-    font-size: clamp(1.2rem, 5vw, 2rem);
-    line-height: 1.1;
   }
 
   .intro {
     font-size: 11px;
-    letter-spacing: 1.4px;
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 8vw, 2rem);
   }
 
   .description {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   .actions {
-    flex-direction: column;
     gap: 10px;
   }
 
   .primaryButton,
   .secondaryButton {
-    padding: 12px 20px;
-    font-size: 13px;
-    width: 100%;
+    padding: 14px;
+    font-size: 14px;
   }
 
   .heroStats {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .statItem {
-    padding: 14px;
-    border-radius: 16px;
-  }
-
-  .statItem strong {
-    font-size: 1rem;
-    margin-bottom: 2px;
-  }
-
-  .statItem span {
-    font-size: 0.85rem;
-  }
-
-  .heroImage {
-    display: none;
-  }
-
-  .discountSection {
-    padding: 16px;
-    gap: 14px;
-    border-radius: 20px;
-  }
-
-  .sectionHeader {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
     gap: 12px;
   }
 
-  .sectionHeader h2 {
+  .statItem strong {
     font-size: 1.3rem;
     margin-bottom: 0;
   }
 
-  .sectionHeader p {
-    font-size: 13px;
+  .discountSection {
+    padding: 16px;
+    border-radius: 20px;
   }
 
-  .discountActions {
-    gap: 8px;
+  .sectionHeader h2 {
+    font-size: 1.3rem;
   }
 
   .discountButton {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
+    width: 40px;
+    height: 40px;
   }
 
   .discountSlide {
@@ -763,48 +807,17 @@
     max-width: 100%;
   }
 
-  .cardsSection {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
   .cardLarge {
     min-height: 240px;
-    padding: 20px;
     border-radius: 20px;
-  }
-
-  .cardLarge p {
-    font-size: 11px;
-    margin-bottom: 8px;
   }
 
   .cardLarge h3 {
     font-size: 1.3rem;
-    margin-bottom: 12px;
-  }
-
-  .cardLarge small,
-  .cardLarge p:last-child {
-    font-size: 13px;
   }
 
   .smallCard {
-    padding: 16px;
-    gap: 10px;
     border-radius: 16px;
-  }
-
-  .smallCard span {
-    font-size: 11px;
-  }
-
-  .smallCard h4 {
-    font-size: 1.1rem;
-  }
-
-  .smallCard p {
-    font-size: 13px;
   }
 
   .collectionGrid {
@@ -814,89 +827,217 @@
 
   .collectionCard {
     min-height: 180px;
-    padding: 14px;
     border-radius: 20px;
-  }
-
-  .collectionCard p {
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-  }
-
-  .collectionCard strong {
-    font-size: 1rem;
   }
 
   .appSection {
     padding: 20px;
-    gap: 16px;
     border-radius: 20px;
-  }
-
-  .appInfo {
-    gap: 14px;
   }
 
   .appInfo h2 {
-    font-size: clamp(1.2rem, 4vw, 1.6rem);
-  }
-
-  .appInfo p {
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .appActions {
-    gap: 10px;
-  }
-
-  .appBadge {
-    padding: 10px 16px;
-    font-size: 11px;
-    border-radius: 12px;
-    width: 100%;
-    justify-content: center;
+    font-size: 1.3rem;
   }
 
   .appGraphic {
-    min-height: 240px;
-    border-radius: 20px;
-    display: none;
+    min-height: 200px;
   }
 }
 
-@media (max-width: 720px) {
+/* Очень маленькие экраны */
+@media (max-width: 360px) {
   .page {
-    padding: 24px 16px 56px;
+    padding: 12px 8px 32px;
+    gap: 20px;
   }
 
-  .hero {
-    gap: 24px;
+  .heroText {
+    gap: 12px;
   }
 
-  .heroStats {
-    grid-template-columns: 1fr;
+  .title {
+    font-size: 1.3rem;
   }
 
-  .collectionGrid {
-    grid-template-columns: 1fr;
+  .description {
+    font-size: 13px;
   }
 
-  .appSection {
-    padding: 28px;
+  .statItem {
+    padding: 10px 12px;
+  }
+
+  .statItem strong {
+    font-size: 1.1rem;
   }
 
   .discountSection {
-    padding: 24px;
+    padding: 12px;
   }
 
-  .sectionHeader {
+  .sectionHeader h2 {
+    font-size: 1.1rem;
+  }
+
+  .cardLarge {
+    min-height: 200px;
+    padding: 16px;
+  }
+}
+
+/* === СЕКЦИЯ CARDS (ХИТЫ ПРОДАЖ + МАЛЫЕ КАРТОЧКИ) === */
+.cardsSection {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+}
+
+/* Левая колонка — карусель хитов */
+.topHits {
+  background: #f8fafc;
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 25px 65px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.topHitsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cardLabel {
+  margin: 0 0 8px;
+  color: #2563eb;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.topHits h3 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+.topHitsHeader p {
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.topHitsControls {
+  display: flex;
+  gap: 10px;
+}
+
+/* Карусель */
+.topCarousel {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.topTrack {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topSlide {
+  /* ширина задаётся инлайн-стилем */
+}
+
+/* Малые карточки (правая колонка) */
+.cardSmallGrid {
+  display: grid;
+  gap: 20px;
+}
+
+.smallCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s ease;
+}
+
+.smallCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+}
+
+.smallCard span {
+  color: #2563eb;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.smallCard h4 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.smallCard p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.75;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 1024px) {
+  .cardsSection {
+    grid-template-columns: 1fr;
+  }
+
+  .topHits {
+    order: -1; /* на планшетах сначала идут хиты, потом малые карточки */
+  }
+}
+
+@media (max-width: 768px) {
+  .topHits {
+    padding: 20px;
+  }
+
+  .topHitsHeader {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .discountSlide {
-    min-width: 88%;
-    max-width: 88%;
+  .topHitsControls {
+    align-self: flex-end;
+  }
+
+  .smallCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topHits {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .topHits h3 {
+    font-size: 1.4rem;
+  }
+
+  .topSlide {
+    /* на мобилке показываем по 1 товару */
+    flex: 0 0 100% !important;
   }
 }
