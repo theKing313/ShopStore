@@ -258,14 +258,6 @@ const CartPage: React.FC = () => {
 
         <SectionBody>
           <>
-            <button
-              type="button"
-              className={classes.backButton}
-              onClick={handleGoBack}
-              aria-label="Назад"
-            >
-              ←
-            </button>
             {!hasProducts && <Placeholder text={NO_PRODUCTS_IN_CART} />}
 
             {hasProducts && (
