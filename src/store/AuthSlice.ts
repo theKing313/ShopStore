@@ -57,6 +57,7 @@ export const authUser = createAsyncThunk<
     }
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("firstOrderDiscount", "true"); // Устанавливаем флаг для скидки на первый заказ
     }
     dispatch(
       showAlert({
