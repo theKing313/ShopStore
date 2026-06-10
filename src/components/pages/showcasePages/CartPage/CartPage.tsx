@@ -161,7 +161,7 @@ const CartPage: React.FC = () => {
       userId: authUser?.id,
       userName: cartUser?.username || input.name,
       userPhone: cartUser?.phone || input.phone,
-      userAddress: cartUser?.address || input.address,
+      userAddress: cartUser?.address || input.address || "Нет адреса",
       paymentType: input.paymentType,
       orderType: input.orderType,
       cart: cart,
