@@ -75,10 +75,17 @@ const CartPage: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
     if (!input.paymentType) newErrors.paymentType = "Выберите тип оплаты";
     if (!input.orderType) newErrors.orderType = "Выберите тип заказа";
-    if (!cartUser || !cartUser.phone || !cartUser.address) {
+    if (!cartUser || !cartUser.phone) {
       if (!input.name) newErrors.name = "Введите имя";
       if (!input.phone) newErrors.phone = "Введите телефон";
-      if (!input.address) newErrors.address = "Введите адрес";
+    }
+
+    if (
+      input.orderType === "delivery" &&
+      !cartUser?.address &&
+      !input.address
+    ) {
+      newErrors.address = "Введите адрес";
     }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;

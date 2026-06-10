@@ -37,6 +37,9 @@ const CartForm: React.FC<ICartFormProps> = ({
     onChange(e);
   };
 
+  // Определяем, нужно ли поле адреса обязательным
+  const isAddressRequired = value.orderType === "delivery" ? true : false;
+
   return (
     <Form onSubmit={onSubmit}>
       <div className={classes["cart-form"]}>
@@ -102,6 +105,7 @@ const CartForm: React.FC<ICartFormProps> = ({
             <span className={classes.error}>{errors.orderType}</span>
           )}
         </div>
+
         {value.orderType === "delivery" && (
           <Input
             label={"Адрес"}
@@ -110,7 +114,7 @@ const CartForm: React.FC<ICartFormProps> = ({
             type={"text"}
             value={value.address || ""}
             onChange={onChange}
-            required
+            required={isAddressRequired}
             placeholder={"Куда доставить заказ?"}
           />
         )}
