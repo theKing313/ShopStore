@@ -299,6 +299,22 @@ const CartPage: React.FC = () => {
                         Зарегистрируйтесь сейчас
                       </Link>{" "}
                       и получите 50% скидки на первый заказ.
+                      <div style={{ marginTop: 8, fontSize: 14 }}>
+                        * Скидка применяется автоматически при оформлении
+                        заказа.
+                      </div>
+                      <div style={{ marginTop: 8, fontSize: 14 }}>
+                        * Доставка осуществляется только по городу Омск. Для
+                        других регионов свяжитесь с нами через{" "}
+                        <a
+                          href="https://t.me/yourstore"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "#663c00", fontWeight: 700 }}
+                        >
+                          По этой ссылке
+                        </a>
+                      </div>
                     </div>
                   )}
 
