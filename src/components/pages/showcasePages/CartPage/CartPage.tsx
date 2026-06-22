@@ -280,6 +280,29 @@ const CartPage: React.FC = () => {
                   <span className={classes.title}>
                     {cartUser ? "Доставка" : "Ваши данные"}
                   </span>
+                  <div
+                    style={{
+                      marginBottom: 16,
+                      padding: "14px 16px",
+                      backgroundColor: "#fff7e6",
+                      border: "1px solid #ffd591",
+                      borderRadius: 12,
+                      color: "#663c00",
+                    }}
+                  >
+                    <div style={{ marginTop: 8, fontSize: 14 }}>
+                      * Доставка осуществляется только по городу Омск. Для
+                      других регионов свяжитесь с нами через{" "}
+                      <a
+                        href="https://t.me/yourstore"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#663c00", fontWeight: 700 }}
+                      >
+                        По этой ссылке
+                      </a>
+                    </div>
+                  </div>
 
                   {!authUser && hasProducts && (
                     <div
@@ -302,18 +325,6 @@ const CartPage: React.FC = () => {
                       <div style={{ marginTop: 8, fontSize: 14 }}>
                         * Скидка применяется автоматически при оформлении
                         заказа.
-                      </div>
-                      <div style={{ marginTop: 8, fontSize: 14 }}>
-                        * Доставка осуществляется только по городу Омск. Для
-                        других регионов свяжитесь с нами через{" "}
-                        <a
-                          href="https://t.me/yourstore"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: "#663c00", fontWeight: 700 }}
-                        >
-                          По этой ссылке
-                        </a>
                       </div>
                     </div>
                   )}
